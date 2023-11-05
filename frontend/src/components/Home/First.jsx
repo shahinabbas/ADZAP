@@ -13,8 +13,8 @@ function First() {
           style={{ paddingLeft: "140px" }}
         />
         <Flex direction="column" style={{ marginLeft: "20px" }}>
-          <Text as="h1" paddingTop="180px">
-            Advertise anywhere in the world with us.
+          <Text as="h1" style={{fontFamily:'cursive'}} fontSize="4xl" fontWeight="bold" paddingTop="180px">
+            Advertise anywhere in the world <br />  with us.
           </Text>
           <Flex alignItems="center" style={{ paddingTop: "80px" }}>
             <Button
