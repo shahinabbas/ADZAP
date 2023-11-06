@@ -3,18 +3,18 @@ import First from "./Home/First";
 import District from "./Home/District";
 import Banner from "./Home/Banner";
 import Category from "./Home/Category";
-import Login from "./Login";
-import Signup from "./Signup";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 function Home() {
   return (
     <>
-      <Login />
-      <Signup />
+      <Navbar />
       <First />
       <District />
       <Banner />
       <Category />
       <Banner />
+      <Footer />
     </>
   );
 }

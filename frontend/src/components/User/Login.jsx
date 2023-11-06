@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -17,16 +17,17 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-function Signup() {
+function Login() {
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
 
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  //   useEffect(() => {
+  //     setIsOpen(true);
+  //   }, []);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cnfpassword, setCnfPassword] = useState("");
 
   const handleSubmit = () => {
     console.log("Email: ", email);
@@ -36,64 +37,44 @@ function Signup() {
 
   return (
     <div>
-      <Button onClick={onOpen}>Signup</Button>
+      <Text style={{ cursor: "pointer" }} onClick={onOpen}>
+        Login
+      </Text>
 
       <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />
         <ModalContent>
           <Flex>
+            <Image
+              src="src\images\login.jpg"
+              alt="Login Image"
+              boxSize="50%"
+              objectFit="cover"
+            />
             <Flex direction="column" p={5} bg="#848CEF" w="100%">
               <ModalHeader fontSize="2xl" textAlign="center" color="white">
-                Signup
+                Login
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody color="white">
                 <FormControl>
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter your Name"
-                    bg="white"
-                    color="black"
-                  />
-                </FormControl>
-                <FormControl mt={5}>
-                  <Input
-                    type="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter your username"
-                    bg="white"
-                    color="black"
-                  />
-                </FormControl>
-                <FormControl mt={5}>
+                  <FormLabel>Email</FormLabel>
                   <Input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your Email"
+                    placeholder="Enter your email"
                     bg="white"
                     color="black"
                   />
                 </FormControl>
                 <FormControl mt={5}>
+                  <FormLabel>Password</FormLabel>
                   <Input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    bg="white"
-                    color="black"
-                  />
-                </FormControl>
-                <FormControl mt={5}>
-                  <Input
-                    type="password"
-                    value={cnfpassword}
-                    onChange={(e) => setCnfPassword(e.target.value)}
-                    placeholder="Enter Confirm password"
                     bg="white"
                     color="black"
                   />
@@ -107,26 +88,19 @@ function Signup() {
                   bg="#BACEF5"
                   onClick={handleSubmit}
                 >
-                  Signup
+                  Login
                 </Button>
               </ModalFooter>
               <Text
                 style={{
-                  marginLeft: "80px",
+                  marginLeft: "100px",
                   fontSize: "10px",
                   fontFamily: "cursive",
                 }}
               >
-                Already have an account? Login{" "}
+                Not a user? Signup
               </Text>
             </Flex>
-            <Image
-              src="src\images\signup.jpg"
-              alt="Login Image"
-              boxSize="50%"
-              objectFit="cover"
-              marginTop="75"
-            />
           </Flex>
         </ModalContent>
       </Modal>
@@ -134,4 +108,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;

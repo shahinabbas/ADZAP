@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import { Image, Flex, Text, Button, Spacer } from "@chakra-ui/react";
 
 function First() {
+  const navigate = useNavigate();
   return (
     <div>
       <Flex>
@@ -13,8 +15,14 @@ function First() {
           style={{ paddingLeft: "140px" }}
         />
         <Flex direction="column" style={{ marginLeft: "20px" }}>
-          <Text as="h1" style={{fontFamily:'cursive'}} fontSize="4xl" fontWeight="bold" paddingTop="180px">
-            Advertise anywhere in the world <br />  with us.
+          <Text
+            as="h1"
+            style={{ fontFamily: "cursive" }}
+            fontSize="4xl"
+            fontWeight="bold"
+            paddingTop="180px"
+          >
+            Advertise anywhere in the world <br /> with us.
           </Text>
           <Flex alignItems="center" style={{ paddingTop: "80px" }}>
             <Button
@@ -30,6 +38,7 @@ function First() {
               }}
               style={{ marginRight: "35px" }}
               size="lg"
+              onClick={() => navigate("about")}
             >
               Enquire Now
             </Button>
@@ -38,6 +47,7 @@ function First() {
               marginTop="10px"
               size="lg"
               _hover={{ backgroundColor: "#3745d2", color: "white" }}
+              onClick={() => navigate("spots")}
             >
               Buy Spots
             </Button>
