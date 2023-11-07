@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import {
   Button,
   Modal,
@@ -23,10 +25,23 @@ function Signup() {
   const onOpen = () => setIsOpen(true);
 
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cnfpassword, setCnfPassword] = useState("");
+  const [contact, setContact] = useState("");
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
+    password: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .required("Password is required"),
+    cnfpassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Confirm password is required"),
+    contact: Yup.string().required("Contact number is required"),
+  });
+  
 
   const handleSubmit = () => {
     console.log("Email: ", email);
@@ -57,16 +72,7 @@ function Signup() {
                     placeholder="Enter your Name"
                     bg="white"
                     color="black"
-                  />
-                </FormControl>
-                <FormControl mt={5}>
-                  <Input
-                    type="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter your username"
-                    bg="white"
-                    color="black"
+                    required
                   />
                 </FormControl>
                 <FormControl mt={5}>
@@ -77,6 +83,18 @@ function Signup() {
                     placeholder="Enter your Email"
                     bg="white"
                     color="black"
+                    required
+                  />
+                </FormControl>
+                <FormControl mt={5}>
+                  <Input
+                    type="Phone"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    placeholder="Enter your Contact Number"
+                    bg="white"
+                    color="black"
+                    required
                   />
                 </FormControl>
                 <FormControl mt={5}>
@@ -87,6 +105,7 @@ function Signup() {
                     placeholder="Enter your password"
                     bg="white"
                     color="black"
+                    required
                   />
                 </FormControl>
                 <FormControl mt={5}>
@@ -94,9 +113,10 @@ function Signup() {
                     type="password"
                     value={cnfpassword}
                     onChange={(e) => setCnfPassword(e.target.value)}
-                    placeholder="Enter Confirm password"
+                    placeholder="Confirm password"
                     bg="white"
                     color="black"
+                    required
                   />
                 </FormControl>
               </ModalBody>
@@ -106,6 +126,9 @@ function Signup() {
                   w="130px"
                   style={{ marginRight: "60px" }}
                   bg="#BACEF5"
+                  // onClick={() => {
+                  //   validateForm();
+                  // }}
                   onClick={handleSubmit}
                 >
                   Signup
@@ -127,7 +150,7 @@ function Signup() {
               alt="Login Image"
               boxSize="50%"
               objectFit="cover"
-              marginTop="75"
+              marginTop="89"
             />
           </Flex>
         </ModalContent>
@@ -137,3 +160,4 @@ function Signup() {
 }
 
 export default Signup;
+
