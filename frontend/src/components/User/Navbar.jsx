@@ -4,11 +4,18 @@ import { Flex, Box, Text, HStack, Heading, Spacer } from "@chakra-ui/react";
 import Signup from "./Signup";
 import Login from "./Login";
 function Navbar() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   return (
-    <div>
-      <Flex as="nav" bg="blue" alignItems="center">
-        <Heading as="h1" style={{cursor:'pointer'}} onClick={() => navigate("/")}>ADZAP</Heading>
+    <div style={{ position: "sticky", top: 0, zIndex: 100 }}>
+      {" "}
+      <Flex as="nav" bg="blue" alignItems="center" h="75px" bgColor="#5C59EC">
+        <Heading
+          as="h1"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
+          ADZAP
+        </Heading>
         <Spacer />
         <Login />
         <Signup />
