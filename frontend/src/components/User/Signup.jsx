@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import axios from "axios";
 import {
   Button,
   Modal,
@@ -29,24 +28,40 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [cnfpassword, setCnfPassword] = useState("");
   const [contact, setContact] = useState("");
+  const [formError, setFormError] = useState([]);
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string().email("Invalid email format").required("Email is required"),
-    password: Yup.string()
-      .min(8, "Password must be at least 8 characters")
-      .required("Password is required"),
-    cnfpassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .required("Confirm password is required"),
-    contact: Yup.string().required("Contact number is required"),
-  });
-  
+  const handleSubmit = async () => {
+    setFormError([]);
+    const formData = {
+      name: name,
+      email: email,
+      password: password,
+      contact_number: contact,
+    };
 
-  const handleSubmit = () => {
-    console.log("Email: ", email);
-    console.log("Password: ", password);
-    onClose();
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/accounts/api/register/",
+        formData
+      );
+      console.log("User registered successfully.");
+      onClose();
+    } catch (error) {
+      console.error("Registration failed:", error);
+
+      if (error.response && error.response.data && error.response.data.error) {
+        const errorMessage = error.response.data.error;
+        console.log("Backend error:", errorMessage);
+
+        // Update the state with the error message
+        setFormError([errorMessage]);
+      } else {
+        console.error("Unexpected error occurred:", error);
+        console.log("Full error response from backend:", error.response.data);
+
+        setFormError([error.response.data]);
+      }
+    }
   };
 
   return (
@@ -64,6 +79,7 @@ function Signup() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody color="white">
+                
                 <FormControl>
                   <Input
                     type="text"
@@ -72,7 +88,6 @@ function Signup() {
                     placeholder="Enter your Name"
                     bg="white"
                     color="black"
-                    required
                   />
                 </FormControl>
                 <FormControl mt={5}>
@@ -83,7 +98,6 @@ function Signup() {
                     placeholder="Enter your Email"
                     bg="white"
                     color="black"
-                    required
                   />
                 </FormControl>
                 <FormControl mt={5}>
@@ -94,7 +108,6 @@ function Signup() {
                     placeholder="Enter your Contact Number"
                     bg="white"
                     color="black"
-                    required
                   />
                 </FormControl>
                 <FormControl mt={5}>
@@ -105,7 +118,6 @@ function Signup() {
                     placeholder="Enter your password"
                     bg="white"
                     color="black"
-                    required
                   />
                 </FormControl>
                 <FormControl mt={5}>
@@ -116,7 +128,6 @@ function Signup() {
                     placeholder="Confirm password"
                     bg="white"
                     color="black"
-                    required
                   />
                 </FormControl>
               </ModalBody>
@@ -126,9 +137,6 @@ function Signup() {
                   w="130px"
                   style={{ marginRight: "60px" }}
                   bg="#BACEF5"
-                  // onClick={() => {
-                  //   validateForm();
-                  // }}
                   onClick={handleSubmit}
                 >
                   Signup
@@ -160,4 +168,3 @@ function Signup() {
 }
 
 export default Signup;
-

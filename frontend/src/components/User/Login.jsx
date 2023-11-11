@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Button,
   Modal,
@@ -29,10 +30,25 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = () => {
-    console.log("Email: ", email);
-    console.log("Password: ", password);
-    onClose();
+  const handleSubmit = async () => {
+    const formData = {
+      email,
+      password,
+    };
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/accounts/api/login/",
+        formData
+      );
+      console.log("User login success:", response.data);
+      localStorage.setItem("access:", response.data.access);
+      localStorage.setItem("refresh:", response.data.refresh);
+      console.log(response.data);
+      onClose();
+    } catch (error) {
+      console.error("User login failed:", error.response.data);
+      // Handle login failure, show an error message, etc.
+    }
   };
 
   return (

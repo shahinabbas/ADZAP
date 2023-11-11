@@ -10,7 +10,7 @@ function First() {
         <Image
           src="src/images/flipped.png"
           alt="Image Alt Text"
-          boxSize="800px"
+          boxSize="700px"
           objectFit="contain"
           style={{ paddingLeft: "140px" }}
         />

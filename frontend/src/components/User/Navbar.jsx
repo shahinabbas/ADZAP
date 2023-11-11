@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Flex, Box, Text, HStack, Heading, Spacer } from "@chakra-ui/react";
 import Signup from "./Signup";
 import Login from "./Login";
@@ -16,6 +16,7 @@ function Navbar() {
         >
           ADZAP
         </Heading>
+        <Link to='/post'>Post</Link>
         <Spacer />
         <Login />
         <Signup />
