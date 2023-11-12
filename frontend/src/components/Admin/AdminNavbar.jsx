@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Flex,
@@ -8,41 +9,29 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Stack,
-  Icon,
   Link,
-  IconButton,
   useDisclosure,
   useColorModeValue,
+  MenuDivider,
 } from "@chakra-ui/react";
-
 import { AiOutlineClose } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const navLinks = [
   { name: "Users", path: "/users" },
   { name: "AdStatus", path: "/status" },
   { name: "Category", path: "/category" },
-  { name: "Banner", path: "/banner" },
-];
-
-const dropdownLinks = [
-  {
-    name: "Blog",
-    path: "/users",
-  },
-  {
-    name: "Documentation",
-    path: "#",
-  },
-  {
-    name: "Logout",
-    path: "#",
-  },
 ];
 
 export default function AdminNavbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch(logoutUser());
+    navigate("/");
+  };
 
   return (
     <>
@@ -53,7 +42,6 @@ export default function AdminNavbar() {
           justifyContent="space-between"
           mx="auto"
         >
-          {/* <Icon as={RiFlashlightFill} h={8} w={8} /> */}
           <Link href="/admin">
             <Text fontSize="30px" fontWeight="bold" color="white">
               ADZAP
@@ -69,73 +57,33 @@ export default function AdminNavbar() {
               {navLinks.map((link, index) => (
                 <NavLink key={index} {...link} onClose={onClose} />
               ))}
-
-              <Menu autoSelect={false} isLazy>
-                {({ isOpen, onClose }) => (
-                  <>
-                    <MenuButton _hover={{ color: "White" }}>
-                      <Flex alignItems="center">
-                        <Text>Community</Text>
-                        <Icon
-                          as={BiChevronDown}
-                          h={5}
-                          w={5}
-                          ml={1}
-                          transition="all .25s ease-in-out"
-                          transform={isOpen ? "rotate(180deg)" : ""}
-                        />
-                      </Flex>
-                    </MenuButton>
-                    <MenuList
-                      zIndex={5}
-                      bg={useColorModeValue(
-                        "rgb(255, 255, 255)",
-                        "rgb(26, 32, 44)"
-                      )}
-                      border="none"
-                      boxShadow={useColorModeValue(
-                        "2px 4px 6px 2px rgba(160, 174, 192, 0.6)",
-                        "2px 4px 6px 2px rgba(9, 17, 28, 0.6)"
-                      )}
-                    >
-                      {dropdownLinks.map((link, index) => (
-                        <MenuLink
-                          key={index}
-                          name={link.name}
-                          path={link.path}
-                          onClose={onClose}
-                        />
-                      ))}
-                    </MenuList>
-                  </>
-                )}
-              </Menu>
             </HStack>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<BiChevronDown />}
+                variant="ghost"
+              >
+                More
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  <Text onClick={() => navigate("/users")}>User</Text>
+                </MenuItem>
+                <MenuItem>
+                  <Text onClick={() => navigate("/status")}>Ad status</Text>
+                </MenuItem>
+                <MenuItem>
+                  <Text onClick={handleLogout}>Logout</Text>
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </HStack>
-
-          {/* <Button colorScheme="blue" size="md" rounded="md" d={{ base: 'none', md: 'block' }}>
-          Sign in
-        </Button> */}
-
-          {/* <IconButton
-          size="md"
-          // icon={isOpen ? <AiOutlineClose /> : <GiHamburgerMenu />}
-          aria-label="Open Menu"
-          d={{ base: 'inherit', md: 'none' }}
-          onClick={isOpen ? onClose : onOpen}
-        /> */}
         </Flex>
       </Box>
     </>
   );
 }
-
-// // NavLink Component
-// interface NavLinkProps {
-//   name: string;
-//   path: string;
-//   onClose: () => void;
-// }
 
 const NavLink = ({ name, path, onClose }) => {
   return (
@@ -152,13 +100,6 @@ const NavLink = ({ name, path, onClose }) => {
     </Link>
   );
 };
-
-// // Dropdown MenuLink Component
-// interface MenuLinkProps {
-//   name: string;
-//   path: string;
-//   onClose: () => void;
-// }
 
 const MenuLink = ({ name, path, onClose }) => {
   return (

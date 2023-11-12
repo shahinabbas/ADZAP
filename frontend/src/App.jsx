@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"; // Import React and other necessary modules
+import React, {  } from "react"; 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ChakraProvider, Switch } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import Login from "./components/User/Login";
 import Signup from "./components/User/Signup";
 import Contact from "./components/User/Contact";
@@ -16,26 +16,14 @@ import Users from "./components/Admin/Users";
 import AdStatus from "./components/Admin/AdStatus";
 import AdminHome from "./components/Admin/AdminHome";
 import { Provider } from "react-redux";
-import userStore from "./Redux/userStore";
+import {store} from "./Redux/store";
 
 function App() {
-  // const [message, setMessage] = useState('');
-
-  // useEffect(() => {
-  //   fetch('http://localhost:8000/adzap/api/hello/')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setMessage(data.message);
-  //     })
-  //     .catch((error) => {
-  //       console.error('API request failed', error);
-  //     });
-  // }, []);
-
+ 
   return (
     <ChakraProvider>
       <BrowserRouter>
-        <Provider store={userStore}>
+        <Provider store={store}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

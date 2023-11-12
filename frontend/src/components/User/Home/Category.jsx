@@ -1,45 +1,79 @@
-import React from "react";
-import { Box, SimpleGrid, Text, Center } from "@chakra-ui/react";
+import * as React from "react";
+import { Container, Text, SimpleGrid, Box } from "@chakra-ui/react";
 
-function Category() {
-  // Sample categories data
-  const categories = [
-    {title:"Category 1" ,src:''},
-    {title:"Category 1" ,src:''},
-    {title:"Category 1" ,src:''},
-    {title:"Category 1" ,src:''},
-    {title:"Category 1" ,src:''},
-    {title:"Category 1" ,src:''},
-    
-  ];
+const statData = [
+  {
+    id: 1,
+    label: "Total post reactions",
+    score: "1,730",
+  },
+  {
+    id: 2,
+    label: "Total post views",
+    score: "31,573",
+  },
+  {
+    id: 3,
+    label: "Listings created",
+    score: "5",
+  },
+  {
+    id: 4,
+    label: "Listings created",
+    score: "5",
+  },
+  {
+    id: 5,
+    label: "Listings created",
+    score: "5",
+  },
+  {
+    id: 6,
+    label: "Listings created",
+    score: "5",
+  },
+  {
+    id: 7,
+    label: "Listings created",
+    score: "5",
+  },
+];
 
+const Category = () => {
   return (
-    <Center h="30vh">
-      <div>
+    <>
+    <br />
       <Text textAlign="center" fontSize="4xl" fontWeight="bold" mt="4">
-      Explore More Categories
+        Explore the Categories
       </Text>
-        <SimpleGrid columns={7} spacing={9} mt={7} ml={9}> 
-          {categories.map((category, index) => (
+      <Text textAlign="center" fontSize="2xl" fontWeight="bold">
+        our service available.
+      </Text>
+      <Container maxW="7xl" p={{ base: 5, md: 10 }}>
+        <SimpleGrid
+          columns={{ base: 1, sm: 2, md: 5 }}
+          spacing={5}
+          mt={12}
+          mb={4}
+        >
+          {statData.map((data) => (
             <Box
-              key={index}
-              bg="#BBE7ED"
-              height="100px"
-              width="130px"  
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              fontSize="20px"
-              fontWeight="bold"
-              color="white"
+              key={data.id}
+              p={5}
+              boxShadow="md"
+              rounded="md"
+              borderWidth={1}
             >
-              {category.title}
+              <Text fontWeight="extrabold" fontSize="x-large">
+                {data.score}
+              </Text>
+              <Text>{data.label}</Text>
             </Box>
           ))}
         </SimpleGrid>
-      </div>
-    </Center>
+      </Container>
+    </>
   );
-}
+};
 
 export default Category;

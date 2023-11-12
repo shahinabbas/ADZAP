@@ -14,23 +14,31 @@ import {
   Input,
   Flex,
   Image,
-  Spacer,
   Text,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login, fetchUser } from "../../Redux/userActions";
 
 function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
-
-  //   useEffect(() => {
-  //     setIsOpen(true);
-  //   }, []);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    if (currentPath === "/login") {
+      onOpen();
+    }
+  }, []);
+
+  const onClose = () => setIsOpen(false);
+  const onOpen = () => setIsOpen(true);
+
   const handleSubmit = async () => {
+    console.log("Login modal");
     const formData = {
       email,
       password,
@@ -40,22 +48,25 @@ function Login() {
         "http://127.0.0.1:8000/accounts/api/login/",
         formData
       );
+      dispatch(login(email, password));
+      const userId = response.data.user.id;
+      dispatch(fetchUser(userId));
       console.log("User login success:", response.data);
       localStorage.setItem("access:", response.data.access);
       localStorage.setItem("refresh:", response.data.refresh);
       console.log(response.data);
       onClose();
+      navigate("/");
     } catch (error) {
-      console.error("User login failed:", error.response.data);
-      // Handle login failure, show an error message, etc.
+      console.error("User login failed from Login modal");
     }
   };
 
   return (
     <div>
-      <Text style={{ cursor: "pointer" }} onClick={onOpen}>
+      {/* <Text style={{ cursor: "pointer" }} onClick={onOpen}>
         Login
-      </Text>
+      </Text> */}
 
       <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />

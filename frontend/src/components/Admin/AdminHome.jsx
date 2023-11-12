@@ -5,7 +5,6 @@ function AdminHome() {
   return (
     <div>
       <AdminNavbar />
-      
     </div>
   )
 }

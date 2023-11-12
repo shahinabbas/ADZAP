@@ -23,21 +23,19 @@ const Footer = () => {
         direction={{ base: "column", md: "row" }}
       >
         <Box maxW="300px">
-          <Link href="https://templateskart.com" isExternal>
-            <Image
-              w="100px"
-              src="/assets/images/layouts/hero_image.png"
-              alt="TemplatesKart"
-            />
-          </Link>
-          <Text mt={2} fontSize="md">
-            Build fully functional accessible web applications faster than ever
+          <Link href="#" isExternal></Link>
+          <Text mt={2} fontSize="25px">
+            Adzap
           </Text>
+          <br />
+          <Text>Email: adzap@gmail.com</Text>
+          <Text>Phone: +91 0000000000</Text>
+          <Text>Location: Kundanoor, Maradu, Ernakulam</Text>
         </Box>
         <HStack
-          spacing={4}
-          d={{ base: "none", sm: "flex" }}
-          justifyContent={{ sm: "space-between", md: "normal" }}
+          spacing={14}
+          // d={{ base: "none", sm: "flex" }}
+          // justifyContent={{ sm: "space-between", md: "normal" }}
         >
           <VStack spacing={4} alignItems="flex-start">
             <Text fontSize="md" fontWeight="bold">

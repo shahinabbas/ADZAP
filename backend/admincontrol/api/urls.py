@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('users/', views.UserListView.as_view(), name='user-list'),
+    path('edit/<int:pk>/', views.UserEditView.as_view(), name='edit-user'),
     path('banners/', views.BannerListCreateView.as_view(), name='banner-create'),
     path('banners/<int:pk>/', views.BannerRetrieveUpdateDeleteView.as_view(), name='banner-retrieve-update-delete'),
     path('category/', views.CategoryCreateView.as_view(), name='category-create'),

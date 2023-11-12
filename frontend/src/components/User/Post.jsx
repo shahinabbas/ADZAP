@@ -13,12 +13,14 @@ import {
   Text,
   Center,
 } from "@chakra-ui/react";
-
 function Post() {
   return (
     <>
       <Navbar />
-      <Text textAlign="center" fontSize="30px" fontWeight="bold" mt={8}>
+      <br />
+      <br />
+      <br />
+      <Text textAlign="center" fontSize="30px" fontWeight="bold">
         Post Your AD
       </Text>
       <Container maxW="container.md" border="1px" mt={5}>

@@ -20,6 +20,8 @@ function About() {
   return (
     <div>
       <Navbar />
+      <br />
+      <br />
       <Text
         mt={10}
         fontSize="35px"
@@ -79,8 +81,15 @@ function About() {
           ))}
         </SimpleGrid>
 
-        <Text mt={20} fontWeight="bold" fontSize="35px" color='white' textAlign='center'>Companies Using ADZAP</Text>
-        
+        <Text
+          mt={20}
+          fontWeight="bold"
+          fontSize="35px"
+          color="white"
+          textAlign="center"
+        >
+          Companies Using ADZAP
+        </Text>
       </Flex>
       <Footer mt={10} />
     </div>

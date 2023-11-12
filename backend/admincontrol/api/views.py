@@ -22,6 +22,11 @@ class BannerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 class UserListView(ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
+
+class UserEditView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    # permission_classes = [IsAuthenticated]
     
 class CategoryListView(generics.ListAPIView):
     queryset=Category.objects.all()
