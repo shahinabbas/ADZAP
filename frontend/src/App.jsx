@@ -1,4 +1,4 @@
-import React, {  } from "react"; 
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import Login from "./components/User/Login";
@@ -16,31 +16,90 @@ import Users from "./components/Admin/Users";
 import AdStatus from "./components/Admin/AdStatus";
 import AdminHome from "./components/Admin/AdminHome";
 import { Provider } from "react-redux";
-import {store} from "./Redux/store";
+import { store } from "./Redux/store";
+import Profile from "./components/User/Profile";
+import { UserRoute } from "./components/PrivateRoute/PrivateRoute";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import FrequentlyAskedQuestions from "./components/Admin/FrequentlyAskedQuestions";
 
 function App() {
- 
   return (
+    
     <ChakraProvider>
       <BrowserRouter>
-        <Provider store={store}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/spots" element={<Spots />} />
-            <Route path="/spot" element={<Spot />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/post" element={<Post />} />
-            <Route path="/adminlogin" element={<AdminLogin />} />
-            <Route path="/banner" element={<BannerManagement />} />
-            <Route path="/category" element={<Category />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/status" element={<AdStatus />} />
-            <Route path="/admin" element={<AdminHome />} />
-          </Routes>
-        </Provider>
+        <>
+          <Provider store={store}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/adminlogin" element={<AdminLogin />} />
+
+              <Route path="/" element={<Home />} />
+              <Route path="/spots" element={<Spots />} />
+              <Route path="/spot" element={<Spot />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/post" element={<Post />} />
+              <Route
+                path="/profile"
+                element={
+                  <UserRoute>
+                    <Profile />
+                  </UserRoute>
+                }
+              />
+
+              <Route
+                path="/admin"
+                element={
+                  <PrivateRoute>
+                    <AdminHome />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/users"
+                element={
+                  <PrivateRoute>
+                    <Users />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/faq"
+                element={
+                  <PrivateRoute>
+                    <FrequentlyAskedQuestions />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/category"
+                element={
+                  <PrivateRoute>
+                    <Category />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/status"
+                element={
+                  <PrivateRoute>
+                    <AdStatus />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/banner"
+                element={
+                  <PrivateRoute>
+                    <BannerManagement />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </Provider>
+        </>
       </BrowserRouter>
     </ChakraProvider>
   );

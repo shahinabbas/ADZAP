@@ -1,43 +1,41 @@
-  const initialState = {
-    user: null,
-    error: null,
-  };
+const initialState = {
+  user: null,
+  is_authenticated: false,
+  is_admin: false,
+  error: null,
+};
 
-  const userReducer = (state = initialState, action) => {
-    switch (action.type) {
-      case "USER_LOGIN_SUCCESS":
-        return {
-          ...state,
-          user: action.payload.user,
-          error: null,
-        };
-      case "USER_LOGIN_FAILURE":
-        return {
-          ...state,
-          user: null,
-          error: action.payload,
-        };
-      case "FETCH_USER_SUCCESS":
-        return {
-          ...state,
-          user: action.payload,
-          error: null,
-        };
-      case "FETCH_USER_FAILURE":
-        return {
-          ...state,
-          user: null,
-          error: action.payload,
-        };
-      case "LOGOUT_USER":
-        return {
-          ...state,
-          user: null,
-          error: null,
-        };
-      default:
-        return state;
-    }
-  };
+const userReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "FETCH_USER_SUCCESS":
+      console.log(action.payload.is_superuser,'shughugghyhu');
+      return {
+        ...state,
+        user: action.payload,
+        is_authenticated: true,
+        is_admin: action.payload.is_superuser,
+        error: null,
+      };
+    case "FETCH_USER_FAILURE":
+      return {
+        ...state,
+        user: null,
+        is_authenticated: false,
+        is_admin: false,
+        error: action.payload,
+      };
+    case "LOGOUT_USER":
+      console.log("Logout Action Received");
+      return {
+        ...state,
+        user: null,
+        is_authenticated: false,
+        is_admin: false,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
 
-  export default userReducer;
+export default userReducer;

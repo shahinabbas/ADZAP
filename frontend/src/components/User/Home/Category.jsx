@@ -1,54 +1,33 @@
 import * as React from "react";
-import { Container, Text, SimpleGrid, Box } from "@chakra-ui/react";
+import { Container, Text, SimpleGrid, Box, Image, useSafeLayoutEffect, Center } from "@chakra-ui/react";
+import axios from "axios";
 
-const statData = [
-  {
-    id: 1,
-    label: "Total post reactions",
-    score: "1,730",
-  },
-  {
-    id: 2,
-    label: "Total post views",
-    score: "31,573",
-  },
-  {
-    id: 3,
-    label: "Listings created",
-    score: "5",
-  },
-  {
-    id: 4,
-    label: "Listings created",
-    score: "5",
-  },
-  {
-    id: 5,
-    label: "Listings created",
-    score: "5",
-  },
-  {
-    id: 6,
-    label: "Listings created",
-    score: "5",
-  },
-  {
-    id: 7,
-    label: "Listings created",
-    score: "5",
-  },
-];
 
 const Category = () => {
+const [categories,setCategories]=React.useState([]);
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
   return (
     <>
     <br />
       <Text textAlign="center" fontSize="4xl" fontWeight="bold" mt="4">
         Explore the Categories
       </Text>
-      <Text textAlign="center" fontSize="2xl" fontWeight="bold">
+      {/* <Text textAlign="center" fontSize="2xl" fontWeight="bold">
         our service available.
-      </Text>
+      </Text> */}
       <Container maxW="7xl" p={{ base: 5, md: 10 }}>
         <SimpleGrid
           columns={{ base: 1, sm: 2, md: 5 }}
@@ -56,7 +35,7 @@ const Category = () => {
           mt={12}
           mb={4}
         >
-          {statData.map((data) => (
+          {categories.map((data) => (
             <Box
               key={data.id}
               p={5}
@@ -64,10 +43,10 @@ const Category = () => {
               rounded="md"
               borderWidth={1}
             >
-              <Text fontWeight="extrabold" fontSize="x-large">
-                {data.score}
+              <Text fontSize="x-large">
+                {data.name}
               </Text>
-              <Text>{data.label}</Text>
+              <Image src={data.icon} alt={`Icon for ${data.name}`} />
             </Box>
           ))}
         </SimpleGrid>

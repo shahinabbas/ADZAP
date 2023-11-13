@@ -1,42 +1,49 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import { Image, Flex, Text, Button, Spacer } from "@chakra-ui/react";
+import { Image, Flex, Text, Button } from "@chakra-ui/react";
 
 function First() {
   const navigate = useNavigate();
+
   return (
     <div>
-      <Flex>
+      <Flex direction={{ base: "column", md: "row" }} align="center">
         <Image
           src="src/images/flipped.png"
           alt="Image Alt Text"
-          boxSize="700px"
+          boxSize={{ base: "100%", md: "700px" }}
           objectFit="contain"
-          style={{ paddingLeft: "140px" }}
+          mb={{ base: "20px", md: "0" }}
         />
-        <Flex direction="column" style={{ marginLeft: "20px" }}>
+        <Flex
+          direction="column"
+          justify="center"
+          align={{ base: "center", md: "start" }}
+          ml={{ base: "0", md: "20px" }}
+          textAlign={{ base: "center", md: "left" }}
+        >
           <Text
             as="h1"
-            style={{ fontFamily: "cursive" }}
-            fontSize="4xl"
+            fontFamily="cursive"
+            fontSize={{ base: "2xl", md: "4xl" }}
             fontWeight="bold"
-            paddingTop="180px"
+            mb={{ base: "10px", md: "0" }}
           >
             Advertise anywhere in the world <br /> with us.
           </Text>
-          <Flex alignItems="center" style={{ paddingTop: "80px" }}>
+          <Flex direction={{ base: "column", md: "row" }} align="center">
             <Button
               variant="outline"
               borderColor="gray.400"
-              marginTop="10px"
-              backgroundColor="#3745d2"
+              bgColor="#3745d2"
               color="white"
               _hover={{
-                backgroundColor: "transparent",
+                bgColor: "transparent",
                 borderColor: "gray.400",
                 color: "black",
               }}
-              style={{ marginRight: "35px" }}
+              mr={{ base: "0", md: "4" }}
+              mb={{ base: "4", md: "0" }}
               size="lg"
               onClick={() => navigate("about")}
             >
@@ -44,9 +51,8 @@ function First() {
             </Button>
             <Button
               variant="outline"
-              marginTop="10px"
               size="lg"
-              _hover={{ backgroundColor: "#3745d2", color: "white" }}
+              _hover={{ bgColor: "#3745d2", color: "white" }}
               onClick={() => navigate("spots")}
             >
               Buy Spots
@@ -59,3 +65,4 @@ function First() {
 }
 
 export default First;
+ 

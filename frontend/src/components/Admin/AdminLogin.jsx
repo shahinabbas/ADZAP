@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Button,
   Modal,
@@ -13,34 +14,53 @@ import {
   Input,
   Flex,
   Image,
-  Spacer,
   Text,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../../Redux/userActions";
 
 function AdminLogin() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
-
-  //   useEffect(() => {
-  //     setIsOpen(true);
-  //   }, []);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = () => {
-    console.log("Email: ", email);
-    console.log("Password: ", password);
-    onClose();
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    if (currentPath === "/adminlogin") {
+      onOpen();
+    }
+  }, []);
+
+  const onClose = () => setIsOpen(false);
+  const onOpen = () => setIsOpen(true);
+
+  const handleSubmit = async () => {
+    console.log("Login modal", import.meta.env.VITE_APP_BASE_URL);
+    const formData = {
+      email,
+      password,
+    };
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_BASE_URL}accounts/api/login/`,
+        formData
+      );
+      const userId = response.data.user.id;
+      dispatch(fetchUser(userId));
+      localStorage.setItem("access:", response.data.access);
+      localStorage.setItem("refresh:", response.data.refresh);
+      onClose();
+      navigate("/admin");
+    } catch (error) {
+      console.error("User login failed from admin Login modal");
+    }
   };
 
   return (
     <div>
-      <Text style={{ cursor: "pointer" }} onClick={onOpen}>
-        Admin Login
-      </Text>
-
       <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />
         <ModalContent>
@@ -53,7 +73,7 @@ function AdminLogin() {
             />
             <Flex direction="column" p={5} bg="#848CEF" w="100%">
               <ModalHeader fontSize="2xl" textAlign="center" color="white">
-                Login
+                Admin Login
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody color="white">
@@ -80,7 +100,6 @@ function AdminLogin() {
                   />
                 </FormControl>
               </ModalBody>
-
               <ModalFooter>
                 <Button
                   w="130px"

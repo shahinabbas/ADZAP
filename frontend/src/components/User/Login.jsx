@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login, fetchUser } from "../../Redux/userActions";
+import {fetchUser } from "../../Redux/userActions";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,17 +38,13 @@ function Login() {
   const onOpen = () => setIsOpen(true);
 
   const handleSubmit = async () => {
-    console.log("Login modal");
+    console.log("Login modal",import.meta.env.VITE_APP_BASE_URL);
     const formData = {
       email,
       password,
     };
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/accounts/api/login/",
-        formData
-      );
-      dispatch(login(email, password));
+      const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}accounts/api/login/`, formData);
       const userId = response.data.user.id;
       dispatch(fetchUser(userId));
       console.log("User login success:", response.data);
@@ -119,6 +115,7 @@ function Login() {
                 </Button>
               </ModalFooter>
               <Text
+              onClick={()=>navigate("/signup")}
                 style={{
                   marginLeft: "100px",
                   fontSize: "10px",

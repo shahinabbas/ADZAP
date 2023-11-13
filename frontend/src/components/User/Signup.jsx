@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import {
   Button,
@@ -10,15 +10,16 @@ import {
   ModalBody,
   ModalCloseButton,
   FormControl,
-  FormLabel,
   Input,
   Flex,
   Image,
-  Spacer,
   Text,
+  Link
 } from "@chakra-ui/react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Signup() {
+  const navigate=useNavigate()
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
@@ -29,6 +30,13 @@ function Signup() {
   const [cnfpassword, setCnfPassword] = useState("");
   const [contact, setContact] = useState("");
   const [formError, setFormError] = useState([]);
+
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    if (currentPath === "/signup") {
+      onOpen();
+    }
+  }, []);
 
   const handleSubmit = async () => {
     setFormError([]);
@@ -41,11 +49,12 @@ function Signup() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/accounts/api/register/",
+        `${import.meta.env.VITE_APP_BASE_URL}accounts/api/register/`,
         formData
       );
       console.log("User registered successfully.");
       onClose();
+      navigate("/login")
     } catch (error) {
       console.error("Registration failed:", error);
 
@@ -53,7 +62,6 @@ function Signup() {
         const errorMessage = error.response.data.error;
         console.log("Backend error:", errorMessage);
 
-        // Update the state with the error message
         setFormError([errorMessage]);
       } else {
         console.error("Unexpected error occurred:", error);
@@ -66,9 +74,9 @@ function Signup() {
 
   return (
     <div>
-      <Text style={{ cursor: "pointer" }} onClick={onOpen}>
+      {/* <Text style={{ cursor: "pointer" }} onClick={onOpen}>
         Signup
-      </Text>
+      </Text> */}
       <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />
         <ModalContent>
@@ -150,7 +158,7 @@ function Signup() {
                 }}
               >
                 Already have an account?
-                {/* <Link to="/login">Login</Link>  */}
+                <Link to="/login">Login</Link> 
               </Text>
             </Flex>
             <Image

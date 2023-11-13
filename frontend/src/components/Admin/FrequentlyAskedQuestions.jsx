@@ -24,7 +24,7 @@ import {
   ModalHeader,
 } from "@chakra-ui/react";
 
-const Category = () => {
+const FrequentlyAskedQuestions = () => {
   const [name, setName] = useState("");
   const [icon, setIcon] = useState(null);
   const [formError, SetFormError] = useState([]);
@@ -191,4 +191,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default FrequentlyAskedQuestions;

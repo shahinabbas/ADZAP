@@ -17,21 +17,33 @@ import {
 import { AiOutlineClose } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../Redux/userActions";
+import { useDispatch } from "react-redux";
 
 const navLinks = [
   { name: "Users", path: "/users" },
   { name: "AdStatus", path: "/status" },
   { name: "Category", path: "/category" },
+  { name: "Faq", path: "/faq" },
 ];
 
 export default function AdminNavbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
+    console.log("Logging out...");
     localStorage.clear();
     dispatch(logoutUser());
-    navigate("/");
+    navigate("/adminlogin");
   };
+
+  // const handleLogout = () => {
+  //   localStorage.clear();
+  //   dispatch(logoutUser());
+  //   navigate("/adminlogin");
+  // };
 
   return (
     <>

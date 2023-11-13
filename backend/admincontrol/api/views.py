@@ -48,3 +48,4 @@ class CategoryCreateView(generics.CreateAPIView):
 class CategoryRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset=Category.objects.all()
     serializer_class=CategorySerializer
+

@@ -1,52 +1,50 @@
-# # class Solution:
-# #     def merge(self, nums1,nums2):
-# #         nums1=nums1+nums2
-# #         for i in range(len(nums1)-1):
-# #             if nums1[i]==0:
-# #                 nums1.remove(nums1[i])
-# #         return nums1
+# export const login = (email, password) => async (dispatch) => {
+#   console.log("Starting login function from userAction", email, password);
+#   try {
+#     const response = await axios.post(
+#       `${import.meta.env.VITE_APP_BASE_URL}accounts/api/login/`,
+#       {
+#         email,
+#         password,
+#       }
+#     );
+#     const userId = response.data.user.id; // Access user ID from the response
+#     console.log("User ID:", userId);
 
-                        
-# # s = Solution()
-# # res = s.merge([1,2,3,0,0,0],[2,5,6])
-# # print(res)
-# // import React from "react";
-# // import { useSelector } from "react-redux";
-# // import { Link, Navigate, useNavigate } from "react-router-dom";
-# // import { Flex, Box, Text, HStack, Heading, Spacer } from "@chakra-ui/react";
-# // import Signup from "./Signup";
-# // import Login from "./Login";
-# // function Navbar() {
-# //   const isAuthenticated = useSelector(
-# //     (state) => state.user_details.name !== null
-# //   );
-# //   const userName = useSelector((state) => state.user_details.name);
+#     dispatch({ type: "USER_LOGIN_SUCCESS", payload: response.data });
 
-# //   const navigate = useNavigate();
-# //   return (
-# //     <div style={{ position: "sticky", top: 0, zIndex: 100 }}>
-# //       {" "}
-# //       <Flex as="nav" bg="blue" alignItems="center" h="75px" bgColor="#5C59EC">
-# //         <Heading
-# //           as="h1"
-# //           style={{ cursor: "pointer" }}
-# //           onClick={() => navigate("/")}
-# //         >
-# //           ADZAP
-# //         </Heading>
-# //         <Link to="/post">Post</Link>
-# //         <Spacer />
-# //         <Login />
-# //         <Signup />
-# //         <HStack spacing="20px" marginLeft="0">
-# //           <Box bg="black" p="10px">
-# //             {isAuthenticated ? userName[0].toUpperCase() : "M"}
-# //           </Box>
-# //           <Text>{isAuthenticated ? userName : "user"}</Text>
-# //         </HStack>
-# //       </Flex>
-# //     </div>
-# //   );
-# // }
+#     dispatch({ type: "FETCH_USER_REQUEST" });
 
-# // export default Navbar;
+#     dispatch(fetchUser(userId));
+
+#     console.log("login function completed successfully userAction");
+#   } catch (error) {
+#     console.error("Login error:", error);
+#     dispatch({ type: "USER_LOGIN_FAILURE", payload: error.message });
+#   }
+# };
+
+
+
+# case "USER_LOGIN_SUCCESS":
+#       return {
+#         ...state,
+#         user: action.payload.user,
+#         is_authenticated: true,
+#         is_admin: action.payload.user.is_superuser,
+#         error: null,
+#       };
+#     case "USER_LOGIN_FAILURE":
+#       return {
+#         ...state,
+#         user: null,
+#         is_authenticated: false,
+#         is_admin: false,
+#         error: action.payload,
+#       };
+
+
+
+
+#       dispatch(login(email, password));
+
