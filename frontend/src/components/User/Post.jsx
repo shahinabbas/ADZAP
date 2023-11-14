@@ -1,5 +1,6 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import Navbar from "./Navbar";
+import axios from "axios"; 
 import Footer from "./Footer";
 import {
   Box,
@@ -14,6 +15,9 @@ import {
   Center,
 } from "@chakra-ui/react";
 function Post() {
+  const [countries, setCountries] = useState([]);
+
+
   return (
     <>
       <Navbar />
@@ -23,6 +27,9 @@ function Post() {
       <Text textAlign="center" fontSize="30px" fontWeight="bold">
         Post Your AD
       </Text>
+      {countries.map(country => (
+    <li key={country.cca3}>{country.name.common}</li>
+  ))}
       <Container maxW="container.md" border="1px" mt={5}>
         <Box mt="4">
           <form>

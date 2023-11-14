@@ -55,13 +55,3 @@ class UserLoginView(APIView):
             return Response({'error': 'Both email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ToggleUserActiveStatus(generics.UpdateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.is_active = not instance.is_active
-        instance.save()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)

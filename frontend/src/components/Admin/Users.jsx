@@ -17,36 +17,40 @@ import {
 const Users = () => {
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/admins/api/users/"
-        );
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/admins/api/users/"
+      );
 
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+  useEffect(() => {
     fetchUsers();
   }, []);
 
   const handleToggleUser = async (userId) => {
     try {
-      const response = await axios.put(
-        `http://127.0.0.1:8000/admins/api/action/${userId}/`
+      console.log("toggle start");
+      const response = await axios.patch(
+        `${import.meta.env.VITE_APP_BASE_URL}accounts/api/action/${userId}/`
       );
+      console.log("toggle DONE");
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user.id === userId ? { ...user, is_Active: !user.is_Active } : user
         )
       );
       console.log(`Toggling user with ID: ${userId}`, response);
+      await fetchUsers();
     } catch (error) {
       console.error("Error toggling user status:", error);
     }
   };
+  const sortedUsers = [...users].sort((a, b) => a.id - b.id);
 
   return (
     <div>
@@ -67,7 +71,7 @@ const Users = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {users.map((user) => (
+              {sortedUsers.map((user) => (
                 <Tr key={user.id}>
                   <Td>{user.id}</Td>
                   <Td>{user.name}</Td>

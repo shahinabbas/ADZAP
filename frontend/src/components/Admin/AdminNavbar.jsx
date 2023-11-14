@@ -22,9 +22,9 @@ import { useDispatch } from "react-redux";
 
 const navLinks = [
   { name: "Users", path: "/users" },
-  { name: "AdStatus", path: "/status" },
+  { name: "Post", path: "/status" },
   { name: "Category", path: "/category" },
-  { name: "Faq", path: "/faq" },
+  // { name: "Faq", path: "/faq" },
 ];
 
 export default function AdminNavbar() {

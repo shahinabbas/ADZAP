@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import emailjs from 'emailjs-com';
 import Navbar from "./Navbar";
 import {
   Image,
@@ -19,10 +20,22 @@ function Contact() {
   const [location, setLocation] = useState("");
   const [message, setMessage] = useState("");
 
+
+  // function sendEmail(e) {
+  //   e.preventDefault();    
+
+  //   emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target, 'YOUR_USER_ID')
+  //     .then((result) => {
+  //         window.location.reload()  
+  //     }, (error) => {
+  //         console.log(error.text);
+  //     });
+  // }
+
   return (
     <div>
       <Navbar />
-      <Text fontSize="35px" fontWeight="bold" mt="8" textAlign="center">
+      <Text fontSize="35px" fontWeight="bold" mt="8" textAlign="center" marginTop='65px' >
         Are You Looking For More About Us
       </Text>
       <Flex>

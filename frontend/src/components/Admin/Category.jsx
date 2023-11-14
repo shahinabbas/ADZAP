@@ -33,7 +33,6 @@ const Category = () => {
   const onOpen = () => setIsOpen(true);
   const [category, setCategory] = useState([]);
 
-  useEffect(() => {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
@@ -44,6 +43,8 @@ const Category = () => {
         console.log(response.error.data);
       }
     };
+    
+  useEffect(() => {
     fetchCategory();
   }, []);
 
@@ -64,17 +65,14 @@ const Category = () => {
       );
       console.log("category added successfully");
       onClose();
-      const categoryResponse = await axios.get(
-        `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
-      );
-      setCategory(categoryResponse.data);
+      fetchCategory()
       setName("");
       setIcon(null);
       Swal.fire({
         icon: "success",
         title: "New category added successfully",
         showConfirmButton: false,
-        timer: 2200, 
+        timer: 2000, 
       });
     } catch (error) {
       SetFormError([error.response.data]);
@@ -105,6 +103,7 @@ const Category = () => {
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
       );
       setCategory(updatedCategory.data);
+      fetchCategory()
     } catch (error) {
       console.error(`Error deleting category with ID ${categoryId}:`, error);
     }

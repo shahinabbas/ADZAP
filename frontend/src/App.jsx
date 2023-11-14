@@ -21,6 +21,7 @@ import Profile from "./components/User/Profile";
 import { UserRoute } from "./components/PrivateRoute/PrivateRoute";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import FrequentlyAskedQuestions from "./components/Admin/FrequentlyAskedQuestions";
+import Fetch from "./components/User/Fetch";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="/post" element={<Post />} />
+              <Route path="/fetch" element={<Fetch />} />
               <Route
                 path="/profile"
                 element={

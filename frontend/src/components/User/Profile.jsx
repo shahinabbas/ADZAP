@@ -17,27 +17,33 @@ import { useSelector } from "react-redux";
 function Profile() {
   const user = useSelector((state) => state.user);
 
-  // if (!user || !user.user) {
-  //   return (
-  //     <div>
-  //       <Navbar />
-  //       <Center mt={12} py={6}>
-  //         <Text>Loading...</Text>
-  //       </Center>
-  //     </div>
-  //   );
-  // }
   return (
     <div>
       <Navbar />
-      <Center mt={12} py={6}>
+
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        p={8}
+        justify="center" // Center horizontally
+        align="center" // Center vertically
+      >
+        <Image
+          src="src\images\9169253.jpg"
+          boxSize={{ base: "100%", md: "40%" }}
+          objectFit="cover"
+          position="relative"   
+        >
+        </Image>
         <Box
-          maxW={"270px"}
+          maxW={{ base: "270px", md: "270px" }}
           w={"full"}
           bg={useColorModeValue("white", "gray.800")}
           boxShadow={"2xl"}
           rounded={"md"}
+          boxSize="70%"
           overflow={"hidden"}
+          ml={{ base: 0, md: 450 }}
+          mt={{ base: 4, md: 0 }}
         >
           <Flex justify={"center"} mt={5}>
             <Avatar
@@ -48,6 +54,7 @@ function Profile() {
               }}
             />
           </Flex>
+          
           <Box p={6}>
             <Stack spacing={0} align={"center"} mb={5}>
               <Heading fontSize={"2xl"} fontWeight={500} fontFamily={"body"}>
@@ -67,11 +74,11 @@ function Profile() {
                 boxShadow: "lg",
               }}
             >
-              Edit{" "}
+              Edit
             </Button>
           </Box>
         </Box>
-      </Center>
+      </Flex>
     </div>
   );
 }

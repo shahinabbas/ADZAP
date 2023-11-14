@@ -45,7 +45,7 @@ function First() {
               mr={{ base: "0", md: "4" }}
               mb={{ base: "4", md: "0" }}
               size="lg"
-              onClick={() => navigate("about")}
+              onClick={() => navigate("contact")}
             >
               Enquire Now
             </Button>

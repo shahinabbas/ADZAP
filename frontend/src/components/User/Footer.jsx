@@ -13,8 +13,10 @@ import {
 // Here we have used react-icons package for the icons
 import { BsDiscord } from "react-icons/bs";
 import { FaGithub } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate=useNavigate()
   return (
     <Box bg="#4370B4" color="white" p={{ base: 5, md: 8 }} marginInline="auto">
       <Stack
@@ -38,7 +40,7 @@ const Footer = () => {
           // justifyContent={{ sm: "space-between", md: "normal" }}
         >
           <VStack spacing={4} alignItems="flex-start">
-            <Text fontSize="md" fontWeight="bold">
+            <Text fontSize="md" fontWeight="bold" onClick={()=>navigate('/about')}>
               About
             </Text>
             <VStack spacing={2} alignItems="flex-start">
