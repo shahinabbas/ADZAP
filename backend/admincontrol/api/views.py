@@ -1,6 +1,6 @@
 from rest_framework import generics
-from admincontrol.models import Banner, Category
-from .serializers import BannerSerializer, CategorySerializer
+from admincontrol.models import Banner, Category, Post
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer
 from accounts.models import CustomUser
 from django.views.generic import ListView
 from rest_framework.response import Response
@@ -10,6 +10,11 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
+
+
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
 
 class BannerListCreateView(generics.ListCreateAPIView):

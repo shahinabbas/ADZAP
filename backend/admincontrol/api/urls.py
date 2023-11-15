@@ -14,6 +14,7 @@ urlpatterns = [
     path('category-list/', views.CategoryListView.as_view(), name='category-list'),
     path('category/<int:pk>/', views.CategoryRetrieveUpdateDeleteView.as_view(),
          name='category-retrieve-update-delete'),
-
+     
+     path('post/',views.PostListCreateView.as_view(),name='post-create')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -5,7 +5,7 @@ class Post(models.Model):
     state = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
     landmark = models.CharField(max_length=100)
-    pincode = models.IntegerField(max_length=6)
+    pincode = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     validity = models.CharField(max_length=1)
     description = models.CharField(max_length=2000)

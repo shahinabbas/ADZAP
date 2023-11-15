@@ -36,7 +36,7 @@ const Users = () => {
     try {
       console.log("toggle start");
       const response = await axios.patch(
-        `${import.meta.env.VITE_APP_BASE_URL}accounts/api/action/${userId}/`
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/action/${userId}/`
       );
       console.log("toggle DONE");
       setUsers((prevUsers) =>

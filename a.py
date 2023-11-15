@@ -48,3 +48,17 @@
 
 #       dispatch(login(email, password));
 
+# useEffect(() => {
+#   setCountries(Country.getAllCountries());
+# }, []);
+
+# const handleChange = (e) => {
+#   const selectedCountryId = e.target.value;
+#   setCountryId(selectedCountryId);
+
+#   // Fetch states based on the selected country
+#   const selectedCountry = Country.getCountryByShort(selectedCountryId);
+#   const statesOfCountry = State.getStatesOfCountry(selectedCountry.isoCode);
+
+#   setStates(statesOfCountry);
+# };
