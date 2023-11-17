@@ -38,7 +38,6 @@ function Login() {
   const onOpen = () => setIsOpen(true);
 
   const handleSubmit = async () => {
-    console.log("Login modal",import.meta.env.VITE_APP_BASE_URL);
     const formData = {
       email,
       password,

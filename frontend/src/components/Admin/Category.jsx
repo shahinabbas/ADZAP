@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminNavbar from "./AdminNavbar";
+import api from "../../Services/Axios/api";
 import Swal from "sweetalert2";
 import axios from "axios";
 import {
@@ -35,7 +36,7 @@ const Category = () => {
 
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
         );
         setCategory(response.data);
@@ -54,7 +55,7 @@ const Category = () => {
     formData.append("name", name);
     formData.append("icon", icon);
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/`,
         formData,
         {
@@ -93,13 +94,13 @@ const Category = () => {
 
   const handleDelete = async (categoryId) => {
     try {
-      const categoryDelete = axios.delete(
+      const categoryDelete = api.delete(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/${categoryId}`
       );
       console.log(`Delete category with ID: ${categoryId}`);
       console.log(categoryDelete, "deleted");
 
-      const updatedCategory = await axios.get(
+      const updatedCategory = await api.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
       );
       setCategory(updatedCategory.data);

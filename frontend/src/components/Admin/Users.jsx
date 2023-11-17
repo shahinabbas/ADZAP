@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AdminNavbar from "./AdminNavbar";
+import api from "../../Services/Axios/api";
 import axios from "axios";
 import {
   Box,
@@ -19,8 +20,8 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/admins/api/users/"
+      const response = await api.get(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/users/`
       );
 
       setUsers(response.data);
@@ -35,7 +36,7 @@ const Users = () => {
   const handleToggleUser = async (userId) => {
     try {
       console.log("toggle start");
-      const response = await axios.patch(
+      const response = await api.patch(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/action/${userId}/`
       );
       console.log("toggle DONE");

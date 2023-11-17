@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import api from "../../Services/Axios/api";
 import Navbar from "./Navbar";
 import axios from "axios";
 import Footer from "./Footer";
+import Swal from "sweetalert2";
 import {
   Box,
   Container,
@@ -15,9 +17,12 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { Country, State, City } from "country-state-city";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Post() {
   const [countries, setCountries] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [enable, setEnable] = useState(true);
@@ -25,6 +30,8 @@ function Post() {
   const [countryId, setCountryId] = useState("");
   const [stateId, setStateId] = useState("");
 
+  const [user, setUser] = useState();
+  const [category, setCategory] = useState();
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -34,9 +41,27 @@ function Post() {
   const [validity, setValidity] = useState("");
   const [discription, setDiscription] = useState("");
   const [size, setSize] = useState("");
-  const [media, setMedia] = useState("");
+  const [mediaType, setMediaType] = useState("");
+  const [image, setImage] = useState("");
 
+  const [formError, setFormError] = useState([]);
+  const navigate = useNavigate();
+  const users = useSelector((state) => state.user);
+
+  
   useEffect(() => {
+    setUser(users.user.id);
+    const fetchCategory = async () => {
+      try {
+        const response = await api.get(
+          `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
+        );
+        setCategories(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     const fetchData = async () => {
       setCountries(Country.getAllCountries());
       if (countryId) {
@@ -48,6 +73,9 @@ function Post() {
           console.error("Error fetching states:", error);
         }
       }
+    };
+
+    const fetchStateData = async () => {
       if (stateId) {
         try {
           const citiesOfStates = await City.getCitiesOfState(
@@ -62,14 +90,16 @@ function Post() {
       }
     };
     fetchData();
-  }, [countryId]);
+    fetchCategory();
+    fetchStateData();
+  }, [countryId, stateId]);
 
   const handleCountryChange = (e) => {
     setCountryId(e.target.value);
     const c = Country.getCountryByCode(e.target.value);
     setCountry(c.name);
     setEnable(false);
-  };
+  };  
 
   const handleStateChange = (e) => {
     setStateId(e.target.value);
@@ -79,30 +109,101 @@ function Post() {
   };
 
   const handleCityChange = (e) => {
-    const city = City.getCitiesOfState(e.target.value, stateId);
     setCity(e.target.value);
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormError([]);
+    if (
+      !user ||
+      !category ||
+      !country ||
+      !state ||
+      !city ||
+      !landmark ||
+      !pincode ||
+      !discription ||
+      !validity ||
+      !price ||
+      !size ||
+      !mediaType ||
+      !image
+    ) {
+      setFormError(["All fields are required"]);
+      return;
+    }
 
-  const handleSubmit=()=>{
+    const formData = new FormData();
+    formData.append("user", user);
+    formData.append("category", category);
+    formData.append("country", country);
+    formData.append("state", state);
+    formData.append("city", city);
+    formData.append("landmark", landmark);
+    formData.append("pincode", pincode);
+    formData.append("validity", validity);
+    formData.append("price", price);
+    formData.append("size", size);
+    formData.append("media_type", mediaType);
+    formData.append("image", image);
+    formData.append("discription", discription);
 
-  }
+    try {
+      const response = await api.post(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      Swal.fire({
+        icon: "success",
+        title: "New Post added successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      navigate("/profile");
+      console.log("success");
+    } catch (error) {
+      if (error.response) {
+        setFormError([error.response.data]);
+        console.log(error.response.data);
+      } else {
+        console.log("Error setting up the request:", error.message);
+      }
+      setFormError(["Failed to submit the form. Please try again."]);
+    }
+  };
 
   return (
     <>
       <Navbar />
-      <Text textAlign="center" fontSize="30px" fontWeight="bold" mt={5}>
+      <Text textAlign="center" fontSize="30px" fontWeight="bold" mt="65px">
         Post Your AD
       </Text>
       <Container maxW="container.md" border="1px" mt={5}>
         <Box mt="4">
-          <form>
+          <form onSubmit={handleSubmit}>
+            {formError.length > 0 && (
+              <Box mt="4">
+                <ul>
+                  {formError.map((error, index) => (
+                    <Text color="red" key={index}>
+                      {error}
+                    </Text>
+                  ))}
+                </ul>
+              </Box>
+            )}
             <FormControl>
               <FormLabel>Country</FormLabel>
               <Select
                 placeholder="Select country"
                 onChange={(e) => handleCountryChange(e)}
               >
-                {countries.map((cntry) => (
+                {countries && countries.map((cntry) => (
                   <option key={cntry.isoCode} value={cntry.isoCode}>
                     {cntry.name}
                   </option>
@@ -117,7 +218,7 @@ function Post() {
                 onChange={(e) => handleStateChange(e)}
                 disabled={enable}
               >
-                {states.map((state) => (
+                {states && states.map((state) => (
                   <option key={state.isoCode} value={state.isoCode}>
                     {state.name}
                   </option>
@@ -132,12 +233,26 @@ function Post() {
                 onChange={(e) => handleCityChange(e)}
                 disabled={cityEnable}
               >
-                {cities.map((city) => (
+                {cities && cities.map((city) => (
                   <option key={city.name} value={city.isoCode}>
                     {city.name}
                   </option>
                 ))}
               </Select>{" "}
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Category</FormLabel>
+              <Select
+                placeholder="Select Category"
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {categories.map((ctgry) => (
+                  <option key={ctgry.id} value={ctgry.id}>
+                    {ctgry.name}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl mt="4">
@@ -203,32 +318,29 @@ function Post() {
               <FormLabel>Media Type</FormLabel>
               <Input
                 type="text"
-                value={media_type}
-                onChange={(e) => setMedia(e.target.value)}
+                value={mediaType}
+                onChange={(e) => setMediaType(e.target.value)}
                 placeholder="Enter media type"
               />
             </FormControl>
 
             <FormControl mt="4">
               <FormLabel>Image</FormLabel>
-              <Input type="file" value={image} accept="image/*" />
+              <Input
+                type="file"
+                onChange={(e) => setImage(e.target.files[0])}
+                accept="image/*"
+              />
             </FormControl>
             <Center mt="4">
-              <Button
-                w="220px"
-                mb={5}
-                colorScheme="blue"
-                type="submit"
-                onClick={handleSubmit}
-              >
+              <Button w="220px" mb={5} colorScheme="blue" type="submit">
                 Post Now
               </Button>
             </Center>
           </form>
         </Box>
       </Container>
-      <br />
-      <br />
+
       <Footer />
     </>
   );

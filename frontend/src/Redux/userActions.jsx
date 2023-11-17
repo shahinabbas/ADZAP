@@ -8,7 +8,6 @@ export const fetchUser = (userId) => async (dispatch) => {
       console.log("Fetching user success:", response.data);
       dispatch({ type: "FETCH_USER_SUCCESS", payload: response.data });
     } else {
-      console.error("User ID is undefined");
     }
   } catch (error) {
     console.error("Fetching user error:", error);

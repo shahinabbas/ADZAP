@@ -18,9 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 
-// type IconButtonProps = {
-//   children: ReactNode;
-// };
+
 
 const IconButton = ({ children }) => {
   return (
@@ -111,19 +109,19 @@ const Navbar = () => {
                 />
               </MenuButton>
 
-              <Text>
                 {user && user.user && user.user.id ? (
                   <Text>Welcome, {user.user.name}!</Text>
                 ) : (
                   <button onClick={() => navigate("/login")}>Login</button>
                 )}
-              </Text>
 
               <MenuList zIndex={5}>
                 <MenuItem>
                   <Text>
                     {user && user.user && user.user.id ? (
-                      <Text onClick={()=>navigate("/profile")}>{user.user.name}</Text>
+                      <Text onClick={() => navigate("/profile")}>
+                        {user.user.name}
+                      </Text>
                     ) : (
                       <Text onClick={() => navigate("/login")}>Login</Text>
                     )}

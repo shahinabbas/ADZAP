@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 const Footer = () => {
   const navigate=useNavigate()
   return (
-    <Box bg="#4370B4" color="white" p={{ base: 5, md: 8 }} marginInline="auto">
+    <Box bg="#4370B4" color="white" p={{ base: 5, md: 8 }} mt={10} marginInline="auto">
       <Stack
         spacing={{ base: 8, md: 0 }}
         justifyContent="space-between"

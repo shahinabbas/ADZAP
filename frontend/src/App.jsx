@@ -39,7 +39,9 @@ function App() {
               <Route path="/spot" element={<Spot />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
-              <Route path="/post" element={<Post />} />
+
+              <Route path="/post" element={<UserRoute><Post /></UserRoute>} />
+
               <Route
                 path="/profile"
                 element={

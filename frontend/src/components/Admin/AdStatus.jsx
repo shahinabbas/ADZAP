@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../Services/Axios/api";
 import AdminNavbar from "./AdminNavbar";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -14,19 +16,31 @@ import {
 } from "@chakra-ui/react";
 
 const AdStatus = () => {
-  const [users, setUsers] = useState([
-    { id: 1, genre: "hording", price: 10000, landmark:'aroor',pincode:123456,is_Active: true },
-    { id: 2, genre: "hording", price: 10000, landmark:'aroor',pincode:123456,is_Active: false },
-  ]);
+  const [post, setPost] = useState([]);
 
   const handleToggleUser = (userId) => {
-    // Find the user by ID and toggle the is_Active field
     setUsers((prevUsers) =>
       prevUsers.map((user) =>
         user.id === userId ? { ...user, is_Active: !user.is_Active } : user
       )
     );
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get(
+          `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`
+        );
+        setPost(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -49,10 +63,10 @@ const AdStatus = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {users.map((ad) => (
+              {post.map((ad) => (
                 <Tr key={ad.id}>
                   <Td>{ad.id}</Td>
-                  <Td>{ad.genre}</Td>
+                  <Td>{ad.media_type}</Td>
                   <Td>{ad.price}</Td>
                   <Td>{ad.landmark}</Td>
                   <Td>{ad.pincode}</Td>
