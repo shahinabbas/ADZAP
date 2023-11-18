@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../Services/Axios/api";
+import api from "../../Services/api";
 import Navbar from "./Navbar";
 import Swal from "sweetalert2";
 import {
@@ -15,13 +15,30 @@ import {
   VStack,
   Container,
   Image,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalOverlay,
+  ModalFooter,
+  ModalContent,
+  ModalHeader,
+  FormControl,
+  FormLabel,
+  Select,
+  Input,
+  Textarea,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import Post from "./Post";
 
 function Profile() {
   const user = useSelector((state) => state.user);
   const [productsList, setProductsList] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -83,14 +100,10 @@ function Profile() {
     });
   };
 
-  const handleEdit = async (productId) => {
-    try {
-      const response = await api.patch(
-        `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${productId}/`
-      );
-    } catch (error) {}
+  const handleEdit = (productId) => {
+    setSelectedProductId(productId);
+    setIsModalOpen(true);
   };
-
   return (
     <>
       <Navbar />
@@ -220,6 +233,7 @@ function Profile() {
                         {product.landmark}
                       </Text>
                       <Stack direction="row" spacing={1} mb="0 !important">
+                        {/* <InitialFocus id={product.id} /> */}
                         <Button onClick={() => handleEdit(product.id)}>
                           Edit
                         </Button>
@@ -239,173 +253,260 @@ function Profile() {
           </Container>
         )}
       </Flex>
+      {isModalOpen && (
+        <InitialFocus
+          id={selectedProductId}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
 }
 
 export default Profile;
 
-// function Edit() {
-//   return (
-//     <Container maxW="container.md" border="1px" mt={5}>
-//       <Box mt="4">
-//         <form onSubmit={handleSubmit}>
-//           {formError.length > 0 && (
-//             <Box mt="4">
-//               <ul>
-//                 {formError.map((error, index) => (
-//                   <Text color="red" key={index}>
-//                     {error}
-//                   </Text>
-//                 ))}
-//               </ul>
-//             </Box>
-//           )}
-//           <FormControl>
-//             <FormLabel>Country</FormLabel>
-//             <Select
-//               placeholder="Select country"
-//               onChange={(e) => handleCountryChange(e)}
-//             >
-//               {countries &&
-//                 countries.map((cntry) => (
-//                   <option key={cntry.isoCode} value={cntry.isoCode}>
-//                     {cntry.name}
-//                   </option>
-//                 ))}
-//             </Select>
-//           </FormControl>
+const InitialFocus = ({ id, onClose }) => {
+  const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 
-//           <FormControl mt="4">
-//             <FormLabel>State</FormLabel>
-//             <Select
-//               placeholder="Select state"
-//               onChange={(e) => handleStateChange(e)}
-//               disabled={enable}
-//             >
-//               {states &&
-//                 states.map((state) => (
-//                   <option key={state.isoCode} value={state.isoCode}>
-//                     {state.name}
-//                   </option>
-//                 ))}
-//             </Select>
-//           </FormControl>
+  const fetchData = async () => {
+    console.log(id, "log");
+    try {
+      const response = await api.get(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${id}/`
+      );
+      const postData = response.data;
+      // setUser(postData.user);
+      setCategory(postData.category);
+      setCountry(postData.country);
+      setState(postData.state);
+      setCity(postData.city);
+      setLandmark(postData.landmark);
+      setPincode(postData.pincode);
+      setDiscription(postData.discription);
+      setValidity(postData.validity);
+      setSize(postData.size);
+      setPrice(postData.price);
+      setMediaType(postData.mediaType);
+      setImage(postData.image);
+      onOpen();
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
 
-//           <FormControl mt="4">
-//             <FormLabel>City</FormLabel>
-//             <Select
-//               placeholder="Select City"
-//               onChange={(e) => handleCityChange(e)}
-//               disabled={cityEnable}
-//             >
-//               {cities &&
-//                 cities.map((city) => (
-//                   <option key={city.name} value={city.isoCode}>
-//                     {city.name}
-//                   </option>
-//                 ))}
-//             </Select>{" "}
-//           </FormControl>
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState();
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [landmark, setLandmark] = useState("");
+  const [price, setPrice] = useState("");
+  const [validity, setValidity] = useState("");
+  const [discription, setDiscription] = useState("");
+  const [size, setSize] = useState("");
+  const [mediaType, setMediaType] = useState("");
+  const [image, setImage] = useState("");
 
-//           <FormControl mt="4">
-//             <FormLabel>Category</FormLabel>
-//             <Select
-//               placeholder="Select Category"
-//               onChange={(e) => setCategory(e.target.value)}
-//             >
-//               {categories.map((ctgry) => (
-//                 <option key={ctgry.id} value={ctgry.id}>
-//                   {ctgry.name}
-//                 </option>
-//               ))}
-//             </Select>
-//           </FormControl>
+  const users = useSelector((state) => state.user);
 
-//           <FormControl mt="4">
-//             <FormLabel>Landmark</FormLabel>
-//             <Input
-//               type="text"
-//               value={landmark}
-//               onChange={(e) => setLandmark(e.target.value)}
-//               placeholder="Enter landmark"
-//             />
-//           </FormControl>
+  useEffect(() => {
+    fetchData();
+    fetchCategory();
+  }, [isOpen]);
 
-//           <FormControl mt="4">
-//             <FormLabel>Pincode</FormLabel>
-//             <Input
-//               type="text"
-//               value={pincode}
-//               onChange={(e) => setPincode(e.target.value)}
-//               placeholder="Enter pincode"
-//             />
-//           </FormControl>
+  const fetchCategory = async () => {
+    try {
+      const response = await api.get(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
+      );
+      setCategories(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const handleEdit = async () => {
+  //   // You need to send a PATCH request to update the post with the new data.
+  //   try {
+  //     const response = await api.patch(
+  //       `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${post.id}/`,
+  //       {
+  //         landmark,
+  //         pincode,
+  //         discription,
+  //         validity,
+  //         size,
+  //         price,
+  //         mediaType,
+  //       }
+  //     );
 
-//           <FormControl mt="4">
-//             <FormLabel>Description</FormLabel>
-//             <Textarea
-//               placeholder="Enter description"
-//               onChange={(e) => setDiscription(e.target.value)}
-//               value={discription}
-//             />
-//           </FormControl>
+  //     console.log("Post updated successfully:", response.data);
+  //     onClose();
+  //   } catch (error) {
+  //     console.error("Error updating post:", error);
+  //   }
+  // };
+  return (
+    <>
+      <Button onClick={onOpen}>Edit</Button>
 
-//           <FormControl mt="4">
-//             <FormLabel>Validity</FormLabel>
-//             <Input
-//               type="text"
-//               onChange={(e) => setValidity(e.target.value)}
-//               value={validity}
-//               placeholder="Enter validity"
-//             />
-//           </FormControl>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Post</ModalHeader>
+          <ModalCloseButton />
 
-//           <FormControl mt="4">
-//             <FormLabel>Size</FormLabel>
-//             <Input
-//               type="text"
-//               onChange={(e) => setSize(e.target.value)}
-//               value={size}
-//               placeholder="Enter size"
-//             />
-//           </FormControl>
+          <ModalBody pb={6}>
+            {/* <FormControl>
+              <FormLabel>Country</FormLabel>
+              <Select
+                placeholder="Select country"
+                onChange={(e) => handleCountryChange(e)}
+              >
+                {countries &&
+                  countries.map((cntry) => (
+                    <option key={cntry.isoCode} value={cntry.isoCode}>
+                      {cntry.name}
+                    </option>
+                  ))}
+              </Select>
+            </FormControl>
 
-//           <FormControl mt="4">
-//             <FormLabel>Price</FormLabel>
-//             <Input
-//               type="text"
-//               onChange={(e) => setPrice(e.target.value)}
-//               value={price}
-//               placeholder="Enter price"
-//             />
-//           </FormControl>
+            <FormControl mt="4">
+              <FormLabel>State</FormLabel>
+              <Select
+                placeholder="Select state"
+                onChange={(e) => handleStateChange(e)}
+                disabled={enable}
+              >
+                {states &&
+                  states.map((state) => (
+                    <option key={state.isoCode} value={state.isoCode}>
+                      {state.name}
+                    </option>
+                  ))}
+              </Select>
+            </FormControl>
 
-//           <FormControl mt="4">
-//             <FormLabel>Media Type</FormLabel>
-//             <Input
-//               type="text"
-//               value={mediaType}
-//               onChange={(e) => setMediaType(e.target.value)}
-//               placeholder="Enter media type"
-//             />
-//           </FormControl>
+            <FormControl mt="4">
+              <FormLabel>City</FormLabel>
+              <Select
+                placeholder="Select City"
+                onChange={(e) => handleCityChange(e)}
+                disabled={cityEnable}
+              >
+                {cities &&
+                  cities.map((city) => (
+                    <option key={city.name} value={city.isoCode}>
+                      {city.name}
+                    </option>
+                  ))}
+              </Select>{" "}
+            </FormControl>*/}
 
-//           <FormControl mt="4">
-//             <FormLabel>Image</FormLabel>
-//             <Input
-//               type="file"
-//               onChange={(e) => setImage(e.target.files[0])}
-//               accept="image/*"
-//             />
-//           </FormControl>
-//           <Center mt="4">
-//             <Button w="220px" mb={5} colorScheme="blue" type="submit">
-//               Post Now
-//             </Button>
-//           </Center>
-//         </form>
-//       </Box>
-//     </Container>
-//   );
-// }
+            <FormControl mt="4">
+              <FormLabel>Category</FormLabel>
+              <Select
+                placeholder="Select Category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {categories.map((ctgry) => (
+                  <option key={ctgry.id} value={ctgry.id}>
+                    {ctgry.name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Landmark</FormLabel>
+              <Input
+                type="text"
+                value={landmark}
+                onChange={(e) => setLandmark(e.target.value)}
+                placeholder="Enter landmark"
+              />
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Pincode</FormLabel>
+              <Input
+                type="text"
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value)}
+                placeholder="Enter pincode"
+              />
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                placeholder="Enter description"
+                onChange={(e) => setDiscription(e.target.value)}
+                value={discription}
+              />
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Validity</FormLabel>
+              <Input
+                type="text"
+                onChange={(e) => setValidity(e.target.value)}
+                value={validity}
+                placeholder="Enter validity"
+              />
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Size</FormLabel>
+              <Input
+                type="text"
+                onChange={(e) => setSize(e.target.value)}
+                value={size}
+                placeholder="Enter size"
+              />
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Price</FormLabel>
+              <Input
+                type="text"
+                onChange={(e) => setPrice(e.target.value)}
+                value={price}
+                placeholder="Enter price"
+              />
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Media Type</FormLabel>
+              <Input
+                type="text"
+                value={mediaType}
+                onChange={(e) => setMediaType(e.target.value)}
+                placeholder="Enter media type"
+              />
+            </FormControl>
+
+            <FormControl mt="4">
+              <FormLabel>Image</FormLabel>
+              <Input
+                type="file"
+                onChange={(e) => setImage(e.target.files[0])}
+                accept="image/*"
+              />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="brand" mr={3}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};

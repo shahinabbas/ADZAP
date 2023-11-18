@@ -21,6 +21,7 @@ import Profile from "./components/User/Profile";
 import { UserRoute } from "./components/PrivateRoute/PrivateRoute";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import FrequentlyAskedQuestions from "./components/Admin/FrequentlyAskedQuestions";
+import Payment from "./components/User/Payment";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
               <Route path="/spot" element={<Spot />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
+              <Route path="/payment" element={<Payment />} />
 
               <Route path="/post" element={<UserRoute><Post /></UserRoute>} />
 

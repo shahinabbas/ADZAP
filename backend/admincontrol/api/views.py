@@ -7,13 +7,16 @@ from accounts.api.serializers import UserSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 
 class PostListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 class PostRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset=Post.objects.all()
     serializer_class=PostSerializer
 
@@ -52,6 +55,7 @@ class ToggleUserActiveStatus(generics.UpdateAPIView):
 
 
 class CategoryListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 

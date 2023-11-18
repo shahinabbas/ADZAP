@@ -12,7 +12,7 @@ function Home() {
     <>
       <Navbar />
       <First />
-      <District />
+      {/* <District /> */}
       {/* <Banner textAlign='right' src='src\images\download (1).png' title=' Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut

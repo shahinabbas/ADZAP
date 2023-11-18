@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminNavbar from "./AdminNavbar";
-import api from "../../Services/Axios/api";
+import api from "../../Services/api";
 import Swal from "sweetalert2";
 import axios from "axios";
 import {
@@ -30,21 +30,29 @@ const Category = () => {
   const [icon, setIcon] = useState(null);
   const [formError, SetFormError] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
+  const onClose = () => {
+    setIsOpen(false);
+    setIsEditMode(false);
+    setEditingCategory(null);
+    setName("");
+    setIcon(null);
+  };
   const onOpen = () => setIsOpen(true);
   const [category, setCategory] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
 
-    const fetchCategory = async () => {
-      try {
-        const response = await api.get(
-          `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
-        );
-        setCategory(response.data);
-      } catch (error) {
-        console.log(response.error.data);
-      }
-    };
-    
+  const fetchCategory = async () => {
+    try {
+      const response = await api.get(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
+      );
+      setCategory(response.data);
+    } catch (error) {
+      console.log(response.error.data);
+    }
+  };
+
   useEffect(() => {
     fetchCategory();
   }, []);
@@ -54,26 +62,46 @@ const Category = () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("icon", icon);
+
     try {
-      const response = await api.post(
-        `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("category added successfully");
+      if (isEditMode) {
+        const response = await api.put(
+          `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/${
+            editingCategory.id
+          }/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Category updated successfully");
+      } else {
+        const response = await api.post(
+          `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Category added successfully");
+      }
+
       onClose();
-      fetchCategory()
+      fetchCategory();
       setName("");
       setIcon(null);
+
       Swal.fire({
         icon: "success",
-        title: "New category added successfully",
+        title: isEditMode
+          ? "Category updated successfully"
+          : "New category added successfully",
         showConfirmButton: false,
-        timer: 2000, 
+        timer: 2000,
       });
     } catch (error) {
       SetFormError([error.response.data]);
@@ -89,25 +117,14 @@ const Category = () => {
   };
 
   const handleEdit = (categoryId) => {
-    console.log(`Edit category with ID: ${categoryId}`);
-  };
+    setIsOpen(true);
+    setIsEditMode(true);
 
-  const handleDelete = async (categoryId) => {
-    try {
-      const categoryDelete = api.delete(
-        `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/${categoryId}`
-      );
-      console.log(`Delete category with ID: ${categoryId}`);
-      console.log(categoryDelete, "deleted");
-
-      const updatedCategory = await api.get(
-        `${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`
-      );
-      setCategory(updatedCategory.data);
-      fetchCategory()
-    } catch (error) {
-      console.error(`Error deleting category with ID ${categoryId}:`, error);
-    }
+    const categoryToEdit = category.find((catg) => catg.id === categoryId);
+    setEditingCategory(categoryToEdit);
+    setName(categoryToEdit.name);
+    setIcon(categoryToEdit.icon ? null : categoryToEdit.icon);
+    console.log(categoryToEdit,'categoryToEdit');
   };
 
   return (
@@ -177,9 +194,21 @@ const Category = () => {
                 placeholder="Enter new Category"
               />
             </FormControl>
-            <FormControl mt={4}>
+             <FormControl mt={4}>
               <Input type="file" onChange={handleImageChange} />
             </FormControl>
+            <br />
+            {isEditMode && editingCategory && (
+              <Center>
+                <Image
+                  src={editingCategory.icon}
+                  alt={editingCategory.name}
+                  boxSize="50px"
+                  />
+                  {console.log(editingCategory.icon)}
+              </Center>
+            )}
+            
             <br />
             <Center>
               <Button onClick={handleSubmit}>Submit</Button>

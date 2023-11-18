@@ -47,8 +47,8 @@ function Login() {
       const userId = response.data.user.id;
       dispatch(fetchUser(userId));
       console.log("User login success:", response.data);
-      localStorage.setItem("access:", response.data.access);
-      localStorage.setItem("refresh:", response.data.refresh);
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
       console.log(response.data);
       onClose();
       navigate("/");

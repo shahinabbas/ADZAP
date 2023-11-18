@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'admincontrol',
     'accounts',
+    'payment',
 
     'corsheaders',
     'rest_framework',
@@ -150,13 +151,14 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -203,3 +205,10 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+
+SITE_URL = 'http://localhost:5173'
+
+
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT'
+STRIPE_SECRET_KEY = 'sk_test_51ODcxzSBzn9HNwsvNmnyMVjXIOdVMpiThSgbJSxmN3LCXbU2FJ5FLErfa1sP5FGObW0JSm6wYraxmW1fSlA7ec1S00fBnGx8RZ'
