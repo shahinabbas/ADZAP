@@ -11,6 +11,7 @@ function First() {
         <Image
           src="src/images/flipped.png"
           alt="Image Alt Text"
+          mt={14}
           boxSize={{ base: "100%", md: "700px" }}
           objectFit="contain"
           mb={{ base: "20px", md: "0" }}

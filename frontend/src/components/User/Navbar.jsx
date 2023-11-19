@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, logoutUser } from "../../Redux/userActions";
+import { FaBoxOpen } from "react-icons/fa";
 import {
   Container,
   Box,
@@ -17,8 +18,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
-
-
 
 const IconButton = ({ children }) => {
   return (
@@ -86,6 +85,12 @@ const Navbar = () => {
             >
               Create a post
             </Button>
+
+            <FaBoxOpen
+              size={26}
+              onClick={() => navigate("/box")}
+              cursor={"pointer"}
+            />
             <IconButton>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -109,11 +114,11 @@ const Navbar = () => {
                 />
               </MenuButton>
 
-                {user && user.user && user.user.id ? (
-                  <Text>Welcome, {user.user.name}!</Text>
-                ) : (
-                  <button onClick={() => navigate("/login")}>Login</button>
-                )}
+              {user && user.user && user.user.id ? (
+                <Text>Welcome, {user.user.name}!</Text>
+              ) : (
+                <button onClick={() => navigate("/login")}>Login</button>
+              )}
 
               <MenuList zIndex={5}>
                 <MenuItem>

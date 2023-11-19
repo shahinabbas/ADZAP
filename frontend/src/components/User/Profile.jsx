@@ -30,7 +30,6 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import Post from "./Post";
 
 function Profile() {
   const user = useSelector((state) => state.user);
@@ -40,6 +39,7 @@ function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
+  
   const fetchData = async () => {
     try {
       const response = await api.get(
@@ -266,16 +266,23 @@ function Profile() {
 export default Profile;
 
 const InitialFocus = ({ id, onClose }) => {
-  const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
+  const { isOpen, onOpen } = useDisclosure();
+  const users = useSelector((state) => state.user);
+  const postId = id;
+  useEffect(() => {
+    fetchData();
+    fetchCategory();
+    onOpen();
+  }, [isOpen]);
 
   const fetchData = async () => {
-    console.log(id, "log");
     try {
       const response = await api.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${id}/`
       );
       const postData = response.data;
-      // setUser(postData.user);
+      console.log("Fetched Data:", postData);
+      setUser(postData.user);
       setCategory(postData.category);
       setCountry(postData.country);
       setState(postData.state);
@@ -286,19 +293,19 @@ const InitialFocus = ({ id, onClose }) => {
       setValidity(postData.validity);
       setSize(postData.size);
       setPrice(postData.price);
-      setMediaType(postData.mediaType);
+      setMediaType(postData.media_type);
       setImage(postData.image);
-      onOpen();
     } catch (error) {
       console.log(error, "error");
     }
   };
 
-  const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState();
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
+  const [user, setUser] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState();
   const [pincode, setPincode] = useState("");
   const [landmark, setLandmark] = useState("");
   const [price, setPrice] = useState("");
@@ -307,13 +314,6 @@ const InitialFocus = ({ id, onClose }) => {
   const [size, setSize] = useState("");
   const [mediaType, setMediaType] = useState("");
   const [image, setImage] = useState("");
-
-  const users = useSelector((state) => state.user);
-
-  useEffect(() => {
-    fetchData();
-    fetchCategory();
-  }, [isOpen]);
 
   const fetchCategory = async () => {
     try {
@@ -325,32 +325,38 @@ const InitialFocus = ({ id, onClose }) => {
       console.log(error);
     }
   };
-  // const handleEdit = async () => {
-  //   // You need to send a PATCH request to update the post with the new data.
-  //   try {
-  //     const response = await api.patch(
-  //       `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${post.id}/`,
-  //       {
-  //         landmark,
-  //         pincode,
-  //         discription,
-  //         validity,
-  //         size,
-  //         price,
-  //         mediaType,
-  //       }
-  //     );
 
-  //     console.log("Post updated successfully:", response.data);
-  //     onClose();
-  //   } catch (error) {
-  //     console.error("Error updating post:", error);
-  //   }
-  // };
+  const handleEdit = async (postId) => {
+    try {
+      const response = await api.patch(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${postId}/`,
+        {
+          landmark,
+          pincode,
+          discription,
+          validity,
+          size,
+          price,
+          mediaType,
+          image,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Post updated successfully:", response.data);
+      onClose();
+    } catch (error) {
+      console.error("Error updating post:", error);
+      console.error("Error message:", error.message.data);
+      console.error("Error response:", error.response);
+    }
+  };
+
   return (
     <>
-      <Button onClick={onOpen}>Edit</Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -358,52 +364,20 @@ const InitialFocus = ({ id, onClose }) => {
           <ModalCloseButton />
 
           <ModalBody pb={6}>
-            {/* <FormControl>
+            <FormControl>
               <FormLabel>Country</FormLabel>
-              <Select
-                placeholder="Select country"
-                onChange={(e) => handleCountryChange(e)}
-              >
-                {countries &&
-                  countries.map((cntry) => (
-                    <option key={cntry.isoCode} value={cntry.isoCode}>
-                      {cntry.name}
-                    </option>
-                  ))}
-              </Select>
+              <Input value={country} isReadOnly />
             </FormControl>
 
             <FormControl mt="4">
               <FormLabel>State</FormLabel>
-              <Select
-                placeholder="Select state"
-                onChange={(e) => handleStateChange(e)}
-                disabled={enable}
-              >
-                {states &&
-                  states.map((state) => (
-                    <option key={state.isoCode} value={state.isoCode}>
-                      {state.name}
-                    </option>
-                  ))}
-              </Select>
+              <Input value={state} isReadOnly />
             </FormControl>
 
             <FormControl mt="4">
               <FormLabel>City</FormLabel>
-              <Select
-                placeholder="Select City"
-                onChange={(e) => handleCityChange(e)}
-                disabled={cityEnable}
-              >
-                {cities &&
-                  cities.map((city) => (
-                    <option key={city.name} value={city.isoCode}>
-                      {city.name}
-                    </option>
-                  ))}
-              </Select>{" "}
-            </FormControl>*/}
+              <Input value={city} isReadOnly />
+            </FormControl>
 
             <FormControl mt="4">
               <FormLabel>Category</FormLabel>
@@ -491,6 +465,19 @@ const InitialFocus = ({ id, onClose }) => {
 
             <FormControl mt="4">
               <FormLabel>Image</FormLabel>
+              {image && (
+                <>
+                  <Text>Present Image</Text>
+                  <Image
+                    mt="2"
+                    src={image}
+                    alt="Selected Image"
+                    width="100px"
+                    height="100px"
+                  />
+                </>
+              )}
+              <br />
               <Input
                 type="file"
                 onChange={(e) => setImage(e.target.files[0])}
@@ -500,7 +487,7 @@ const InitialFocus = ({ id, onClose }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="brand" mr={3}>
+            <Button mr={3} onClick={() => handleEdit(postId)}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>

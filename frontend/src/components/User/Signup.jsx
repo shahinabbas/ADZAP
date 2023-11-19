@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Button,
@@ -14,12 +14,12 @@ import {
   Flex,
   Image,
   Text,
-  Link
+  Link,
 } from "@chakra-ui/react";
 import { Navigate, useNavigate } from "react-router-dom";
 
 function Signup() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
@@ -54,7 +54,7 @@ function Signup() {
       );
       console.log("User registered successfully.");
       onClose();
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error);
 
@@ -87,7 +87,6 @@ function Signup() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody color="white">
-                
                 <FormControl>
                   <Input
                     type="text"
@@ -158,7 +157,7 @@ function Signup() {
                 }}
               >
                 Already have an account?
-                <Link to="/login">Login</Link> 
+                <Link onClick={() => navigate("/login")}>Login</Link>
               </Text>
             </Flex>
             <Image

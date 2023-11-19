@@ -1,123 +1,141 @@
-import React from 'react'
-import Navbar from './Navbar'
-import {
-  Box,
-  Flex,
-  Text,
-  Image,
-  Badge
-} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import Navbar from "./Navbar";
+import { Flex, Box, Image, Text, Badge, Center } from "@chakra-ui/react";
+import api from "../../Services/api";
+import Footer from "./Footer";
+import { Link, useNavigate } from "react-router-dom";
+import { FaBox } from "react-icons/fa6";
+import { FaBoxOpen } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 function Spots() {
-  const property =[ {
-    imageUrl: "frontend\src\images\aaa.png",
-    imageAlt: "Rear view of modern home with pool",
-    beds: 3,
-    baths: 2,
-    title: "Modern home in city center in the heart of historic Los Angeles",
-    formattedPrice: "$1,900.00",
-    reviewCount: 34,
-    rating: 4,
-  },{
-    imageUrl: "https://bit.ly/2Z4KKcF",
-    imageAlt: "Rear view of modern home with pool",
-    beds: 3,
-    baths: 2,
-    title: "Modern home in city center in the heart of historic Los Angeles",
-    formattedPrice: "$1,900.00",
-    reviewCount: 34,
-    rating: 4,
-  }]
+  const [properties, setProperties] = useState([]);
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
+  const [userId, setUserId] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get(
+          `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`
+        );
+        setProperties(response.data);
+        setUserId(user.user.id);
+      } catch (error) {
+        console.log(error);
+        console.log("asdf", error.response.data);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleBoxAddOrRemove = async (userId, propertyId) => {
+    console.log(propertyId,'id')
+    console.log(userId,'id')
+    try {
+      const requestData = {
+        userId: userId,
+      };
+      await api.post(`${import.meta.env.VITE_APP_BASE_URL}admins/api/box/add-or-remove/${propertyId}/`,
+        requestData
+      );
+      console.log("success");
+    } catch (error) {
+      console.error("Error adding or removing box:", error);
+      console.error("Error adding 2:", error.response);
+    }
+  };
+
   return (
     <div>
       <Navbar />
- <br />
- <br />
- <br />
- <br />
- <br />
- <br />
-    <Flex
-    mt={10}
-      bg="#edf3f8"
-      _dark={{
-        bg: "#3e3e3e",
-      }}
-      p={50}
-      w="full"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Box
-        bg="white"
+      <Flex
+        mt={10}
         _dark={{
-          bg: "gray.800",
+          bg: "#3e3e3e",
         }}
-        maxW="sm"
-        borderWidth="1px"
-        rounded="lg"
-        shadow="lg"
+        p={50}
+        w="full"
+        alignItems="center"
+        justifyContent="center"
+        flexWrap="wrap"
       >
-        <Image
-          src={property.imageUrl}
-          alt={property.imageAlt}
-          roundedTop="lg"
-        />
-
-        <Box p="6">
-          <Box display="flex" alignItems="baseline">
-            <Badge rounded="full" px="2" colorScheme="teal">
-              New
-            </Badge>
-            <Box
-              color="gray.500"
-              fontWeight="semibold"
-              letterSpacing="wide"
-              fontSize="xs"
-              textTransform="uppercase"
-              ml="2"
-            >
-              {property.beds} beds &bull; {property.baths} baths
-            </Box>
-          </Box>
-
-          <Text
-            mt="1"
-            fontWeight="semibold"
-            as="h4"
-            lineHeight="tight"
-            noOfLines={1}
+        {properties.map((property, index) => (
+          <Box
+            key={index}
+            bg="white"
+            _dark={{
+              bg: "gray.800",
+            }}
+            w={{
+              base: "100%",
+              sm: "calc(60% - 2rem)",
+              md: "calc(33.33% - 9rem)",
+            }}
+            borderWidth="1px"
+            rounded="lg"
+            shadow="lg"
+            m={4} // Add margin between cards
           >
-            {property.title}
-          </Text>
+            <Link to={`/spot/${property.id}/`}>
+              <Center>
+                <Image
+                  src={property.image}
+                  alt={property.imageAlt}
+                  roundedTop="lg"
+                  h="200px"
+                />
+              </Center>
+            </Link>
+            <Box p="6">
+              <Box display="flex" alignItems="baseline">
+                <Badge rounded="full" px="2" colorScheme="teal">
+                  New
+                </Badge>
+                <Box
+                  color="gray.500"
+                  fontWeight="semibold"
+                  letterSpacing="wide"
+                  fontSize="xs"
+                  textTransform="uppercase"
+                  ml="2"
+                >
+                  {property.country} beds &bull; {property.state} baths
+                </Box>
+              </Box>
+              
+              <Text
+                mt="1"
+                fontWeight="semibold"
+                as="h4"
+                lineHeight="tight"
+                noOfLines={1}
+              >
+                {property.title}
+              </Text>
 
-          <Box>
-            {property.formattedPrice}
-            <Box as="span" color="gray.600" fontSize="sm">
-              / wk
+              <Box>
+                {property.price}
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <FaBoxOpen
+                    size={23}
+                    onClick={() => handleBoxAddOrRemove(userId, property.id)}
+                  />
+                  
+                  <FaBox
+                    size={20}
+                    onClick={() => handleBoxAddOrRemove(userId, property.id)}
+                  />
+                </div>
+              </Box>
             </Box>
           </Box>
-
-          {/* <Box display="flex" mt="2" alignItems="center">
-            {Array(5)
-              .fill("")
-              .map((_, i) => (
-                <StarIcon
-                  key={i}
-                  color={i < property.rating ? "teal.500" : "gray.300"}
-                />
-              ))}
-            <Box as="span" ml="2" color="gray.600" fontSize="sm">
-              {property.reviewCount} reviews
-            </Box>
-          </Box> */}
-        </Box>
-      </Box>
-    </Flex>
-  
-
+        ))}
+      </Flex>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default Spots
+export default Spots;

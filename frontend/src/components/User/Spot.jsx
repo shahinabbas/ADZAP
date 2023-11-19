@@ -1,48 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import {
-  Image,
-  Flex,
-  Text,
-  Button,
-  Spacer,
-  Input,
-  FormControl,
-  Textarea,
-} from "@chakra-ui/react";
+import api from "../../Services/api";
+import { Image, Flex, Text, Button, Box, Stack } from "@chakra-ui/react";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchCategory } from "../../Services/apiUtils";
+import { logoutUser } from "../../Redux/userActions";
 
 function Spot() {
+  const { spotId } = useParams();
+  const navigate = useNavigate();
+  const [spotData, setSpotData] = useState(null);
+  const [categories, setCategories] = useState(null);
+  const [catgId, setCatgId] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get(
+          `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${spotId}/`
+        );
+        setSpotData(response.data);
+        const categoryData = await fetchCategory();
+        setCategories(categoryData);
+        setCatgId(response.data.category);
+      } catch (error) {
+        console.error(error, "error");
+      }
+    };
+    fetchData();
+  }, [spotId]);
+
+  const getCategoryNameById = (catgId) => {
+    const category = categories
+      ? categories.find((cat) => cat.id === catgId)
+      : null;
+    return category ? category.name : "Unknown Category";
+  };
+
+  if (!categories) {
+    return (
+      <div>
+        <Navbar />
+        <Text mt="70px">Loading........</Text>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar />
-      <Flex>
+      <Stack direction={["column", "row"]} spacing={8} mt="75px" ml={8}>
         <Image
-          mt={12}
-          ml={45}
-          h="500"
-          src="src\images\download (1).png"
+          boxSize={["100%", "500px"]}
+          objectFit="cover"
+          src={spotData.image}
           alt="image"
         />
-        <Flex flexDirection="column" mt={14} ml={14}>
+        <Box>
           <Text fontSize="5xl" fontWeight="bold">
-            Hording
+            {getCategoryNameById(catgId)}
           </Text>
-          <br />
-          <Text fontSize="2xl" mr={6}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.{" "}
+          <Text fontWeight="bold">Price: {spotData.price}</Text>
+          <Text fontSize="2xl" mt={4}>
+            {spotData.discription}
           </Text>
-          <br />
-          <Text>Place:Aroor</Text>
-          <Text>Place:Aroor</Text>
-        </Flex>
-      </Flex>
+          <Flex direction={["column", "row"]} mt={5}>
+            <Button>Chat With Seller</Button>
+            <Button bg="#3b49df" color={"white"} ml={[0, 10]}>
+              More Spots
+            </Button>
+          </Flex>
+        </Box>
+      </Stack>
+      <Stack ml={[8, 10]} fontWeight="bold" direction="column">
+        <Text mt={2}>Country: {spotData.country}</Text>
+        <Text mt={2}>State: {spotData.state}</Text>
+        <Text mt={2}>City: {spotData.city}</Text>
+        <Text mt={2}>Landmark: {spotData.landmark}</Text>
+      </Stack>
 
       <Footer />
     </div>

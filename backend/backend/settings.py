@@ -195,8 +195,8 @@ SIMPLE_JWT = {
     "JTI_CLAIM": "jti",
 
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=60),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=2),
 
     "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
@@ -209,6 +209,3 @@ SIMPLE_JWT = {
 
 SITE_URL = 'http://localhost:5173'
 
-
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT'
-STRIPE_SECRET_KEY = 'sk_test_51ODcxzSBzn9HNwsvNmnyMVjXIOdVMpiThSgbJSxmN3LCXbU2FJ5FLErfa1sP5FGObW0JSm6wYraxmW1fSlA7ec1S00fBnGx8RZ'
