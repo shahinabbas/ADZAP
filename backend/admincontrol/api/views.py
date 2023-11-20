@@ -1,6 +1,6 @@
 from rest_framework import generics
 from admincontrol.models import Banner, Category, Post, Box
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer,BoxSerializer
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -10,27 +10,23 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 
-
-        
-class BoxAddOrRemoveView(generics.GenericAPIView):
+class BoxListCreateView(generics.ListCreateAPIView):
     serializer_class = BoxSerializer
 
-    def post(self, request, *args, **kwargs):
-        post_id = kwargs.get('post_id')  
-        user_id = request.data.get('userId')  # Use 'userId' key
-        print("Received data - post_id:", post_id, "user_id:", user_id)
+    def get_queryset(self):
+        user_id = self.request.query_params.get('userId')
+        if user_id:
+            return Box.objects.filter(user=user_id)
+        else:
+            return Box.objects.all()
 
-        try:
-            existing_box = Box.objects.get(postId=post_id, user=user_id)
-            existing_box.delete()
-            return Response({"message": "Box removed successfully."}, status=status.HTTP_200_OK)
-        except Box.DoesNotExist:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            print("Serializer Data:", serializer.validated_data)
-            serializer.save(postId=post_id, user=user_id)
-            return Response({"message": "Box added successfully."}, status=status.HTTP_201_CREATED)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
+
+class BoxDeleteView(generics.DestroyAPIView):
+    queryset = Box.objects.all()
+    serializer_class = BoxSerializer
 
 
 class PostListCreateView(generics.ListCreateAPIView):

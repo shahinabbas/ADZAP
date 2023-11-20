@@ -13,6 +13,24 @@ function Spots() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const [userId, setUserId] = useState();
+  const [boxData, setBoxData] = useState();
+
+  const fetchBox = async () => {
+    try {
+      const res = await api.get(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/box/`,
+        {
+          params: {
+            userId: userId,
+          },
+        }
+        );
+      setBoxData(res.data);
+      console.log(res.data,'kuaew');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +40,7 @@ function Spots() {
         );
         setProperties(response.data);
         setUserId(user.user.id);
+        fetchBox();
       } catch (error) {
         console.log(error);
         console.log("asdf", error.response.data);
@@ -30,20 +49,31 @@ function Spots() {
     fetchData();
   }, []);
 
-  const handleBoxAddOrRemove = async (userId, propertyId) => {
-    console.log(propertyId,'id')
-    console.log(userId,'id')
+  const handleBoxAdd = async (spotId) => {
     try {
       const requestData = {
-        userId: userId,
+        postId: spotId,
+        user: userId,
       };
-      await api.post(`${import.meta.env.VITE_APP_BASE_URL}admins/api/box/add-or-remove/${propertyId}/`,
+      const response = await api.post(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/box/`,
         requestData
       );
-      console.log("success");
+      console.log("success box add", response.data);
+      fetchBox();
     } catch (error) {
-      console.error("Error adding or removing box:", error);
-      console.error("Error adding 2:", error.response);
+      console.log("error", error);
+    }
+  };
+  const handleBoxRemove = async (spotId) => {
+    try {
+      const response = await api.delete(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/box/${spotId}/`
+      );
+      console.log("success box add");
+      fetchBox();
+    } catch (error) {
+      console.log("error", error);
     }
   };
 
@@ -104,7 +134,7 @@ function Spots() {
                   {property.country} beds &bull; {property.state} baths
                 </Box>
               </Box>
-              
+
               <Text
                 mt="1"
                 fontWeight="semibold"
@@ -118,15 +148,11 @@ function Spots() {
               <Box>
                 {property.price}
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <FaBoxOpen
-                    size={23}
-                    onClick={() => handleBoxAddOrRemove(userId, property.id)}
-                  />
-                  
-                  <FaBox
-                    size={20}
-                    onClick={() => handleBoxAddOrRemove(userId, property.id)}
-                  />
+                  {boxData && boxData.some(box => box.postId === property.id) ? (
+                    <FaBox size={23} onClick={() => handleBoxRemove(property.id)} />
+                  ) : (
+                    <FaBoxOpen size={20} onClick={() => handleBoxAdd(property.id)} />
+                  )}
                 </div>
               </Box>
             </Box>

@@ -29,4 +29,4 @@ class PostSerializer(serializers.ModelSerializer):
 class BoxSerializer(serializers.ModelSerializer):
     class Meta:
         model = Box
-        fields = ['user', 'postId']
+        fields = '__all__'

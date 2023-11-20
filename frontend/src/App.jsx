@@ -23,6 +23,12 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import FrequentlyAskedQuestions from "./components/Admin/FrequentlyAskedQuestions";
 import Payment from "./components/User/Payment";
 import Box from "./components/User/Box";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js/pure";
+
+const stripePromise = loadStripe(
+  "pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT"
+);
 
 function App() {
   return (
@@ -37,6 +43,7 @@ function App() {
 
               <Route path="/" element={<Home />} />
               <Route path="/spots" element={<Spots />} />
+
               <Route
                 path="/spot/:spotId/*"
                 element={
@@ -56,7 +63,6 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="/payment" element={<Payment />} />
-
               <Route
                 path="/post"
                 element={

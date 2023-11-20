@@ -63,8 +63,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  
 ]
-CORS_ALLOW_ALL_HEADERS = True
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -209,3 +208,6 @@ SIMPLE_JWT = {
 
 SITE_URL = 'http://localhost:5173'
 
+
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT'
+STRIPE_SECRET_KEY = 'sk_test_51ODcxzSBzn9HNwsvNmnyMVjXIOdVMpiThSgbJSxmN3LCXbU2FJ5FLErfa1sP5FGObW0JSm6wYraxmW1fSlA7ec1S00fBnGx8RZ'
