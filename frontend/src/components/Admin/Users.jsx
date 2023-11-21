@@ -45,7 +45,6 @@ const Users = () => {
           user.id === userId ? { ...user, is_Active: !user.is_Active } : user
         )
       );
-      console.log(`Toggling user with ID: ${userId}`, response);
       await fetchUsers();
     } catch (error) {
       console.error("Error toggling user status:", error);

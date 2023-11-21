@@ -21,7 +21,11 @@ import { Navigate, useNavigate } from "react-router-dom";
 function Signup() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
+  // const onClose = () => setIsOpen(false);
+  const onClose = () => {
+    setIsOpen(false);
+    navigate(-1);
+  };
   const onOpen = () => setIsOpen(true);
 
   const [name, setName] = useState("");

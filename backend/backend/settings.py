@@ -167,7 +167,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -208,6 +208,3 @@ SIMPLE_JWT = {
 
 SITE_URL = 'http://localhost:5173'
 
-
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT'
-STRIPE_SECRET_KEY = 'sk_test_51ODcxzSBzn9HNwsvNmnyMVjXIOdVMpiThSgbJSxmN3LCXbU2FJ5FLErfa1sP5FGObW0JSm6wYraxmW1fSlA7ec1S00fBnGx8RZ'

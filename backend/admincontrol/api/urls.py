@@ -22,9 +22,10 @@ urlpatterns = [
 
 
     path('post/', views.PostListCreateView.as_view(), name='post-create-list'),
+    path('post/action/<int:pk>/', views.PostToggleActionView.as_view(), name='post-toggle-action'),
     path('post/<int:pk>/', views.PostRetrieveUpdateDeleteView.as_view(), name='post-retrieve-update-delete'),
 
     path('box/', views.BoxListCreateView.as_view(), name='box-list-create'),
-    path('box/<int:spotId>/', views.BoxDeleteView.as_view(), name='box-remove'),
+    path('box/<int:postId>/', views.BoxDeleteView.as_view(), name='box-remove'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

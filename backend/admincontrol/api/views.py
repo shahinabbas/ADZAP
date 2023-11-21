@@ -8,6 +8,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.http import Http404
 
 
 class BoxListCreateView(generics.ListCreateAPIView):
@@ -27,16 +28,42 @@ class BoxListCreateView(generics.ListCreateAPIView):
 class BoxDeleteView(generics.DestroyAPIView):
     queryset = Box.objects.all()
     serializer_class = BoxSerializer
+    lookup_field = 'postId'
+
+    def delete(self, request, *args, **kwargs):
+        postId = kwargs.get('postId')
+        print(f"Deleting Box with postId: {postId}")
+
+        try:
+            instance = self.get_object()
+        except Http404:
+            print(f"Box with postId {postId} not found.")
+            return Response({'detail': 'Item not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-
 class PostRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+
+class PostToggleActionView(generics.UpdateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_active = not instance.is_active
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 
 class BannerListCreateView(generics.ListCreateAPIView):
@@ -65,7 +92,6 @@ class ToggleUserActiveStatus(generics.UpdateAPIView):
     serializer_class = UserSerializer
 
     def update(self, request, *args, **kwargs):
-        print('View called')
         instance = self.get_object()
         instance.is_active = not instance.is_active
         instance.save()
@@ -74,7 +100,6 @@ class ToggleUserActiveStatus(generics.UpdateAPIView):
 
 
 class CategoryListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 

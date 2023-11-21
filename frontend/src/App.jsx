@@ -22,9 +22,10 @@ import { UserRoute } from "./components/PrivateRoute/PrivateRoute";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import FrequentlyAskedQuestions from "./components/Admin/FrequentlyAskedQuestions";
 import Payment from "./components/User/Payment";
-import Box from "./components/User/Box";
+import Boxs from "./components/User/Boxs";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js/pure";
+import Chat from "./components/User/Chat";
 
 const stripePromise = loadStripe(
   "pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT"
@@ -33,6 +34,9 @@ const stripePromise = loadStripe(
 function App() {
   return (
     <ChakraProvider>
+      <Elements stripe={stripePromise}>
+        <Payment />
+      </Elements>
       <BrowserRouter>
         <>
           <Provider store={store}>
@@ -52,17 +56,26 @@ function App() {
                   </UserRoute>
                 }
               />
+              
+              <Route
+                path="/chat"
+                element={
+                  <UserRoute>
+                    <Chat />
+                  </UserRoute>
+                }
+              />
+
               <Route
                 path="/box/"
                 element={
                   <UserRoute>
-                    <Box />
+                    <Boxs />
                   </UserRoute>
                 }
               />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
-              <Route path="/payment" element={<Payment />} />
               <Route
                 path="/post"
                 element={

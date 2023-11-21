@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {fetchUser } from "../../Redux/userActions";
+import { fetchUser } from "../../Redux/userActions";
 
 function Login() {
   const navigate = useNavigate();
@@ -34,7 +34,11 @@ function Login() {
     }
   }, []);
 
-  const onClose = () => setIsOpen(false);
+  // const onClose = () => setIsOpen(false);
+  const onClose = () => {
+    setIsOpen(false);
+    navigate(-1);
+  };
   const onOpen = () => setIsOpen(true);
 
   const handleSubmit = async () => {
@@ -43,14 +47,16 @@ function Login() {
       password,
     };
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}accounts/api/login/`, formData);
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_BASE_URL}accounts/api/login/`,
+        formData
+      );
       const userId = response.data.user.id;
       dispatch(fetchUser(userId));
       console.log("User login success:", response.data);
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
       console.log(response.data);
-      onClose();
       navigate("/");
     } catch (error) {
       console.error("User login failed from Login modal");
@@ -59,18 +65,18 @@ function Login() {
 
   return (
     <div>
-      {/* <Text style={{ cursor: "pointer" }} onClick={onOpen}>
-        Login
-      </Text> */}
-
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={{ base: "full", lg: "2xl" }}
+      >
         <ModalOverlay />
         <ModalContent>
-          <Flex>
+          <Flex direction={{ base: "column", lg: "row" }}>
             <Image
               src="src\images\login.jpg"
               alt="Login Image"
-              boxSize="50%"
+              boxSize={{ base: "100%", lg: "50%" }}
               objectFit="cover"
             />
             <Flex direction="column" p={5} bg="#848CEF" w="100%">
@@ -105,8 +111,8 @@ function Login() {
 
               <ModalFooter>
                 <Button
-                  w="130px"
-                  style={{ marginRight: "60px" }}
+                  w={{ base: "100%", lg: "130px" }}
+                  mt={{ base: 5, lg: 0 }}
                   bg="#BACEF5"
                   onClick={handleSubmit}
                 >
@@ -114,12 +120,11 @@ function Login() {
                 </Button>
               </ModalFooter>
               <Text
-              onClick={()=>navigate("/signup")}
-                style={{
-                  marginLeft: "100px",
-                  fontSize: "10px",
-                  fontFamily: "cursive",
-                }}
+                onClick={() => navigate("/signup")}
+                mt={{ base: 3, lg: 0 }}
+                textAlign={{ base: "center", lg: "left" }}
+                fontSize="10px"
+                fontFamily="cursive"
               >
                 Not a user? Signup
               </Text>
@@ -130,5 +135,4 @@ function Login() {
     </div>
   );
 }
-
 export default Login;

@@ -7,7 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaBox } from "react-icons/fa6";
 import { FaBoxOpen } from "react-icons/fa";
 import { useSelector } from "react-redux";
-
+import FrequentlyAskedQuestions from "./Home/FrequentlyAskedQuestions";
+import { motion } from "framer-motion";
 function Spots() {
   const [properties, setProperties] = useState([]);
   const navigate = useNavigate();
@@ -24,9 +25,8 @@ function Spots() {
             userId: userId,
           },
         }
-        );
+      );
       setBoxData(res.data);
-      console.log(res.data,'kuaew');
     } catch (error) {
       console.log(error);
     }
@@ -65,23 +65,41 @@ function Spots() {
       console.log("error", error);
     }
   };
-  const handleBoxRemove = async (spotId) => {
+
+  const handleBoxRemove = async (postId) => {
     try {
       const response = await api.delete(
-        `${import.meta.env.VITE_APP_BASE_URL}admins/api/box/${spotId}/`
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/box/${postId}/`
       );
-      console.log("success box add");
-      fetchBox();
+
+      if (response.status === 204) {
+        console.log("Success: Box removed");
+        fetchBox(); // or perform any other action after successful removal
+      } else if (response.status === 404) {
+        console.log("Error: Box not found");
+      } else {
+        console.log("Unexpected error:", response.statusText);
+      }
     } catch (error) {
-      console.log("error", error);
+      console.log("Error:", error);
     }
   };
 
   return (
     <div>
       <Navbar />
+      <Center>
+        <Text
+          mt="90px"
+          fontSize={40}
+          fontWeight={"Bold"}
+          fontFamily={"monospace"}
+        >
+          {" "}
+          Explore the Spots
+        </Text>
+      </Center>
       <Flex
-        mt={10}
         _dark={{
           bg: "#3e3e3e",
         }}
@@ -110,12 +128,31 @@ function Spots() {
           >
             <Link to={`/spot/${property.id}/`}>
               <Center>
-                <Image
+                {/* <Image
                   src={property.image}
                   alt={property.imageAlt}
                   roundedTop="lg"
                   h="200px"
-                />
+                /> */}
+                <Box
+                  as={motion.div}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                  position="relative"
+                  overflow="hidden"
+                  borderRadius="lg"
+                  h="200px"
+                >
+                  <motion.img
+                    src={property.image}
+                    alt={property.imageAlt}
+                    roundedTop="lg"
+                    h="200px"
+                    initial={{ opacity: 0.8 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Box>
               </Center>
             </Link>
             <Box p="6">
@@ -148,10 +185,17 @@ function Spots() {
               <Box>
                 {property.price}
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  {boxData && boxData.some(box => box.postId === property.id) ? (
-                    <FaBox size={23} onClick={() => handleBoxRemove(property.id)} />
+                  {boxData &&
+                  boxData.some((box) => box.postId === property.id) ? (
+                    <FaBox
+                      size={23}
+                      onClick={() => handleBoxRemove(property.id)}
+                    />
                   ) : (
-                    <FaBoxOpen size={20} onClick={() => handleBoxAdd(property.id)} />
+                    <FaBoxOpen
+                      size={20}
+                      onClick={() => handleBoxAdd(property.id)}
+                    />
                   )}
                 </div>
               </Box>
@@ -159,6 +203,12 @@ function Spots() {
           </Box>
         ))}
       </Flex>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <FrequentlyAskedQuestions />
       <Footer />
     </div>
   );

@@ -6,7 +6,8 @@ const Payment = () => {
   const [email, setEmail] = useState("");
   const stripe = useStripe();
   const elements = useElements();
-  // Handle real-time validation errors from the CardElement.
+
+
   const handleChange = (event) => {
     if (event.error) {
       setError(event.error.message);
@@ -14,7 +15,8 @@ const Payment = () => {
       setError(null);
     }
   };
-  // Handle form submission.
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const card = elements.getElement(CardElement);
