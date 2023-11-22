@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from admincontrol.models import Banner, Category, Faq, Post, Box
+from admincontrol.models import Banner, Category, Faq, Post, Box, Plans
 
 
 class BannerSerializer(serializers.ModelSerializer):
@@ -29,4 +29,10 @@ class PostSerializer(serializers.ModelSerializer):
 class BoxSerializer(serializers.ModelSerializer):
     class Meta:
         model = Box
+        fields = '__all__'
+
+
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plans
         fields = '__all__'

@@ -24,7 +24,7 @@ function Signup() {
   // const onClose = () => setIsOpen(false);
   const onClose = () => {
     setIsOpen(false);
-    navigate(-1);
+    navigate('/');
   };
   const onOpen = () => setIsOpen(true);
 

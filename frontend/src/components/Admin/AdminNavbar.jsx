@@ -24,7 +24,7 @@ const navLinks = [
   { name: "Users", path: "/users" },
   { name: "Post", path: "/status" },
   { name: "Category", path: "/category" },
-  // { name: "Faq", path: "/faq" },
+  { name: "Plans", path: "/plans" },
 ];
 
 export default function AdminNavbar() {
@@ -47,7 +47,7 @@ export default function AdminNavbar() {
 
   return (
     <>
-      <Box px={4} bg={useColorModeValue("grey", "gray.800")}>
+      <Box px={4} bgColor={'#3949AB'} color={'white'}>
         <Flex
           h={16}
           alignItems="center"
@@ -55,7 +55,7 @@ export default function AdminNavbar() {
           mx="auto"
         >
           <Link href="/admin">
-            <Text fontSize="30px" fontWeight="bold" color="white">
+            <Text fontSize="30px" fontWeight="bold" >
               ADZAP
             </Text>
           </Link>
@@ -75,10 +75,11 @@ export default function AdminNavbar() {
                 as={Button}
                 rightIcon={<BiChevronDown />}
                 variant="ghost"
+                color='white'
               >
                 More
               </MenuButton>
-              <MenuList>
+              <MenuList color={'black'}>
                 <MenuItem>
                   <Text onClick={() => navigate("/users")}>User</Text>
                 </MenuItem>

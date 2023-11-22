@@ -26,17 +26,19 @@ import Boxs from "./components/User/Boxs";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js/pure";
 import Chat from "./components/User/Chat";
+import Plans from "./components/Admin/Plans";
 
 const stripePromise = loadStripe(
-  "pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT"
+  (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY =
+    "pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT")
 );
 
 function App() {
   return (
     <ChakraProvider>
-      <Elements stripe={stripePromise}>
+      {/* <Elements stripe={stripePromise} options={{ mode: 'payment',amount:2000,currency:'inr' }}>
         <Payment />
-      </Elements>
+      </Elements> */}
       <BrowserRouter>
         <>
           <Provider store={store}>
@@ -47,6 +49,9 @@ function App() {
 
               <Route path="/" element={<Home />} />
               <Route path="/spots" element={<Spots />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
 
               <Route
                 path="/spot/:spotId/*"
@@ -56,7 +61,7 @@ function App() {
                   </UserRoute>
                 }
               />
-              
+
               <Route
                 path="/chat"
                 element={
@@ -74,8 +79,6 @@ function App() {
                   </UserRoute>
                 }
               />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/about" element={<About />} />
               <Route
                 path="/post"
                 element={
@@ -107,6 +110,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <Users />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/plans"
+                element={
+                  <PrivateRoute>
+                    <Plans />
                   </PrivateRoute>
                 }
               />

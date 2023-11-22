@@ -1,6 +1,6 @@
 from rest_framework import generics
-from admincontrol.models import Banner, Category, Post, Box
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer
+from admincontrol.models import Banner, Category, Post, Box, Plans
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -9,6 +9,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
+from django.db.models import Q
 
 
 class BoxListCreateView(generics.ListCreateAPIView):
@@ -44,9 +45,37 @@ class BoxDeleteView(generics.DestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# class PostListCreateView(generics.ListCreateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
 class PostListCreateView(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def get_queryset(self):
+        try:
+            queryset = Post.objects.all()
+            search_term = self.request.query_params.get('search', None)
+            is_active = self.request.query_params.get('is_active', None) 
+            if is_active:
+                queryset = queryset.filter(is_active=True)
+            if search_term:
+                queryset = queryset.filter(
+                    Q(category__name__icontains=search_term) |
+                    Q(country__icontains=search_term) |
+                    Q(state__icontains=search_term) |
+                    Q(city__icontains=search_term) |
+                    Q(landmark__icontains=search_term) |
+                    Q(pincode__icontains=search_term) |
+                    Q(validity__icontains=search_term) |
+                    Q(price__icontains=search_term) |
+                    Q(discription__icontains=search_term) |
+                    Q(media_type__icontains=search_term)
+                )
+            return queryset
+        except Exception as e:
+            print(f"Error in get_queryset: {str(e)}")
+            raise
+
 
 class PostRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
@@ -63,7 +92,6 @@ class PostToggleActionView(generics.UpdateAPIView):
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
 
 
 class BannerListCreateView(generics.ListCreateAPIView):
@@ -84,7 +112,6 @@ class UserListView(ListAPIView):
 class UserEditView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    # permission_classes = [IsAuthenticated]
 
 
 class ToggleUserActiveStatus(generics.UpdateAPIView):
@@ -120,3 +147,13 @@ class CategoryCreateView(generics.CreateAPIView):
 class CategoryRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class PlanListCreateView(generics.ListCreateAPIView):
+    queryset = Plans.objects.all()
+    serializer_class = PlanSerializer
+
+
+class PlanRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Plans.objects.all()
+    serializer_class = PlanSerializer
