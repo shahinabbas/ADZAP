@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,14 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'admincontrol',
-    'accounts',
+    'chat',
     'payment',
+    'accounts',
+    'admincontrol',
 
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +64,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',  
+    'http://localhost:5173',
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -84,7 +87,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
+ASGI_APPLICATION = 'backend.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -102,8 +105,8 @@ DATABASES = {
         'NAME': 'adzap',
         'USER': 'postgres',
         'PASSWORD': 'postgres@123',
-        'HOST': 'localhost',  
-        'PORT': '5432',           
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -130,7 +133,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
 
 
 # Internationalization
@@ -163,7 +165,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 
 SIMPLE_JWT = {
@@ -205,9 +206,8 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
+SITE_URL=config('SITE_URL')
 
-SITE_URL = 'http://localhost:5173'
-
-
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT'
-STRIPE_SECRET_KEY = 'sk_test_51ODcxzSBzn9HNwsvNmnyMVjXIOdVMpiThSgbJSxmN3LCXbU2FJ5FLErfa1sP5FGObW0JSm6wYraxmW1fSlA7ec1S00fBnGx8RZ'
+STRIPE_PUBLISHABLE_KEY=config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY=config('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET=config('STRIPE_WEBHOOK_SECRET')
