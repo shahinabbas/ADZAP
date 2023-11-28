@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import api from "../../Services/api";
+import Swal from "sweetalert2";
 import {
   Container,
   Box,
@@ -8,70 +9,82 @@ import {
   Text,
   SimpleGrid,
   Flex,
-  Link,
+  Spinner,
   useColorModeValue,
   Button,
 } from "@chakra-ui/react";
 import Navbar from "./Navbar";
+import { useDispatch } from "react-redux";
 
 export default function Payment() {
+  const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState([]);
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  const handlePayment = async (planId) => {
+    try {
+      setLoading(true);
+      const response = await api.post(
+        `${
+          import.meta.env.VITE_APP_BASE_URL
+        }payment/create-checkout-session/${planId}`
+      );
+      if (response.data && response.data.redirect_url) {
+        const redirectUrl = response.data.redirect_url;
+        window.location.href = redirectUrl;
+      } else {
+        Swal.fire({
+          title: "Unable To Initiate Payment",
+          icon: "error",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Unable To Purchase Now! Please Try Later",
+        icon: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchPlans = async () => {
     try {
       const response = await api.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/plan/`
       );
       setPlan(response.data);
-      console.log(response.data, "planssssssssssssss");
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching plans:", error);
     }
   };
 
-  const handlePayment=(planId)=>{
-
-  }
   useEffect(() => {
-    fetchPlans();
-    // const query = new URLSearchParams(window.location.search);
     const values = location.search;
-    console.log(values);
-
-    // if (query.get("success")) {
-    //   console.log("Order placed! You will receive an email confirmation.");
-    // }
-
-    // if (query.get("canceled")) {
-    //   console.log(
-    //     "Order canceled -- continue to shop around and checkout when you're ready."
-    //   );
-    // }
-  }, []);
+    fetchPlans();
+  }, [location.search]);
 
   return (
     <>
-      <section>
-        <div className="product">
-          <img
-            src="src\images\pay.jpg"
-            alt="The cover of Stubborn Attachments"
-            width="500px"
-          />
-          <div className="description">
-            <h3>Stubborn Attachments</h3>
-            <h5>$20.00</h5>
-          </div>
-        </div>
-        <form
-          action="http://127.0.0.1:8000/payment/create-checkout-session"
-          method="POST"
-        >
-          <button type="submit">Checkout</button>
-        </form>
-      </section>
+      <Navbar />
+      <Container maxW="6xl" mt={10} p={{ base: 5, md: 10 }}>
+        {loading && (
+          <Flex
+            justify="center"
+            align="center"
+            position="fixed"
+            top={0}
+            left={0}
+            width="100%"
+            height="100%"
+            bg="rgba(255, 255, 255, 0.8)"
+            zIndex={999}
+          >
+            <Spinner size="xl" />
+          </Flex>
+        )}
 
-      <Container maxW="6xl" p={{ base: 5, md: 10 }}>
         <chakra.h3 fontSize="4xl" fontWeight="bold" mb={20} textAlign="center">
           Everything your app needs and more
         </chakra.h3>
@@ -79,13 +92,13 @@ export default function Payment() {
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={10} mb={4}>
           {plan.map((item) => (
             <Box
+              key={item.id}
               bg={useColorModeValue("gray.100", "gray.700")}
               p={6}
               rounded="lg"
               textAlign="center"
               pos="relative"
             >
-              {console.log(item, "5848452595959595899")}
               <Flex
                 p={2}
                 w="max-content"
@@ -146,7 +159,7 @@ export default function Payment() {
                 mt={5}
                 color={"white"}
                 bgGradient="linear(to-br, #228be6, #15aabf)"
-                onClick={()=>handlePayment(item.id)}
+                onClick={() => handlePayment(item.id)}
               >
                 Buy Now
               </Button>

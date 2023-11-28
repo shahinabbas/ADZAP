@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, logoutUser } from "../../Redux/userActions";
 import { FaBoxOpen } from "react-icons/fa";
+import { TbCoinRupeeFilled } from "react-icons/tb";
 import {
   Container,
   Box,
@@ -9,6 +10,7 @@ import {
   Button,
   HStack,
   Spacer,
+  Flex,
   Menu,
   MenuButton,
   MenuList,
@@ -16,6 +18,8 @@ import {
   Text,
   MenuDivider,
   useColorModeValue,
+  chakra,
+  Icon,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 
@@ -85,12 +89,31 @@ const Navbar = () => {
             >
               Create a post
             </Button>
-
             <FaBoxOpen
               size={26}
               onClick={() => navigate("/box")}
               cursor={"pointer"}
             />
+            <chakra.span pos="relative" display="inline-block">
+              <TbCoinRupeeFilled size={26} />
+              <chakra.span
+                pos="absolute"
+                top="-1px"
+                right="-1px"
+                px={2}
+                py={1}
+                fontSize="xs"
+                fontWeight="bold"
+                lineHeight="none"
+                color="red.100"
+                transform="translate(50%,-50%)"
+                bg="red.600"
+                rounded="full"
+              >
+                {user && user.user && user.user.id ? user.user.coins : 0}
+              </chakra.span>
+            </chakra.span>
+
             <IconButton>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
