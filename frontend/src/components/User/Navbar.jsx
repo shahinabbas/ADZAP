@@ -94,7 +94,7 @@ const Navbar = () => {
               onClick={() => navigate("/box")}
               cursor={"pointer"}
             />
-            <chakra.span pos="relative" display="inline-block">
+            <chakra.span pos="relative" display="inline-block" onClick={()=>navigate('/payment')}>
               <TbCoinRupeeFilled size={26} />
               <chakra.span
                 pos="absolute"

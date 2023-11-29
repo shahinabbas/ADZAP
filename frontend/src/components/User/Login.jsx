@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
 import {
   Button,
   Modal,
@@ -15,6 +16,7 @@ import {
   Flex,
   Image,
   Text,
+  Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -37,7 +39,7 @@ function Login() {
   // const onClose = () => setIsOpen(false);
   const onClose = () => {
     setIsOpen(false);
-    navigate('/');
+    navigate("/");
   };
   const onOpen = () => setIsOpen(true);
 
@@ -72,62 +74,80 @@ function Login() {
       >
         <ModalOverlay />
         <ModalContent>
-          <Flex direction={{ base: "column", lg: "row" }}>
-            <Image
-              src="src\images\login.jpg"
-              alt="Login Image"
-              boxSize={{ base: "100%", lg: "50%" }}
-              objectFit="cover"
-            />
-            <Flex direction="column" p={5} bg="#848CEF" w="100%">
-              <ModalHeader fontSize="2xl" textAlign="center" color="white">
-                Login
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody color="white">
-                <FormControl>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    bg="white"
-                    color="black"
-                  />
-                </FormControl>
-                <FormControl mt={5}>
-                  <FormLabel>Password</FormLabel>
-                  <Input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    bg="white"
-                    color="black"
-                  />
-                </FormControl>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  w={{ base: "100%", lg: "130px" }}
-                  mt={{ base: 5, lg: 0 }}
-                  bg="#BACEF5"
-                  onClick={handleSubmit}
-                >
+          <Flex>
+            <Flex direction={{ base: "column", lg: "row" }}>
+              <Image
+                src="src\images\login.jpg"
+                alt="Login Image"
+                boxSize={{ base: "100%", lg: "50%" }}
+                objectFit="cover"
+              />
+              <Flex direction="column" p={5} bg="#848CEF" w="100%">
+                <ModalHeader fontSize="2xl" textAlign="center" color="white">
                   Login
-                </Button>
-              </ModalFooter>
-              <Text
-                onClick={() => navigate("/signup")}
-                mt={{ base: 3, lg: 0 }}
-                textAlign={{ base: "center", lg: "left" }}
-                fontSize="10px"
-                fontFamily="cursive"
-              >
-                Not a user? Signup
-              </Text>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody color="white">
+                  <FormControl>
+                    <FormLabel>Email</FormLabel>
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      bg="white"
+                      color="black"
+                    />
+                  </FormControl>
+                  <FormControl mt={5}>
+                    <FormLabel>Password</FormLabel>
+                    <Input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your password"
+                      bg="white"
+                      color="black"
+                    />
+                  </FormControl>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button
+                    w={{ base: "100%", lg: "100%" }}
+                    mt={{ base: 5, lg: 0 }}
+                    bg="#BACEF5"
+                    onClick={handleSubmit}
+                  >
+                    Login
+                  </Button>
+                </ModalFooter>
+                <Center>
+                  <Text color={"white"}>OR</Text>
+                </Center>
+
+                <Center p={2}>
+                  <Button
+                    w={{ base: "100%", lg: "100%" }}
+                    maxW={"md"}
+                    variant={"outline"}
+                    leftIcon={<FcGoogle />}
+                  >
+                    <Center>
+                      <Text>Sign in with Google</Text>
+                    </Center>
+                  </Button>
+                </Center>
+                <Text
+                  onClick={() => navigate("/signup")}
+                  mt={{ base: 3, lg: 0 }}
+                  textAlign={{ base: "center", lg: "left" }}
+                  fontSize="10px"
+                  fontFamily="cursive"
+                >
+                  Not a user? Signup
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
         </ModalContent>

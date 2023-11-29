@@ -27,6 +27,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js/pure";
 import Chat from "./components/User/Chat";
 import Plans from "./components/Admin/Plans";
+import Google from "./components/User/Google";
 
 const stripePromise = loadStripe(
   (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY =
@@ -46,7 +47,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/adminlogin" element={<AdminLogin />} />
-
+              {/* <Route path="/google" element={<Google />} /> */}
               <Route path="/" element={<Home />} />
               <Route path="/spots" element={<Spots />} />
               <Route

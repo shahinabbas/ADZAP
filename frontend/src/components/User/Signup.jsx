@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
 import {
   Button,
   Modal,
@@ -15,6 +16,8 @@ import {
   Image,
   Text,
   Link,
+  Center,
+  Box,
 } from "@chakra-ui/react";
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -24,7 +27,7 @@ function Signup() {
   // const onClose = () => setIsOpen(false);
   const onClose = () => {
     setIsOpen(false);
-    navigate('/');
+    navigate("/");
   };
   const onOpen = () => setIsOpen(true);
 
@@ -77,11 +80,12 @@ function Signup() {
   };
 
   return (
-    <div>
-      {/* <Text style={{ cursor: "pointer" }} onClick={onOpen}>
-        Signup
-      </Text> */}
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+    <Box>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={{ base: "full", lg: "2xl" }}
+      >
         <ModalOverlay />
         <ModalContent>
           <Flex>
@@ -90,6 +94,7 @@ function Signup() {
                 Signup
               </ModalHeader>
               <ModalCloseButton />
+
               <ModalBody color="white">
                 <FormControl>
                   <Input
@@ -144,15 +149,26 @@ function Signup() {
               </ModalBody>
 
               <ModalFooter>
-                <Button
-                  w="130px"
-                  style={{ marginRight: "60px" }}
-                  bg="#BACEF5"
-                  onClick={handleSubmit}
-                >
+                <Button w={"full"} bg="#BACEF5" onClick={handleSubmit}>
                   Signup
                 </Button>
               </ModalFooter>
+              <Center>
+                <Text color={"white"}>OR</Text>
+              </Center>
+
+              <Center p={2}>
+                <Button
+                  w={{ base: "100%", lg: "100%" }}
+                  maxW={"md"}
+                  variant={"outline"}
+                  leftIcon={<FcGoogle />}
+                >
+                  <Center>
+                    <Text>Sign in with Google</Text>
+                  </Center>
+                </Button>
+              </Center>
               <Text
                 style={{
                   marginLeft: "80px",
@@ -164,17 +180,24 @@ function Signup() {
                 <Link onClick={() => navigate("/login")}>Login</Link>
               </Text>
             </Flex>
-            <Image
-              src="src\images\signup.jpg"
-              alt="Login Image"
-              boxSize="50%"
-              objectFit="cover"
-              marginTop="89"
-            />
+            <Flex
+              direction={{ base: "column", lg: "row" }}
+              p={5}
+              bg="#848CEF"
+              w="100%"
+            >
+              <Image
+                src="src\images\signup.jpg"
+                alt="Login Image"
+                boxSize="50%"
+                objectFit="cover"
+                marginTop="89"
+              />
+            </Flex>
           </Flex>
         </ModalContent>
       </Modal>
-    </div>
+    </Box>
   );
 }
 
