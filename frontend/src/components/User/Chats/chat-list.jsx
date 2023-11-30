@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Avatar,
   chakra,
@@ -7,58 +8,77 @@ import {
   Box,
   StackDivider,
   Text,
-} from '@chakra-ui/react';
-import { DeliveredIcon } from '../../../images/icons';
-import { chatData } from '../../../chat_data';
-export function Chat({ name, message, date, seen, src, ...rest }) {
-  return (
-    <HStack
-      _hover={{
-        cursor: 'pointer',
-        backgroundColor: '#f5f6f6',
-      }}
-      py='3'
-      {...rest}
-    >
-      <Avatar mx='3' name={name} src={src} />
-      <Box flex='1' pr='4'>
-        <Flex justify='space-between' align='baseline'>
-          <Box>
-            <Text fontWeight='medium'>{name}</Text>
-            <HStack>
-              <DeliveredIcon color={seen ? '#53bdeb' : '#667781'} />
-              <Text color='#667781' fontSize='sm'>
-                {message}
-              </Text>
-            </HStack>
-          </Box>
-          <chakra.time fontSize='xs' color='#667781'>
-            {date}
-          </chakra.time>
-        </Flex>
-      </Box>
-    </HStack>
-  );
-}
+} from "@chakra-ui/react";
+import { DeliveredIcon } from "../../../images/icons";
+import { fetchUser } from "../../../Services/apiUtils";
 
-export function ChatList(props) {
+export function ChatList({ onItemClick }) {
+  const [userData, setUserData] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userResponse = await fetchUser();
+        setUserData(userResponse);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const onUserClick = (user) => {
+    setSelectedUser(user);
+    console.log("Selected User:", user);
+  };
+
   return (
     <Stack
-      spacing='0'
-      pr='1'
-      divider={<StackDivider w='82%' alignSelf='flex-end' />}
-      {...props}
+      spacing="0"
+      pr="1"
+      divider={<StackDivider w="82%" alignSelf="flex-end" />}
     >
-      {chatData.map((item, index) => (
-        <Chat
-          key={index}
-          src={item.src}
-          date={item.date}
-          message={item.message}
-          name={item.name}
-          seen={item.seen}
-        />
-      ))}
+      {userData &&
+        userData.map((item, index) => (
+          <HStack
+            key={index}
+            _hover={{
+              cursor: "pointer",
+              backgroundColor: "#f5f6f6",
+            }}
+            py="3"
+            onClick={() => {
+              onItemClick(item);
+              console.log("Selected User:", item);
+            }}
+          >
+            <Avatar mx="3" name={item.name} src={item.src} />
+            <Box flex="1" pr="4">
+              <Flex justify="space-between" align="baseline">
+                <Box>
+                  <Text fontWeight="medium">{item.name}</Text>
+                  <HStack>
+                    <DeliveredIcon color={item.seen ? "#53bdeb" : "#667781"} />
+                    <Text color="#667781" fontSize="sm">
+                      {item.message}
+                    </Text>
+                  </HStack>
+                </Box>
+                <chakra.time fontSize="xs" color="#667781">
+                  {item.date}
+                </chakra.time>
+              </Flex>
+            </Box>
+          </HStack>
+        ))}
     </Stack>
   );
 }
+
+// User clicks on a user in the ChatList component (Left Panel).
+// The onClick event in ChatList triggers the onItemClick function.
+// The onItemClick function is passed from Chat to LeftPanel to ChatList.
+// The onItemClick function is called with the clicked user data.
+// The handleUserClick function in the Chat component updates the selectedUser state with the clicked user data.
+// The updated selectedUser state is passed down to the RightPanel component.
+// The RightPanel component renders with the details of the selected user.

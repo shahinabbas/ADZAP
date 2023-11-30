@@ -24,6 +24,7 @@ urlpatterns = [
     path('admins/api/', include('admincontrol.api.urls')),
     path('accounts/api/', include('accounts.api.urls')),
     path('payment/', include('payment.urls')),
+    path('chat/api/', include('chat.api.urls')),
     path('auth/',include('drf_social_oauth2.urls',namespace='drf')),
 ]
 if settings.DEBUG:

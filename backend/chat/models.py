@@ -3,12 +3,16 @@ from accounts.models import CustomUser
 # Create your models here.
 
 class CustomerChat(models.Model):
-    sender = models.IntegerField()
+    sender = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='sender')
+    reciever = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='reciever')
     message = models.TextField(null=True,blank=True)
-    group_name = models.CharField(max_length=50,null=True,blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    from_user = models.BooleanField(default=False)
-    
+    # group_name = models.CharField(max_length=50,null=True,blank=True)
+    time = models.DateTimeField(auto_now_add=True)
+    is_read=models.BooleanField(default=False)
+
+    class meta:
+        ordering=['time']
+
     def __str__(self):
         return self.message
 

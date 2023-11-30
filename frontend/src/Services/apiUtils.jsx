@@ -29,3 +29,15 @@ export const fetchBox = async (userId) => {
       console.log(error);
     }
   };
+
+
+export const fetchUser=async()=>{
+  try{
+    const response=await api.get(
+      `${import.meta.env.VITE_APP_BASE_URL}admins/api/users/`,
+    )
+    return response.data; 
+  }catch(error){
+    console.log(error);
+  }
+}

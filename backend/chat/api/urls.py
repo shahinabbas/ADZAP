@@ -1,15 +1,12 @@
 
-from django.urls import path,include
+from django.urls import path, include
 from rest_framework import routers
 
 from . import views
 
 urlpatterns = [
-    
-    # path("history", views.CustomerVendorChatListAPI.as_view(), name="get-chat-history"),
-    # path("notification/history/", views.CustomerNotificationListAPI.as_view(), name="get-notification-history"),
-    # path("notification/history/<int:pk>/change", views.NotificationUpdateDeleteView.as_view(), name="notification-history-update-delete"),
-    # path("notification/history/delete/", views.NotificationDeleteView, name="get-notification-history-delete-all"),
-    
 
-    ]
+    path("my-messages/<user_id>/", views.MyInbox.as_view(), name='my_messages'),
+    path("get-messages/<sender_id>/<reciever_id>/", views.GetMessages.as_view(), name='get_messages'),
+    path("send-messages/",views.SendMessages.as_view(),name='send_messages')
+]
