@@ -1,10 +1,10 @@
 #Python
-.env
+backend/.env
 venv/
 db.sqlite3
 
 #React
-.env
+frontend/.env
 # Logs
 logs
 *.log

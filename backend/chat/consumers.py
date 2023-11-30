@@ -25,3 +25,26 @@ class PersonalChatConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_layer  
             )
+
+        async def receive(self,text_data=None,bytes_data=None):
+            data=json.loads(text_data)
+            message=data['message']
+            username=data['username']
+
+            await self.cahnnel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type':'chat_message',
+                    'message':message,
+                    'username':username  
+                }
+            )
+        
+        async def chat_message(self,event):
+            message=event['message']
+            username=event['username']
+
+            await self.send(text_data=json.dumps({
+                'message':message,
+                'username':username
+            }))
