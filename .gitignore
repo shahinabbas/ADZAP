@@ -1,3 +1,9 @@
+#Python
+.env
+venv/
+
+
+#React
 .env
 # Logs
 logs
