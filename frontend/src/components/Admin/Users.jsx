@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AdminNavbar from "./AdminNavbar";
 import api from "../../Services/api";
-import axios from "axios";
 import {
   Box,
   Button,
@@ -29,6 +28,7 @@ const Users = () => {
       console.error("Error fetching users:", error);
     }
   };
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -50,16 +50,18 @@ const Users = () => {
       console.error("Error toggling user status:", error);
     }
   };
+
   const sortedUsers = [...users].sort((a, b) => a.id - b.id);
 
   return (
     <div>
       <AdminNavbar />
-      <Text ml={8} mt={5} textAlign="center" fontSize="xl" fontWeight="bold">
+
+      <Text ml={8} mt={5} textAlign="center" fontSize={["xl", "2xl"]} fontWeight="bold">
         User Management
       </Text>
       <Center>
-        <Box m={4} w="75%">
+        <Box m={[2, 4]} w={["95%", "75%"]}>
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -80,7 +82,7 @@ const Users = () => {
                   <Td>
                     <Button
                       colorScheme={user.is_active ? "red" : "green"}
-                      size="sm"
+                      size={["xs", "sm"]}
                       onClick={() => handleToggleUser(user.id)}
                     >
                       {user.is_active ? "Block" : "Unblock"}

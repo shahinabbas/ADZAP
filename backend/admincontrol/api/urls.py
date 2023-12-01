@@ -9,6 +9,10 @@ urlpatterns = [
          name='user-is-active'),
     path('edit/<int:pk>/', views.UserEditView.as_view(), name='edit-user'),
 
+    path('reset-password/<int:pk>/',
+         views.ResetPasswordView.as_view(), name='reset-password'),
+
+
 
     path('banners/', views.BannerListCreateView.as_view(), name='banner-create'),
     path('banners/<int:pk>/', views.BannerRetrieveUpdateDeleteView.as_view(),
@@ -22,14 +26,17 @@ urlpatterns = [
 
 
     path('post/', views.PostListCreateView.as_view(), name='post-create-list'),
-    path('post/action/<int:pk>/', views.PostToggleActionView.as_view(), name='post-toggle-action'),
-    path('post/<int:pk>/', views.PostRetrieveUpdateDeleteView.as_view(), name='post-retrieve-update-delete'),
+    path('post/action/<int:pk>/', views.PostToggleActionView.as_view(),
+         name='post-toggle-action'),
+    path('post/<int:pk>/', views.PostRetrieveUpdateDeleteView.as_view(),
+         name='post-retrieve-update-delete'),
 
     path('box/', views.BoxListCreateView.as_view(), name='box-list-create'),
     path('box/<int:postId>/', views.BoxDeleteView.as_view(), name='box-remove'),
 
     path('plan/', views.PlanListCreateView.as_view(), name='plan-list-create'),
-    path('plan/<int:pk>/', views.PlanRetrieveUpdateDeleteView.as_view(), name='paln-retrieve-update-delete'),
+    path('plan/<int:pk>/', views.PlanRetrieveUpdateDeleteView.as_view(),
+         name='paln-retrieve-update-delete'),
 
 
 ]

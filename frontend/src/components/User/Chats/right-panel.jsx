@@ -14,51 +14,58 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FilterIcon, SearchIcon } from "../../../images/icons";
 import { FiSend } from "react-icons/fi";
 
 export const RightPanel = ({ selectedUser }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [ws, setWs] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [userChatHistory, setUserChatHistory] = useState([]);
 
-  useEffect(()=>{
-    const socket= new WebSocket(
-      `ws://${window.location.host}/ws/${selectedUser.id}/`
-    ) 
-  })
-  // useEffect(() => {
-  //   const socket = new WebSocket(
-  //     `ws://${window.location.host}/ws/${selectedUser.id}/`
-  //   );
+  useEffect(() => {
+    if (!selectedUser) return;
+    let access_token = localStorage.getItem("access");
+    const path = `${import.meta.env.VITE_APP_WS_BASE_URL}chat/${
+      selectedUser.id
+    }/?token=${access_token}`;
+    const socket = new WebSocket(path);
 
-    // socket.onopen = () => {
-    //   console.log("WebSocket connection opened");
-    // };
+    console.log("before onopen ", socket);
 
-    // socket.onmessage = (event) => {
-    //   const data = JSON.parse(event.data);
-    //   setMessages((prevMessages) => [...prevMessages, data]);
-    // };
+    socket.onopen = () => {
+      console.log("WebSocket connection opened");
+      setSocket(socket);
+    };
 
-    // setWs(socket);
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setMessages((prevMessages) => [...prevMessages, data]);
+    };
 
-    // return () => {
-    //   socket.close();
-    // };
-  // }, [selectedUser.id]); 
+    socket.onerror = (e) => {
+      console.error(e);
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket closed let's reopen");
+    };
+
+    return () => {
+      socket?.close();
+      setMessages([]);
+    };
+  }, [selectedUser]);
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
 
   const handleSendMessage = () => {
-    if (ws && message.trim() !== "") {
-      ws.send(JSON.stringify({ message, username: "user" }));
+    if (socket && message.trim() !== "") {
+      socket.send(JSON.stringify({ message, username: "user" }));
       setMessage("");
     }
   };
-
   return (
     <Flex
       direction="column"

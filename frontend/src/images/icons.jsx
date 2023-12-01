@@ -5,7 +5,6 @@ export function FilterIcon({ ...rest }) {
       height='20'
       width='20'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       version='1.1'
       x='0px'
       y='0px'
@@ -39,7 +38,6 @@ export function CommunityIcon() {
       height='28'
       width='28'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       fill='none'
     >
       <path
@@ -59,7 +57,6 @@ export function StatusIcon() {
       height='24'
       width='24'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       version='1.1'
       id='df9d3429-f0ef-48b5-b5eb-f9d27b2deba6'
       x='0px'
@@ -86,7 +83,6 @@ export function NewChatIcon() {
       height='24'
       width='24'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       version='1.1'
       x='0px'
       y='0px'
@@ -109,7 +105,6 @@ export function MenuIcon() {
       height='24'
       width='24'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       version='1.1'
       x='0px'
       y='0px'
@@ -131,7 +126,6 @@ export function SearchIcon() {
       height='24'
       width='24'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       version='1.1'
       x='0px'
       y='0px'
@@ -153,7 +147,6 @@ export function EncryptedIcon() {
       height='12'
       width='10'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       version='1.1'
     >
       <path
@@ -170,7 +163,6 @@ export function GeneralIcon() {
       viewBox='0 0 303 172'
       width='360'
       preserveAspectRatio='xMidYMid meet'
-      class=''
       fill='none'
     >
       <path

@@ -93,13 +93,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = 'backend.asgi.application'
 
-CHANNEL_LAYERS={
-    "default":{
-        "BACKEND":"channels_redis.core.RedisChannelLayer",
-        "CONFIG":{
-            "hosts":[("127.0.0.0",6379)]
-        }
-    }
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
 }
 
 # Database
@@ -233,3 +235,4 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
+

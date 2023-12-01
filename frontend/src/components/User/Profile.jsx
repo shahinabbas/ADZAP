@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../Services/api";
+import ResetPassword from "./ResetPassword";
 import Navbar from "./Navbar";
 import Swal from "sweetalert2";
 import {
@@ -35,11 +36,9 @@ function Profile() {
   const user = useSelector((state) => state.user);
   const [productsList, setProductsList] = useState([]);
   const [categories, setCategories] = useState([]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
-  
   const fetchData = async () => {
     try {
       const response = await api.get(
@@ -154,6 +153,7 @@ function Profile() {
             >
               Edit
             </Button>
+            <ResetPassword userId={user.user.id} />
           </Box>
         </Box>
         {productsList.length === 0 ? (

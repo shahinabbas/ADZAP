@@ -36,3 +36,8 @@ class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plans
         fields = '__all__'
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    current_password = serializers.CharField()
+    new_password = serializers.CharField()

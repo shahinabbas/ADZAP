@@ -1,6 +1,6 @@
 from rest_framework import generics
 from admincontrol.models import Banner, Category, Post, Box, Plans
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -10,6 +10,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
 from django.db.models import Q
+from django.contrib.auth import authenticate
 
 
 class BoxListCreateView(generics.ListCreateAPIView):
@@ -55,7 +56,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         try:
             queryset = Post.objects.all()
             search_term = self.request.query_params.get('search', None)
-            is_active = self.request.query_params.get('is_active', None) 
+            is_active = self.request.query_params.get('is_active', None)
             if is_active:
                 queryset = queryset.filter(is_active=True)
             if search_term:
@@ -157,3 +158,28 @@ class PlanListCreateView(generics.ListCreateAPIView):
 class PlanRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Plans.objects.all()
     serializer_class = PlanSerializer
+
+
+class ResetPasswordView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = PasswordChangeSerializer
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        print(user, '578599')
+        current_password = request.data.get('current_password', None)
+        new_password = request.data.get('new_password', None)
+        print(current_password, new_password,
+              '548111111111111111')
+
+        if not current_password:
+            return Response({'error': 'Current password is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not authenticate(email=user.email, password=current_password):
+            return Response({'error': 'Invalid current password'}, status=status.HTTP_404_NOT_FOUND)
+
+        if new_password:
+            user.set_password(new_password)
+            user.save()
+        print('11111111111111111111111111111111111')
+        return Response({'success': 'Password updated successfully'}, status=status.HTTP_200_OK)
