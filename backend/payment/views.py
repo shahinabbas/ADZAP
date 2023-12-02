@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import stripe
-from admincontrol.models import Plans   
+from admincontrol.models import Plans
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from accounts.models import CustomUser
@@ -17,13 +17,13 @@ from django.views import View
 stripe.api_key = settings.STRIPE_SECRET_KEY
 endpoint_secret = 'whsec_0415e8d72356ae595c0285b3ae9844c446c6d93066a939322aa999817eaea312'
 
+
 class StripeCheckoutView(APIView):
-    def post(self,request,*args, **kwargs):
+    def post(self, request, *args, **kwargs):
         try:
             plan_id = self.kwargs["pk"]
             plan = Plans.objects.get(id=plan_id)
             user_id = request.user.id
-            print('1111111111111111111111111111111')
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[
@@ -42,21 +42,22 @@ class StripeCheckoutView(APIView):
                 ],
                 metadata={
                     "plan_id": plan.id,
-                    "user_id":user_id,
+                    "user_id": user_id,
                 },
                 mode='payment',
 
-                success_url=settings.SITE_URL + '?success=true&session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=settings.SITE_URL + '?canceled=true',
+                success_url=settings.SITE_URL +
+                '/payment?success=true&session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=settings.SITE_URL + '/payment?canceled=true',
             )
             return Response({
                 'redirect_url': checkout_session.url,
-            },status=status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
         except:
             return Response({
-                'message':'unable to process payment now',
-            },status=status.HTTP_404_NOT_FOUND)
-        
+                'message': 'unable to process payment now',
+            }, status=status.HTTP_404_NOT_FOUND)
+
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -86,12 +87,12 @@ def stripe_webhook(request):
                 plan = Plans.objects.get(id=plan_id)
                 user.coins += plan.coins
                 user.save()
+                print('webhook')
 
         except CustomUser.DoesNotExist:
             return JsonResponse({'message': 'User not found'}, status=404)
         except Plans.DoesNotExist:
             return JsonResponse({'message': 'Plan not found'}, status=404)
-        print('webhook')
     else:
         print('Unhandled event type {}'.format(event['type']))
     return HttpResponse(status=200)

@@ -14,13 +14,28 @@ import {
   Button,
 } from "@chakra-ui/react";
 import Navbar from "./Navbar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../../Redux/userActions";
 
 export default function Payment() {
-  const [loading, setLoading] = useState(false);
-  const [plan, setPlan] = useState([]);
   const location = useLocation();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const [plan, setPlan] = useState([]);
+  const userId = user.user.id;
+
+  useEffect(() => {
+    const values = location.search;
+    fetchPlans();
+    if (window.location.href.includes("?success=true")) {
+      try {
+        dispatch(fetchUser(userId));
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    }
+  }, [location.search]);
 
   const handlePayment = async (planId) => {
     try {
@@ -59,11 +74,6 @@ export default function Payment() {
       console.error("Error fetching plans:", error);
     }
   };
-
-  useEffect(() => {
-    const values = location.search;
-    fetchPlans();
-  }, [location.search]);
 
   return (
     <>
