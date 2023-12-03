@@ -18,7 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { Country, State, City } from "country-state-city";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../../Redux/userActions";
 
 function Post() {
   const [countries, setCountries] = useState([]);
@@ -47,8 +48,8 @@ function Post() {
   const [formError, setFormError] = useState([]);
   const navigate = useNavigate();
   const users = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  
   useEffect(() => {
     setUser(users.user.id);
     const fetchCategory = async () => {
@@ -99,7 +100,7 @@ function Post() {
     const c = Country.getCountryByCode(e.target.value);
     setCountry(c.name);
     setEnable(false);
-  };  
+  };
 
   const handleStateChange = (e) => {
     setStateId(e.target.value);
@@ -164,6 +165,7 @@ function Post() {
         showConfirmButton: false,
         timer: 2000,
       });
+      dispatch(fetchUser(users.user.id));
       navigate("/profile");
       console.log("success");
     } catch (error) {
@@ -203,11 +205,12 @@ function Post() {
                 placeholder="Select country"
                 onChange={(e) => handleCountryChange(e)}
               >
-                {countries && countries.map((cntry) => (
-                  <option key={cntry.isoCode} value={cntry.isoCode}>
-                    {cntry.name}
-                  </option>
-                ))}
+                {countries &&
+                  countries.map((cntry) => (
+                    <option key={cntry.isoCode} value={cntry.isoCode}>
+                      {cntry.name}
+                    </option>
+                  ))}
               </Select>
             </FormControl>
 
@@ -218,11 +221,12 @@ function Post() {
                 onChange={(e) => handleStateChange(e)}
                 disabled={enable}
               >
-                {states && states.map((state) => (
-                  <option key={state.isoCode} value={state.isoCode}>
-                    {state.name}
-                  </option>
-                ))}
+                {states &&
+                  states.map((state) => (
+                    <option key={state.isoCode} value={state.isoCode}>
+                      {state.name}
+                    </option>
+                  ))}
               </Select>
             </FormControl>
 
@@ -233,11 +237,12 @@ function Post() {
                 onChange={(e) => handleCityChange(e)}
                 disabled={cityEnable}
               >
-                {cities && cities.map((city) => (
-                  <option key={city.name} value={city.isoCode}>
-                    {city.name}
-                  </option>
-                ))}
+                {cities &&
+                  cities.map((city) => (
+                    <option key={city.name} value={city.isoCode}>
+                      {city.name}
+                    </option>
+                  ))}
               </Select>{" "}
             </FormControl>
 

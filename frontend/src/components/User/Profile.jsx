@@ -31,6 +31,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import { Spinner } from "@chakra-ui/react";
 
 function Profile() {
   const user = useSelector((state) => state.user);
@@ -38,19 +39,30 @@ function Profile() {
   const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const response = await api.get(
-        `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/post-list-userbased/${
+          user.user.id
+        }/`
       );
-      setProductsList(response.data);
+      if (Array.isArray(response.data)) {
+        setProductsList(response.data);
+      } else {
+        console.error("Invalid API response format:", response.data);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchCategory = async () => {
       try {
         const response = await api.get(
@@ -63,6 +75,7 @@ function Profile() {
     };
     fetchData();
     fetchCategory();
+    setLoading(false);
   }, []);
 
   const getCategoryNameById = (categoryId) => {
@@ -103,6 +116,8 @@ function Profile() {
     setSelectedProductId(productId);
     setIsModalOpen(true);
   };
+
+
   return (
     <>
       <Navbar />

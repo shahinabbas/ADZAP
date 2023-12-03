@@ -1,6 +1,6 @@
 const initialState = {
   user: null,
-  coins:0,
+  coins: 0,
   is_authenticated: false,
   is_admin: false,
   error: null,
@@ -9,11 +9,10 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case "FETCH_USER_SUCCESS":
-      console.log(action.payload.is_superuser,'shughugghyhu');
       return {
         ...state,
         user: action.payload,
-        coins:action.payload.coins,
+        coins: action.payload.coins,
         is_authenticated: true,
         is_admin: action.payload.is_superuser,
         error: null,
@@ -22,7 +21,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         user: null,
-        coins:0,
+        coins: 0,
         is_authenticated: false,
         is_admin: false,
         error: action.payload,
@@ -32,7 +31,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         user: null,
-        coins:0,
+        coins: 0,
         is_authenticated: false,
         is_admin: false,
         error: null,

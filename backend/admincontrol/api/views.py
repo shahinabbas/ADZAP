@@ -77,6 +77,30 @@ class PostListCreateView(generics.ListCreateAPIView):
             print(f"Error in get_queryset: {str(e)}")
             raise
 
+    def perform_create(self, serializer):
+        user = self.request.user
+
+        if user.coins >= 10:
+            user.coins -= 10
+            user.save()
+
+            serializer.save(user=user)
+        else:
+            return Response(
+                {'error': 'Not enough coins to create a post'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+class PostList(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        if user_id:
+            return Post.objects.filter(user_id=user_id)
+        
+
 
 class PostRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
