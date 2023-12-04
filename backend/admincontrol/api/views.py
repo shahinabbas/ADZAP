@@ -1,6 +1,6 @@
 from rest_framework import generics
-from admincontrol.models import Banner, Category, Post, Box, Plans
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer
+from admincontrol.models import Banner, Category, Post, Box, Plans,PaymentDetails
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer,ChartDataSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -11,6 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
 from django.db.models import Q
 from django.contrib.auth import authenticate
+from django.db.models.functions import TruncMonth
+from django.db.models import Sum
 
 
 class BoxListCreateView(generics.ListCreateAPIView):
@@ -190,11 +192,8 @@ class ResetPasswordView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
-        print(user, '578599')
         current_password = request.data.get('current_password', None)
         new_password = request.data.get('new_password', None)
-        print(current_password, new_password,
-              '548111111111111111')
 
         if not current_password:
             return Response({'error': 'Current password is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -205,5 +204,24 @@ class ResetPasswordView(generics.UpdateAPIView):
         if new_password:
             user.set_password(new_password)
             user.save()
-        print('11111111111111111111111111111111111')
         return Response({'success': 'Password updated successfully'}, status=status.HTTP_200_OK)
+
+
+class ChartData(generics.ListAPIView):
+    serializer_class = ChartDataSerializer
+
+    def get_queryset(self):
+        queryset = PaymentDetails.objects.annotate(
+            month=TruncMonth('date')
+        ).values('month').annotate(
+            total_price=Sum('price')
+        ).order_by('month')
+        print(queryset)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        print("Queryset:", queryset)
+        print("Serialized Data:", serializer.data)
+        return Response(serializer.data)

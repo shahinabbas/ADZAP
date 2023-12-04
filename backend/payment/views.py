@@ -13,6 +13,7 @@ import json
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.views import View
+from admincontrol.models import PaymentDetails
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 endpoint_secret = 'whsec_0415e8d72356ae595c0285b3ae9844c446c6d93066a939322aa999817eaea312'
@@ -30,7 +31,7 @@ class StripeCheckoutView(APIView):
                     {
                         'price_data': {
                             'currency': 'inr',
-                            'unit_amount': plan.price*100,
+                            'unit_amount': plan.price,
                             'product_data': {
                                 'name': plan.title,
                                 'images': ['https://imgs.search.brave.com/o6oE4N-ohAvbCYLRheuEHwHhXbn_AGvLHQSY66RgLHo/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS12ZWN0b3Iv/Y29uY2VwdC1jcmVk/aXQtY2FyZC1wYXlt/ZW50LWxhbmRpbmct/cGFnZV81MjY4My0y/NDkyMy5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'],
@@ -87,7 +88,7 @@ def stripe_webhook(request):
                 plan = Plans.objects.get(id=plan_id)
                 user.coins += plan.coins
                 user.save()
-                print('webhook')
+                payment_detail = PaymentDetails.objects.create(price=amount_total_paid)
 
         except CustomUser.DoesNotExist:
             return JsonResponse({'message': 'User not found'}, status=404)

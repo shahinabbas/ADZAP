@@ -1,65 +1,50 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
-import AdminNavbar from "./AdminNavbar";
+import React,{useState,useEffect} from "react";
+import AdminNavbar from './AdminNavbar';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Box, Heading, Container ,Tooltip} from "@chakra-ui/react";
+const data = [
+  { name: "Page A", uv: 200 },
+  { name: "Page A", uv: 400 },
+  { name: "Page A", uv: 300 },
+  { name: "Page A", uv: 900 },
+];
 
-function AdminHome() {
-  const chartRef = useRef(); // Reference to the chart instance
-  const [chartData, setChartData] = useState({
-    labels: ["January", "February", "March", "April", "May"],
-    datasets: [
-      {
-        label: "Monthly Sales",
-        data: [65, 59, 80, 81, 56],
-        borderColor: "rgba(75,192,192,1)",
-        borderWidth: 1,
-        fill: false,
-      },
-    ],
-  });
-
+const AdminHome = () => {
+  const [chartData, setChartData] = useState([]);
   useEffect(() => {
-    // Destroy the existing chart before rendering a new one
-    if (chartRef.current) {
-      chartRef.current.destroy();
-    }
-
-    // Create a new chart instance
-    const newChartInstance = new Chart(chartRef.current, {
-      type: "line",
-      data: chartData,
-      options: {
-        scales: {
-          x: {
-            type: "category",
-            labels: ["January", "February", "March", "April", "May"],
-          },
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-
-    // Update the chart reference
-    chartRef.current = newChartInstance;
-
-    // Cleanup the chart on component unmount
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.destroy();
-      }
+    // Fetch or generate your data dynamically here
+    const fetchData = async () => {
+      // Replace this with your actual data fetching or generation logic
+      const dynamicData = [
+        { awsMonth: "January", money: 200 },
+        { awsMonth: "February", money: 400 },
+        { awsMonth: "March", money: 300 },
+        { awsMonth: "April", money: 900 },
+      ];
+      setChartData(dynamicData);
     };
-  }, [chartData]);
 
+    fetchData();
+  }, []);
   return (
-    <div>
+    <>
       <AdminNavbar />
-      <div>
-        <h2>Monthly Sales Chart</h2>
-        <canvas ref={chartRef} />
-      </div>
-    </div>
+      <Container maxW="49%" mt={5}>
+        <Box bg="white" p={6} borderRadius="lg" boxShadow="lg">
+          <Heading mb={4} textAlign="center" size="xl">
+            Line Chart
+          </Heading>
+          <LineChart width={600} height={300} data={chartData}>
+            <Line type="monotone" dataKey="money" stroke="#8884d8" />
+            <CartesianGrid stroke="#ccc" />
+            <XAxis dataKey="awsMonth" />
+            <YAxis />
+          </LineChart>
+        </Box>
+      </Container>
+    </>
   );
-}
+};
 
 export default AdminHome;
+

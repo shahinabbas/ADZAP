@@ -39,6 +39,7 @@ urlpatterns = [
     path('plan/<int:pk>/', views.PlanRetrieveUpdateDeleteView.as_view(),
          name='paln-retrieve-update-delete'),
 
+    path('chart-data/', views.ChartData.as_view(), name='chart-data-list'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

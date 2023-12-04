@@ -45,3 +45,7 @@ class Plans(models.Model):
     mrp = models.IntegerField()
     price = models.IntegerField()
     coins = models.IntegerField()
+
+class PaymentDetails(models.Model):
+    price=models.IntegerField()
+    date=models.DateField(auto_now_add=True)

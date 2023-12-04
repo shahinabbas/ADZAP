@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from admincontrol.models import Banner, Category, Faq, Post, Box, Plans
+from admincontrol.models import Banner, Category, Faq, Post, Box, Plans, PaymentDetails
 
 
 class BannerSerializer(serializers.ModelSerializer):
@@ -41,3 +41,8 @@ class PlanSerializer(serializers.ModelSerializer):
 class PasswordChangeSerializer(serializers.Serializer):
     current_password = serializers.CharField()
     new_password = serializers.CharField()
+
+
+class ChartDataSerializer(serializers.Serializer):
+    month = serializers.DateField()
+    total_price = serializers.IntegerField()
