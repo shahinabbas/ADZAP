@@ -15,7 +15,7 @@ from django.urls import path
 from channels.routing import ProtocolTypeRouter, URLRouter
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ohh_flash__django.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
 django_asgi_app = get_asgi_application()
 

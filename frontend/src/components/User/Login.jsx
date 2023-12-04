@@ -30,7 +30,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const currentPath = window.location.pathname;
     if (currentPath === "/login") {
@@ -46,6 +46,8 @@ function Login() {
   const onOpen = () => setIsOpen(true);
 
   const handleSubmit = async () => {
+    setError("");
+    setLoading(true);
     const formData = {
       email,
       password,
@@ -64,16 +66,18 @@ function Login() {
       navigate("/");
     } catch (error) {
       setError("Invalid email or password. Please try again.");
-      console.error("User login failed from Login modal");
-      setTimeout(() => {
-        setError("");
-      }, 18000);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Box>
-      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", lg: "2xl" }}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={{ base: "full", lg: "2xl" }}
+      >
         <ModalOverlay />
         <ModalContent>
           <Flex
@@ -134,8 +138,9 @@ function Login() {
                   mt={{ base: 5, lg: 0 }}
                   bg="#BACEF5"
                   onClick={handleSubmit}
+                  isLoading={loading}
                 >
-                  Login
+                  {loading ? "Logging In..." : "Login"}
                 </Button>
               </ModalFooter>
               <Center>

@@ -15,6 +15,24 @@ class CustomerChat(models.Model):
     def __str__(self):
         return self.message
 
+
+class ChatMessages(models.Model):
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='user')
+    reciever=models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='reciever')
+
+    message=models.CharField(max_length=1000)
+    is_read=models.BooleanField(default=False)
+    date=models.DateTimeField(auto_now_add=True)   
+
+    class Meta:
+        ordering=['date']
+        verbose_name_plural='Message' 
+    
+    def __str__(self):
+        return self.message
+
+
+
 class Notification(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,null=True,blank=True)
     created_at = models.DateTimeField(auto_now=True)

@@ -25,7 +25,7 @@ export const RightPanel = ({ selectedUser }) => {
   useEffect(() => {
     if (!selectedUser) return;
     let access_token = localStorage.getItem("access");
-    const path = `${import.meta.env.VITE_APP_WS_BASE_URL}chat/${
+    const path = `${import.meta.env.VITE_APP_WS_BASE_URL}${
       selectedUser.id
     }/?token=${access_token}`;
     const socket = new WebSocket(path);
