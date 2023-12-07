@@ -65,18 +65,39 @@ const Category = () => {
 
     try {
       if (isEditMode) {
-        const response = await api.put(
-          `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/${
-            editingCategory.id
-          }/`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log("Category updated successfully");
+        if (name === editingCategory.name && icon === null) {
+          // No changes, close the modal
+          onClose();
+          Swal.fire({
+            icon: "No Change",
+            title: "No changes",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          return;
+        }
+        if (icon === null) {
+          const response = await api.patch(
+            `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/${
+              editingCategory.id
+            }/`,
+            { name }
+          );
+          console.log("Category name updated successfully");
+        } else {
+          const response = await api.put(
+            `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/${
+              editingCategory.id
+            }/`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log("Category updated successfully");
+        }
       } else {
         const response = await api.post(
           `${import.meta.env.VITE_APP_BASE_URL}admins/api/category/`,
@@ -124,7 +145,7 @@ const Category = () => {
     setEditingCategory(categoryToEdit);
     setName(categoryToEdit.name);
     setIcon(categoryToEdit.icon ? null : categoryToEdit.icon);
-    console.log(categoryToEdit,'categoryToEdit');
+    console.log(categoryToEdit, "categoryToEdit");
   };
 
   return (
@@ -143,7 +164,7 @@ const Category = () => {
                 <Th>Category</Th>
                 <Th>Actions</Th>
                 <Th>
-                  <Button bgColor="white" onClick={onOpen}>
+                  <Button bgColor="purple" color={'white'} onClick={onOpen}>
                     Add category
                   </Button>
                 </Th>
@@ -194,7 +215,7 @@ const Category = () => {
                 placeholder="Enter new Category"
               />
             </FormControl>
-             <FormControl mt={4}>
+            <FormControl mt={4}>
               <Input type="file" onChange={handleImageChange} />
             </FormControl>
             <br />
@@ -204,11 +225,11 @@ const Category = () => {
                   src={editingCategory.icon}
                   alt={editingCategory.name}
                   boxSize="50px"
-                  />
-                  {console.log(editingCategory.icon)}
+                />
+                {console.log(editingCategory.icon)}
               </Center>
             )}
-            
+
             <br />
             <Center>
               <Button onClick={handleSubmit}>Submit</Button>

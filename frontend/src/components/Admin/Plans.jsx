@@ -30,7 +30,7 @@ function Plans() {
   const [mrp, setMrp] = useState();
   const [price, setPrice] = useState();
   const [coins, setCoins] = useState();
-  const [formError, SetFormError] = useState([]);
+  const [formError, setFormError] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => {
     setIsOpen(false);
@@ -64,7 +64,14 @@ function Plans() {
   }, []);
 
   const handleSubmit = async () => {
-    SetFormError([]);
+    setFormError([]);
+
+    if (!title || !description || !mrp || !price || !coins) {
+      setFormError(["Please fill in all required fields."]);
+      setTimeout(() => setFormError([]), 1000);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -75,9 +82,7 @@ function Plans() {
     try {
       if (isEditMode) {
         const response = await api.patch(
-          `${import.meta.env.VITE_APP_BASE_URL}admins/api/plan/${
-            planEdit.id
-          }/`,
+          `${import.meta.env.VITE_APP_BASE_URL}admins/api/plan/${planEdit.id}/`,
           formData,
           {
             headers: {
@@ -216,6 +221,16 @@ function Plans() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
+          {formError.length > 0 && (
+            <Box mt={4} color="red.500">
+              <ul>
+                {formError.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </Box>
+          )}
+
           <ModalHeader>Add Plan</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

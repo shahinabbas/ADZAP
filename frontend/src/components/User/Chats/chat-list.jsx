@@ -11,15 +11,18 @@ import {
 } from "@chakra-ui/react";
 import { DeliveredIcon } from "../../../images/icons";
 import { fetchUser } from "../../../Services/apiUtils";
+import { useSelector } from "react-redux";
 
 export function ChatList({ onItemClick }) {
+  const user = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userResponse = await fetchUser();
-        setUserData(userResponse);
+        const filteredUserData = userResponse.filter((item) => item.id !== user.user.id);
+        setUserData(filteredUserData);
       } catch (error) {
         console.log(error);
       }
@@ -29,7 +32,6 @@ export function ChatList({ onItemClick }) {
 
   const onUserClick = (user) => {
     setSelectedUser(user);
-    console.log("Selected User:", user);
   };
 
   return (

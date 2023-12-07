@@ -1,6 +1,6 @@
 from rest_framework import generics
-from admincontrol.models import Banner, Category, Post, Box, Plans,PaymentDetails
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer,ChartDataSerializer
+from admincontrol.models import Banner, Category, Post, Box, Plans, PaymentDetails
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer, ChartDataSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -13,6 +13,8 @@ from django.db.models import Q
 from django.contrib.auth import authenticate
 from django.db.models.functions import TruncMonth
 from django.db.models import Sum
+from datetime import date, timedelta
+from ..tasks import send_post_created_email
 
 
 class BoxListCreateView(generics.ListCreateAPIView):
@@ -87,6 +89,7 @@ class PostListCreateView(generics.ListCreateAPIView):
             user.save()
 
             serializer.save(user=user)
+            send_post_created_email.apply_async(countdown=10)
         else:
             return Response(
                 {'error': 'Not enough coins to create a post'},
@@ -101,7 +104,6 @@ class PostList(generics.ListAPIView):
         user_id = self.kwargs.get('user_id')
         if user_id:
             return Post.objects.filter(user_id=user_id)
-        
 
 
 class PostRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -211,17 +213,15 @@ class ChartData(generics.ListAPIView):
     serializer_class = ChartDataSerializer
 
     def get_queryset(self):
-        queryset = PaymentDetails.objects.annotate(
+        six_months_ago = date.today() - timedelta(days=6*30)
+        queryset = PaymentDetails.objects.filter(date__gte=six_months_ago).annotate(
             month=TruncMonth('date')
         ).values('month').annotate(
             total_price=Sum('price')
         ).order_by('month')
-        print(queryset)
         return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        print("Queryset:", queryset)
-        print("Serialized Data:", serializer.data)
         return Response(serializer.data)

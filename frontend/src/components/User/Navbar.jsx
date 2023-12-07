@@ -47,9 +47,12 @@ const Navbar = () => {
   }, [dispatch]);
 
   const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate("/post");
+  const handleCreatePostClick = () => {
+    if (user && user.coins >= 10) {
+      navigate('/post');
+    } else {
+      navigate('/payment');
+    }
   };
 
   const handleLogout = () => {
@@ -85,7 +88,7 @@ const Navbar = () => {
               rounded="md"
               bg="#3b49df"
               _hover={{ bg: "#323ebe" }}
-              onClick={handleClick}
+              onClick={handleCreatePostClick}
             >
               Create a post
             </Button>
@@ -161,7 +164,7 @@ const Navbar = () => {
                   <Text fontWeight="500">Dashboard</Text>
                 </MenuItem>
                 <MenuItem>
-                  <Text fontWeight="500" onClick={handleClick}>
+                  <Text fontWeight="500">
                     Create Post
                   </Text>
                 </MenuItem>

@@ -12,47 +12,56 @@ import {
   InputLeftElement,
   Tooltip,
   IconButton,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiSend } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import api from "../../../Services/api";
 
 export const RightPanel = ({ selectedUser }) => {
+  const user = useSelector((state) => state.user);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const [userChatHistory, setUserChatHistory] = useState([]);
 
   useEffect(() => {
     if (!selectedUser) return;
+
     let access_token = localStorage.getItem("access");
-    const path = `${import.meta.env.VITE_APP_WS_BASE_URL}${
+    const path = `${import.meta.env.VITE_APP_WS_BASE_URL}${user.user.id}/${
       selectedUser.id
     }/?token=${access_token}`;
-    const socket = new WebSocket(path);
 
-    console.log("before onopen ", socket);
+    const ws = new WebSocket(path);
 
-    socket.onopen = () => {
-      console.log("WebSocket connection opened");
-      setSocket(socket);
+    console.log("before onopen ", ws);
+    ws.onopen = () => {
+      console.log("WebSocket Connected");
+      setSocket(ws);
     };
 
-    socket.onmessage = (event) => {
+    ws.onmessage = (event) => {
+      console.log("Received message:", event.data);
       const data = JSON.parse(event.data);
-      setMessages((prevMessages) => [...prevMessages, data]);
+      if (ws.readyState === WebSocket.OPEN) {
+        setChatMessages((prevMessages) => [...prevMessages, data]);
+      }
     };
 
-    socket.onerror = (e) => {
+    ws.onerror = (e) => {
       console.error(e);
     };
 
-    socket.onclose = () => {
-      console.log("WebSocket closed let's reopen");
+    ws.onclose = () => {
+      console.log("WebSocket Closed");
     };
 
     return () => {
-      socket?.close();
-      setMessages([]);
+      ws?.close();
+      console.log("WebSocket Closed (cleanup)");
+      setChatMessages([]);
     };
   }, [selectedUser]);
 
@@ -60,110 +69,151 @@ export const RightPanel = ({ selectedUser }) => {
     setMessage(e.target.value);
   };
 
+  const getUserChatHistory = async (group_name = "") => {
+    try {
+      console.log("getUserChatHistory");
+      const response = await api.get(
+        `${
+          import.meta.env.VITE_APP_BASE_URL
+        }chat/api/history/?group_name=${group_name}`
+      );
+      const reversedChatHistory = response.data.slice().reverse();
+      setUserChatHistory(reversedChatHistory);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        localStorage.removeItem("access");
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (selectedUser) {
+      let group_name = `chat_${user.user.id}-${selectedUser.id}`;
+      getUserChatHistory((group_name = group_name));
+    }
+  }, [selectedUser]);
+
   const handleSendMessage = () => {
-    if (socket && message.trim() !== "") {
-      socket.send(JSON.stringify({ message, username: "user" }));
+    if (
+      socket &&
+      socket.readyState === WebSocket.OPEN &&
+      message.trim() !== ""
+    ) {
+      console.log("Sending message:", message);
+      socket.send(
+        JSON.stringify({
+          message: message,
+          current_user_id: user.user.id,
+          from_user: true,
+        })
+      );
+
       setMessage("");
     }
   };
+  console.log(chatMessages);
+
   return (
-    <Flex
-      direction="column"
-      textAlign="center"
-      color="#41525d"
-      align={selectedUser ? "center" : "center"}
-    >
-      <Box w="full">
-        <Flex
-          bg="#f0f2f5"
-          justify="space-between"
-          py="2"
-          px="4"
-          borderRight="1px solid #f2f2f2"
-          color="#54656f"
-          ml={2}
-        >
-          <Avatar
-            boxSize="40px"
-            name="Clara Fiona"
-            src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGJsYWNrJTIwZmVtYWxlJTIwaGVhZHNob3R8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
-          />
-          <Text>User</Text>
-        </Flex>
-      </Box>
-
+    <>
       {selectedUser ? (
-        <Box>
-          <Heading fontWeight="light">{selectedUser.name}</Heading>
-          <Box
-            w="auto"
-            maxW="700px"
-            bg="gray.500"
-            color="white"
-            borderRadius="18px 18px 18px 0px"
-            p="3"
-            margin={10}
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.{" "}
-          </Box>
-          {messages.map((msg, index) => (
-            <Box
-              mt={index === 0 ? 5 : 2}
-              key={index}
-              w="auto"
-              maxW="70%" // Adjust this value as needed
-              ml="auto" // This will align the box to the right end
-              bg="gray.500"
-              color="white"
-              borderRadius="18px 18px 0px 18px"
-              p="3"
-              margin={2}
+        <Flex direction="column" h="100vh" w="full">
+       
+          <Box w="full">
+            <Flex
+              bg="#f0f2f5"
+              justify="space-between"
+              py="2"
+              px="4"
+              borderRight="1px solid #f2f2f2"
+              color="#54656f"
+              ml={2}
             >
-              {msg.text}
-            </Box>
-          ))}
-
-          <Box position="fixed" bottom="0" left="30%" right="50" p="4">
-            <Input
-              placeholder={"Enter message"}
-              value={message}
-              onChange={handleInputChange}
-            />
-            <IconButton
-              ml="2"
-              colorScheme="teal"
-              aria-label="Send message"
-              icon={<FiSend />}
-              onClick={handleSendMessage}
-            />
+              <Avatar
+                boxSize="40px"
+                name="Clara Fiona"
+                src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGJsYWNrJTIwZmVtYWxlJTIwaGVhZHNob3R8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
+              />
+              <Text>{selectedUser.name}</Text>
+            </Flex>
           </Box>
-        </Box>
+          <Flex flex="1" overflowY="auto" p={5} flexDirection="column">
+            {userChatHistory.map((chat, index) => (
+              <Box
+                key={index}
+                maxWidth="100%"
+                bg="gray.500"
+                color={chat.user === user.user.id ? "white" : "black"}
+                borderRadius={
+                  chat.user === user.user.id
+                    ? "18px 18px 0px 18px"
+                    : "18px 18px 18px 0px"
+                }
+                p="2"
+                mb={3}
+                alignSelf={
+                  chat.user === user.user.id ? "flex-end" : "flex-start"
+                }
+              >
+                {chat.message}
+              </Box>
+            ))}
+            {chatMessages.map((chat, index) => (
+              <Box
+                key={index}
+                maxWidth="100%"
+                bg="gray.500"
+                color={
+                  chat.current_user_id === user.user.id ? "white" : "black"
+                }
+                borderRadius={
+                  chat.current_user_id === user.user.id
+                    ? "18px 18px 0px 18px"
+                    : "18px 18px 18px 0px"
+                }
+                p="3"
+                mb={3}
+                alignSelf={
+                  chat.current_user_id === user.user.id
+                    ? "flex-end"
+                    : "flex-start"
+                }
+              >
+                {chat.message}
+              </Box>
+            ))}
+          </Flex>
+          <Box position="fixed" bottom="0" left="30%" right="0" p="4">
+            <InputGroup>
+              <Input
+                placeholder={"Enter message"}
+                value={message}
+                onChange={handleInputChange}
+              />
+              <InputRightElement>
+                <IconButton
+                  colorScheme="teal"
+                  aria-label="Send message"
+                  icon={<FiSend />}
+                  onClick={handleSendMessage}
+                />
+              </InputRightElement>
+            </InputGroup>
+          </Box>
+        </Flex>
       ) : (
-        <Center
-          bg="#f0f2f5"
-          borderBottom="6px solid #43c960"
-          position="relative"
-          w="70%"
-        >
-          <Box pt="8">
-            <Heading fontWeight="light">ADZAP</Heading>
-            <Text fontSize="sm" mt="4">
-              Chat with the seller and make better negotiations.
-              <br />
-            </Text>
-          </Box>
-        </Center>
+        <>
+          <Center bg="#f0f2f5" position="relative" w="70%">
+            <Box pt="8">
+              <Heading fontWeight="light">ADZAP</Heading>
+              <Text fontSize="sm" mt="4">
+                Chat with the seller and make better negotiations.
+                <br />
+              </Text>
+            </Box>
+          </Center>
+        </>
       )}
-
-      <AbsoluteCenter axis="horizontal" bottom="10" flex="1" mt="10">
-        <HStack justifyItems="baseline" color="#8696a0"></HStack>
-      </AbsoluteCenter>
-    </Flex>
+    </>
   );
 };
