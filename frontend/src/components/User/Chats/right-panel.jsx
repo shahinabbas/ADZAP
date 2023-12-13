@@ -34,6 +34,8 @@ export const RightPanel = ({ selectedUser }) => {
       selectedUser.id
     }/?token=${access_token}`;
 
+    getUserChatHistory();
+
     const ws = new WebSocket(path);
 
     console.log("before onopen ", ws);
@@ -69,15 +71,16 @@ export const RightPanel = ({ selectedUser }) => {
     setMessage(e.target.value);
   };
 
-  const getUserChatHistory = async (group_name = "") => {
+  const getUserChatHistory = async () => {
     try {
       console.log("getUserChatHistory");
       const response = await api.get(
-        `${
-          import.meta.env.VITE_APP_BASE_URL
-        }chat/api/history/?group_name=${group_name}`
+        `${import.meta.env.VITE_APP_BASE_URL}chat/api/history/?user_id=${
+          selectedUser.id
+        }`
       );
       const reversedChatHistory = response.data.slice().reverse();
+      console.log(reversedChatHistory, "111111111111111111111");
       setUserChatHistory(reversedChatHistory);
     } catch (error) {
       if (error.response?.status === 401) {
@@ -86,13 +89,6 @@ export const RightPanel = ({ selectedUser }) => {
       }
     }
   };
-
-  useEffect(() => {
-    if (selectedUser) {
-      let group_name = `chat_${user.user.id}-${selectedUser.id}`;
-      getUserChatHistory((group_name = group_name));
-    }
-  }, [selectedUser]);
 
   const handleSendMessage = () => {
     if (
@@ -118,7 +114,6 @@ export const RightPanel = ({ selectedUser }) => {
     <>
       {selectedUser ? (
         <Flex direction="column" h="100vh" w="full">
-       
           <Box w="full">
             <Flex
               bg="#f0f2f5"
