@@ -3,6 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, logoutUser } from "../../Redux/userActions";
 import { FaBoxOpen } from "react-icons/fa";
 import { TbCoinRupeeFilled } from "react-icons/tb";
+import { FaBell } from "react-icons/fa";
+import { setNotificationCount } from "../../Redux/userActions";
+import { NotificationData } from "../../Redux/userActions";
+import api from "../../services/api";
 import {
   Container,
   Box,
@@ -21,7 +25,7 @@ import {
   chakra,
   Icon,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const IconButton = ({ children }) => {
   return (
@@ -38,20 +42,70 @@ const IconButton = ({ children }) => {
   );
 };
 
+export const setupNotification = (dispatch) => {
+  let access_token = localStorage.getItem("access");
+  const ws = new WebSocket(
+    `${import.meta.env.VITE_APP_WS_BASE_URL}notification/?token=${access_token}`
+  );
+  console.log("WebSocket connection established");
+
+  ws.onopen = (e) => {
+    console.log("notification connected");
+  };
+  ws.onmessage = function (e) {
+    console.log("WebSocket message received:", e.data);
+    const data = JSON.parse(e.data);
+    console.log("Notification data:", data);
+    dispatch(setNotificationCount(data.count));
+  };
+
+  ws.onclose = () => {
+    console.log("WebSocket connection closed");
+  };
+  ws.onerror = () => {
+    console.log("WebSocket connection error");
+  };
+  return ws;
+};
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const [notificationHistory, setNotificationHistory] = useState();
 
   useEffect(() => {
     dispatch(fetchUser());
+    setupNotification(dispatch);
+    dispatch(NotificationData(user.user.id));
   }, [dispatch]);
 
   const navigate = useNavigate();
   const handleCreatePostClick = () => {
     if (user && user.coins >= 10) {
-      navigate('/post');
+      navigate("/post");
     } else {
-      navigate('/payment');
+      navigate("/payment");
+    }
+  };
+
+  const fetchNotificationChat = async () => {
+    try {
+      const lastFiveNotificationData = user.notificationdata.slice(0, 5);
+      const chatDataPromises = user.notificationdata.map(
+        async (notification) => {
+          const chatId = notification.chat;
+          const response = await api.get(
+            `${import.meta.env.VITE_APP_BASE_URL}chat/api/history/${chatId}/`
+          );
+          return response.data;
+        }
+      );
+
+      const chatData = await Promise.all(chatDataPromises);
+      console.log(chatData);
+      setNotificationHistory(chatData);
+    } catch (error) {
+      console.log("fetchNotificationChat error", error);
     }
   };
 
@@ -60,6 +114,8 @@ const Navbar = () => {
     dispatch(logoutUser());
     navigate("/");
   };
+  console.log(user.notificationdata, "1111111111111111");
+
   return (
     <Box
       py="2"
@@ -97,41 +153,68 @@ const Navbar = () => {
               onClick={() => navigate("/box")}
               cursor={"pointer"}
             />
-            <chakra.span pos="relative" display="inline-block" onClick={()=>navigate('/payment')}>
-              <TbCoinRupeeFilled size={26} />
+            <Box mr={2}>
               <chakra.span
-                pos="absolute"
-                top="-1px"
-                right="-1px"
-                px={2}
-                py={1}
-                fontSize="xs"
-                fontWeight="bold"
-                lineHeight="none"
-                color="red.100"
-                transform="translate(50%,-50%)"
-                bg="red.600"
-                rounded="full"
+                pos="relative"
+                display="inline-block"
+                onClick={() => navigate("/payment")}
               >
-                {user && user.user && user.user.id ? user.user.coins : 0}
+                <TbCoinRupeeFilled size={26} />
+                <chakra.span
+                  pos="absolute"
+                  top="-1px"
+                  right="-1px"
+                  px={2}
+                  py={1}
+                  fontSize="xs"
+                  fontWeight="bold"
+                  lineHeight="none"
+                  color="red.100"
+                  transform="translate(50%,-50%)"
+                  bg="red.600"
+                  rounded="full"
+                >
+                  {user && user.user && user.user.id ? user.user.coins : 0}
+                </chakra.span>
               </chakra.span>
-            </chakra.span>
+            </Box>
+            <Menu isLazy>
+              {/* <MenuButton onClick={()=>{fetchNotificationChat()}}> */}
+              <MenuButton onClick={()=>navigate('/chat')}>
+                <chakra.span
+                  pos="relative"
+                  display="inline-block"
+                  onClick={() => navigate("/payment")}
+                >
+                  <FaBell size={22} />
+                  <chakra.span
+                    pos="absolute"
+                    top="-1px"
+                    right="-1px"
+                    px={2}
+                    py={1}
+                    fontSize="xs"
+                    fontWeight="bold"
+                    lineHeight="none"
+                    color="red.100"
+                    transform="translate(50%, -50%)"
+                    bg="red.600"
+                    rounded="full"
+                  >
+                    {user.notificationCount}
+                  </chakra.span>
+                </chakra.span>
+              </MenuButton>
+              {/* <MenuList zIndex={5}>
+                {notificationHistory &&
+                  notificationHistory.map((notification) => (
+                    <MenuItem key={notification.id}>
+                      <Text fontWeight="500">{notification.message}</Text>
+                    </MenuItem>
+                  ))}
+              </MenuList> */}
+            </Menu>
 
-            <IconButton>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                role="img"
-                aria-labelledby="ap1tc5wqdskeg9i5jtulggx2n8axe0vz"
-              >
-                <title id="ap1tc5wqdskeg9i5jtulggx2n8axe0vz">
-                  Notifications
-                </title>
-                <path d="M20 17h2v2H2v-2h2v-7a8 8 0 1116 0v7zm-2 0v-7a6 6 0 10-12 0v7h12zm-9 4h6v2H9v-2z"></path>
-              </svg>
-            </IconButton>
             <Menu isLazy>
               <MenuButton as={Button} size="sm" px={0} py={0} rounded="full">
                 <Avatar
@@ -156,17 +239,14 @@ const Navbar = () => {
                     ) : (
                       <Text onClick={() => navigate("/login")}>Login</Text>
                     )}
-                  </Text>{" "}
+                  </Text>
                 </MenuItem>
-
                 <MenuDivider />
                 <MenuItem>
                   <Text fontWeight="500">Dashboard</Text>
                 </MenuItem>
                 <MenuItem>
-                  <Text fontWeight="500">
-                    Create Post
-                  </Text>
+                  <Text fontWeight="500">Create Post</Text>
                 </MenuItem>
                 <MenuItem>
                   <Text fontWeight="500" onClick={() => navigate("/login")}>

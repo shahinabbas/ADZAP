@@ -11,21 +11,18 @@ class CustomerChat(models.Model):
     is_read = models.BooleanField(default=False)
     from_user = models.BooleanField(default=False)
 
-
     def __str__(self):
         return self.message
 
 
-
-
 class Notification(models.Model):
+    chat=models.ForeignKey(CustomerChat,on_delete=models.CASCADE)
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     is_seen = models.BooleanField(default=False)
 
-    # def __str__(self):
-    #     return f'{self.user.first_name}-{self.flash.title}'
+    def __str__(self):
+        return self.user.name
 
-    class Meta:
-        ordering = ['-created_at']
+    

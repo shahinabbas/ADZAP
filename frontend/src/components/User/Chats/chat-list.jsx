@@ -18,6 +18,7 @@ export function ChatList({ onItemClick }) {
   const [userData, setUserData] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   useEffect(() => {
+    console.log('chat-list');
     const fetchData = async () => {
       try {
         const userResponse = await fetchUser();

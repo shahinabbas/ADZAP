@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import api from "../../../Services/api";
+import { setupNotification } from "../Navbar";
 
 export const RightPanel = ({ selectedUser }) => {
   const user = useSelector((state) => state.user);
@@ -38,18 +39,16 @@ export const RightPanel = ({ selectedUser }) => {
 
     const ws = new WebSocket(path);
 
-    console.log("before onopen ", ws);
     ws.onopen = () => {
-      console.log("WebSocket Connected");
       setSocket(ws);
     };
 
     ws.onmessage = (event) => {
-      console.log("Received message:", event.data);
       const data = JSON.parse(event.data);
       if (ws.readyState === WebSocket.OPEN) {
         setChatMessages((prevMessages) => [...prevMessages, data]);
       }
+      setupNotification();
     };
 
     ws.onerror = (e) => {
@@ -71,16 +70,28 @@ export const RightPanel = ({ selectedUser }) => {
     setMessage(e.target.value);
   };
 
+  // const notificationStatus =async () => {
+  //   console.log('222222222222222222222222');
+  //   try {
+  //     const response =await api.patch(
+  //       `${import.meta.env.VITE_APP_BASE_URL}chat/api/notification/${
+  //         selectedUser.id
+  //       }/`
+  //     );
+  //     console.log(response,'notificationststus');
+  //   } catch (error) {
+  //     console.log("notification status error", error);
+  //   }
+  // };
+
   const getUserChatHistory = async () => {
     try {
-      console.log("getUserChatHistory");
       const response = await api.get(
         `${import.meta.env.VITE_APP_BASE_URL}chat/api/history/?user_id=${
           selectedUser.id
         }`
       );
       const reversedChatHistory = response.data.slice().reverse();
-      console.log(reversedChatHistory, "111111111111111111111");
       setUserChatHistory(reversedChatHistory);
     } catch (error) {
       if (error.response?.status === 401) {
@@ -96,19 +107,18 @@ export const RightPanel = ({ selectedUser }) => {
       socket.readyState === WebSocket.OPEN &&
       message.trim() !== ""
     ) {
-      console.log("Sending message:", message);
       socket.send(
         JSON.stringify({
           message: message,
           current_user_id: user.user.id,
           from_user: true,
+          receiver: selectedUser.id,
         })
       );
 
       setMessage("");
     }
   };
-  console.log(chatMessages);
 
   return (
     <>
@@ -167,7 +177,6 @@ export const RightPanel = ({ selectedUser }) => {
                     : "18px 18px 18px 0px"
                 }
                 p="3"
-                mb={3}
                 alignSelf={
                   chat.current_user_id === user.user.id
                     ? "flex-end"
@@ -178,6 +187,7 @@ export const RightPanel = ({ selectedUser }) => {
               </Box>
             ))}
           </Flex>
+
           <Box position="fixed" bottom="0" left="30%" right="0" p="4">
             <InputGroup>
               <Input

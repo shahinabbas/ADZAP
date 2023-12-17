@@ -66,7 +66,7 @@ function Spot() {
             {spotData.discription}
           </Text>
           <Flex direction={["column", "row"]} mt={5}>
-            <Button onClick={()=>navigate('/chat')}>Chat With Seller</Button>
+            <Button onClick={()=>navigate('/chat',{state:{selectedUser:spotData.user}})}>Chat With Seller</Button>
             <Button bg="#3b49df" color={"white"} ml={[0, 10]}>
               More Spots
             </Button>

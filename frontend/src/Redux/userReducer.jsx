@@ -3,6 +3,8 @@ const initialState = {
   coins: 0,
   is_authenticated: false,
   is_admin: false,
+  notificationCount: 0,
+  notificationdata: null,
   error: null,
 };
 
@@ -26,6 +28,16 @@ const userReducer = (state = initialState, action) => {
         is_admin: false,
         error: action.payload,
       };
+    case "SET_NOTIFICATION_COUNT":
+      return {
+        ...state,
+        notificationCount: action.payload,
+      };
+    case "FETCH_NOTIFICATION_DATA_SUCCESS":
+      return {
+        ...state,
+        notificationdata: action.payload,
+      };
     case "LOGOUT_USER":
       console.log("Logout Action Received");
       return {
@@ -34,8 +46,12 @@ const userReducer = (state = initialState, action) => {
         coins: 0,
         is_authenticated: false,
         is_admin: false,
+        notificationCount: 0,
+        notificationdata: null,
+
         error: null,
       };
+
     default:
       return state;
   }
