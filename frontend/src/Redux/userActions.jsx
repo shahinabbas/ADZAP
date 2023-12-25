@@ -23,10 +23,9 @@ export const NotificationData = (userId) => async (dispatch) => {
       const response = await api.get(
         `${import.meta.env.VITE_APP_BASE_URL}chat/api/notification/${userId}/`
       );
-      console.log("notificationdata", response);
       dispatch({
         type: "FETCH_NOTIFICATION_DATA_SUCCESS",
-        payload: response.data,
+        payload: [],
       });
     } else {
     }
@@ -45,5 +44,12 @@ export const setNotificationCount = (count) => {
   return {
     type: "SET_NOTIFICATION_COUNT",
     payload: count,
+  };
+};
+
+export const setSelectedChatUser = (user) => {
+  return {
+    type: "SET_SELECTED_CHAT_USER",
+    payload: user,
   };
 };

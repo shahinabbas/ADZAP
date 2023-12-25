@@ -4,12 +4,14 @@ import { RightPanel } from "./Chats/right-panel";
 import { Flex } from "@chakra-ui/react";
 import Navbar from "./Navbar";
 import { useLocation, useParams } from "react-router-dom";
+import { setSelectedChatUser } from "../../Redux/userActions";
+import { useDispatch } from "react-redux";
 
 function Chat() {
-  const [selectedUser, setSelectedUser] = useState(null);
-
+  const dispatch = useDispatch();
+  
   const handleUserClick = (user) => {
-    setSelectedUser(user);
+    dispatch(setSelectedChatUser(user));
   };
 
   return (
@@ -17,7 +19,7 @@ function Chat() {
       <Navbar />
       <Flex h="100vh" mt="65px">
         <LeftPanel onItemClick={handleUserClick} />
-        <RightPanel selectedUser={selectedUser} />
+        <RightPanel />
       </Flex>
     </div>
   );

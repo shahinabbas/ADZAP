@@ -11,19 +11,24 @@ import {
 } from "@chakra-ui/react";
 import { DeliveredIcon } from "../../../images/icons";
 import { fetchUser } from "../../../Services/apiUtils";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedChatUser } from "../../../Redux/userActions";
 
 export function ChatList({ onItemClick }) {
   const user = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    console.log('chat-list');
     const fetchData = async () => {
       try {
         const userResponse = await fetchUser();
-        const filteredUserData = userResponse.filter((item) => item.id !== user.user.id);
+        const filteredUserData = userResponse.filter(
+          (item) => item.id !== user.user.id
+        );
         setUserData(filteredUserData);
+        console.log(filteredUserData, "fkfkfk");
       } catch (error) {
         console.log(error);
       }
@@ -32,6 +37,7 @@ export function ChatList({ onItemClick }) {
   }, []);
 
   const onUserClick = (user) => {
+    dispatch(setSelectedChatUser(user));
     setSelectedUser(user);
   };
 
@@ -61,15 +67,29 @@ export function ChatList({ onItemClick }) {
                 <Box>
                   <Text fontWeight="medium">{item.name}</Text>
                   <HStack>
-                    <DeliveredIcon color={item.seen ? "#53bdeb" : "#667781"} />
                     <Text color="#667781" fontSize="sm">
-                      {item.message}
+                      {/* 1 */}
                     </Text>
                   </HStack>
                 </Box>
-                <chakra.time fontSize="xs" color="#667781">
+                {/* <chakra.time fontSize="xs" color="#667781">
                   {item.date}
-                </chakra.time>
+                </chakra.time> */}
+                {/* {item.notificationCount > 0 && ( */}
+                  <chakra.time
+                    w="20px"
+                    h="20px"
+                    bg="grey"
+                    color="white"
+                    borderRadius="full"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    fontSize="sm"
+                  >
+                    1
+                  </chakra.time>
+                {/* )} */}
               </Flex>
             </Box>
           </HStack>

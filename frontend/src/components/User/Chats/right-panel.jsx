@@ -20,20 +20,19 @@ import { useSelector } from "react-redux";
 import api from "../../../Services/api";
 import { setupNotification } from "../Navbar";
 
-export const RightPanel = ({ selectedUser }) => {
+export const RightPanel = () => {
   const user = useSelector((state) => state.user);
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const [userChatHistory, setUserChatHistory] = useState([]);
 
+  const selectedUser = user.selectedUser;
   useEffect(() => {
     if (!selectedUser) return;
-
-    let access_token = localStorage.getItem("access");
     const path = `${import.meta.env.VITE_APP_WS_BASE_URL}${user.user.id}/${
       selectedUser.id
-    }/?token=${access_token}`;
+    }/`;
 
     getUserChatHistory();
 
@@ -70,19 +69,18 @@ export const RightPanel = ({ selectedUser }) => {
     setMessage(e.target.value);
   };
 
-  // const notificationStatus =async () => {
-  //   console.log('222222222222222222222222');
-  //   try {
-  //     const response =await api.patch(
-  //       `${import.meta.env.VITE_APP_BASE_URL}chat/api/notification/${
-  //         selectedUser.id
-  //       }/`
-  //     );
-  //     console.log(response,'notificationststus');
-  //   } catch (error) {
-  //     console.log("notification status error", error);
-  //   }
-  // };
+  const notificationStatus = async () => {
+    try {
+      const response = await api.patch(
+        `${import.meta.env.VITE_APP_BASE_URL}chat/api/notification/${
+          selectedUser
+        }/`
+      );
+
+    } catch (error) {
+      console.log("notification status error", error);
+    }
+  };
 
   const getUserChatHistory = async () => {
     try {
@@ -119,7 +117,6 @@ export const RightPanel = ({ selectedUser }) => {
       setMessage("");
     }
   };
-
   return (
     <>
       {selectedUser ? (
@@ -139,7 +136,8 @@ export const RightPanel = ({ selectedUser }) => {
                 name="Clara Fiona"
                 src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGJsYWNrJTIwZmVtYWxlJTIwaGVhZHNob3R8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
               />
-              <Text>{selectedUser.name}</Text>
+              
+              <Text>{user.selectedUser.name}</Text>
             </Flex>
           </Box>
           <Flex flex="1" overflowY="auto" p={5} flexDirection="column">

@@ -9,9 +9,7 @@ import json
 @receiver(post_save, sender=Notification)
 def send_notification(sender, instance, created, **kwargs):
     if created:
-        print('signallllllllllllllllllllllllllllllllllllll')
         async def send_notification_async():
-            print('send_notification_async')
             channel_layer = get_channel_layer()
             notification_obj = await database_sync_to_async(
                 Notification.objects.filter(is_seen=False, user=instance.user).count
@@ -21,7 +19,6 @@ def send_notification(sender, instance, created, **kwargs):
             data = {
                 'count': notification_obj
             }
-            print('1111111111111111111111111')
             await channel_layer.group_send(
                 user_id,
                 {

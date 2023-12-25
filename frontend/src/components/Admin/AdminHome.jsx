@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import AdminNavbar from "./AdminNavbar";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
-import { Box, Heading, Container, Tooltip } from "@chakra-ui/react";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+} from "recharts";
+import { Box, Heading, Container, Flex } from "@chakra-ui/react";
 import api from "../../Services/api";
 
 const AdminHome = () => {
   const [chartData, setChartData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -21,6 +29,7 @@ const AdminHome = () => {
 
     fetchData();
   }, []);
+
   const formattedChartData = chartData.map((item) => {
     const date = new Date(item.month);
     const monthName = new Intl.DateTimeFormat("en-US", {
@@ -31,21 +40,48 @@ const AdminHome = () => {
       money: item.total_price,
     };
   });
+
   return (
     <>
       <AdminNavbar />
-      <Container maxW="49%" mt={5}>
-        <Box bg="white" p={6} borderRadius="lg" boxShadow="lg">
-          <Heading mb={4} textAlign="center" size="xl">
-            Payment Graph{" "}
-          </Heading>
-          <LineChart width={600} height={300} data={formattedChartData}>
-            <Line type="monotone" dataKey="money" stroke="#8884d8" />
-            <CartesianGrid stroke="#ccc" />
-            <XAxis dataKey="awsMonth" />
-            <YAxis />
-          </LineChart>
-        </Box>
+      <Container mt={5}>
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          justifyContent="space-between"
+          flexWrap="wrap"
+        >
+          <Box width={{ base: "100%", md: "48%" }} mb={4}>
+            <Box bg="white" p={6} borderRadius="lg" boxShadow="lg">
+              <Heading mb={4} textAlign="center" size="xl">
+                Payment Graph 1
+              </Heading>
+              <ResponsiveContainer>
+                <LineChart data={formattedChartData}>
+                  <Line type="monotone" dataKey="money" stroke="#8884d8" />
+                  <CartesianGrid stroke="#ccc" />
+                  <XAxis dataKey="awsMonth" />
+                  <YAxis />
+                </LineChart>
+              </ResponsiveContainer>
+            </Box>
+          </Box>
+
+          <Box width={{ base: "100%", md: "48%" }}>
+            <Box bg="white" p={6} borderRadius="lg" boxShadow="lg">
+              <Heading mb={4} textAlign="center" size="xl">
+                Payment Graph 2
+              </Heading>
+              <ResponsiveContainer>
+                <LineChart data={formattedChartData}>
+                  <Line type="monotone" dataKey="money" stroke="#8884d8" />
+                  <CartesianGrid stroke="#ccc" />
+                  <XAxis dataKey="awsMonth" />
+                  <YAxis />
+                </LineChart>
+              </ResponsiveContainer>
+            </Box>
+          </Box>
+        </Flex>
       </Container>
     </>
   );

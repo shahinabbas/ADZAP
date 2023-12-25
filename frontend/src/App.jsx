@@ -9,6 +9,7 @@ import Spots from "./components/User/Spots";
 import Home from "./components/User/Home";
 import Post from "./components/User/Post";
 import Spot from "./components/User/Spot";
+import SpotDetails from "./components/Admin/SpotDetails";
 import AdminLogin from "./components/Admin/AdminLogin";
 import BannerManagement from "./components/Admin/BannerManagement";
 import Category from "./components/Admin/Category";
@@ -158,6 +159,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <BannerManagement />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/spotdetails/:id"
+                element={
+                  <PrivateRoute>
+                    <SpotDetails />
                   </PrivateRoute>
                 }
               />

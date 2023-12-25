@@ -8,10 +8,9 @@ export const fetchCategory = async () => {
     return response.data;
   } catch (error) {
     console.error(error);
-    throw error; 
+    throw error;
   }
 };
-
 
 export const fetchBox = async (userId) => {
   try {
@@ -22,22 +21,43 @@ export const fetchBox = async (userId) => {
           userId: userId,
         },
       }
-      );
-      console.log(res.data,'kuaew');
-      return res
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-
-export const fetchUser=async()=>{
-  try{
-    const response=await api.get(
-      `${import.meta.env.VITE_APP_BASE_URL}admins/api/users/`,
-    )
-    return response.data; 
-  }catch(error){
+    );
+    console.log(res.data, "kuaew");
+    return res;
+  } catch (error) {
     console.log(error);
   }
-}
+};
+
+export const fetchUser = async () => {
+  try {
+    const response = await api.get(
+      `${import.meta.env.VITE_APP_BASE_URL}admins/api/users/`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchSingleUser = async (user_id) => {
+  try {
+    const response = await api.get(
+      `${import.meta.env.VITE_APP_BASE_URL}admins/api/edit/${user_id}/`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchPostDetails = async (id) => {
+  try {
+    const response = await api.get(
+      `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/${id}/`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

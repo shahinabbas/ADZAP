@@ -72,18 +72,17 @@ class PersonalChatConsumer(AsyncWebsocketConsumer):
 
 class NotificationStatus(AsyncWebsocketConsumer):
     async def connect(self):
-        print('notification entered')
-        my_id = self.scope['user'].id
-        if not my_id:
+        print('revubfnkd')
+        user_id = self.scope['url_route']['kwargs']['user_id']
+        print(user_id)
+        if not user_id:
             await self.close()
-        self.room_group_name = f'{my_id}'
+        self.room_group_name = f'{user_id}'
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
-        print('here')
         await self.accept()
-        print('sijsuhygtfrdefgvbhnjmk')
 
     async def send_notification(self, event):
         print('send notif')

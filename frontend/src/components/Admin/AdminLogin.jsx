@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
 import {
+  Box,
   Button,
   Modal,
   ModalOverlay,
@@ -15,6 +17,7 @@ import {
   Flex,
   Image,
   Text,
+  Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -26,6 +29,8 @@ function AdminLogin() {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const currentPath = window.location.pathname;
@@ -34,11 +39,16 @@ function AdminLogin() {
     }
   }, []);
 
-  const onClose = () => setIsOpen(false);
+  const onClose = () => {
+    setIsOpen(false);
+    navigate("/");
+  };
+
   const onOpen = () => setIsOpen(true);
 
   const handleSubmit = async () => {
-    console.log("Login modal", import.meta.env.VITE_APP_BASE_URL);
+    setError("");
+    setLoading(true);
     const formData = {
       email,
       password,
@@ -50,33 +60,54 @@ function AdminLogin() {
       );
       const userId = response.data.user.id;
       dispatch(fetchUser(userId));
-      localStorage.setItem("access:", response.data.access);
-      localStorage.setItem("refresh:", response.data.refresh);
-      onClose();
+      console.log("User login success:", response.data);
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
       navigate("/admin");
     } catch (error) {
-      console.error("User login failed from admin Login modal");
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+    <Box>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={{ base: "full", lg: "2xl" }}
+      >
         <ModalOverlay />
         <ModalContent>
-          <Flex>
+          <Flex
+            direction={{ base: "column", lg: "row" }}
+            display={{ base: "block", lg: "flex" }}
+            flexWrap="wrap"
+          >
             <Image
               src="src\images\login.jpg"
               alt="Login Image"
-              boxSize="50%"
+              mt={{ base: 0, lg: 100 }}
+              boxSize={{ base: "100%", lg: "50%" }}
               objectFit="cover"
             />
-            <Flex direction="column" p={5} bg="#848CEF" w="100%">
+            <Flex
+              direction="column"
+              p={5}
+              bg="#848CEF"
+              w={{ base: "100%", lg: "50%" }}
+            >
               <ModalHeader fontSize="2xl" textAlign="center" color="white">
                 Admin Login
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody color="white">
+                {error && (
+                  <Text color="white" mt={2} textAlign="center">
+                    {error}
+                  </Text>
+                )}
                 <FormControl>
                   <FormLabel>Email</FormLabel>
                   <Input
@@ -100,30 +131,24 @@ function AdminLogin() {
                   />
                 </FormControl>
               </ModalBody>
+
               <ModalFooter>
                 <Button
-                  w="130px"
-                  style={{ marginRight: "60px" }}
+                  w={{ base: "100%", lg: "100%" }}
                   bg="#BACEF5"
                   onClick={handleSubmit}
+                  isLoading={loading}
                 >
-                  Login
+                  {loading ? "Logging In..." : "Login"}
                 </Button>
               </ModalFooter>
-              <Text
-                style={{
-                  marginLeft: "100px",
-                  fontSize: "10px",
-                  fontFamily: "cursive",
-                }}
-              >
-                Not a user? Signup
-              </Text>
+
+           
             </Flex>
           </Flex>
         </ModalContent>
       </Modal>
-    </div>
+    </Box>
   );
 }
 

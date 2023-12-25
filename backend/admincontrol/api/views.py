@@ -89,7 +89,6 @@ class PostListCreateView(generics.ListCreateAPIView):
             user.save()
 
             serializer.save(user=user)
-            send_post_created_email.apply_async(countdown=10)
         else:
             return Response(
                 {'error': 'Not enough coins to create a post'},
@@ -119,6 +118,11 @@ class PostToggleActionView(generics.UpdateAPIView):
         instance = self.get_object()
         instance.is_active = not instance.is_active
         instance.save()
+        # print('mail start',instance.id)
+        # if instance.is_active:
+        #     print('11111111111111')
+        #     send_post_created_email.delay(post_id=instance.id)
+        # print('mail func call')
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

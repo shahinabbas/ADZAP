@@ -42,10 +42,9 @@ const IconButton = ({ children }) => {
   );
 };
 
-export const setupNotification = (dispatch) => {
-  let access_token = localStorage.getItem("access");
+export const setupNotification = (dispatch, user) => {
   const ws = new WebSocket(
-    `${import.meta.env.VITE_APP_WS_BASE_URL}notification/?token=${access_token}`
+    `${import.meta.env.VITE_APP_WS_BASE_URL}notification/${user.user.id}/`
   );
   console.log("WebSocket connection established");
 
@@ -53,9 +52,7 @@ export const setupNotification = (dispatch) => {
     console.log("notification connected");
   };
   ws.onmessage = function (e) {
-    console.log("WebSocket message received:", e.data);
     const data = JSON.parse(e.data);
-    console.log("Notification data:", data);
     dispatch(setNotificationCount(data.count));
   };
 
@@ -75,10 +72,11 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
-    setupNotification(dispatch);
-    dispatch(NotificationData(user.user.id));
+    if (user && user.user) {
+      setupNotification(dispatch, user);
+      dispatch(NotificationData(user.user.id));
+    }
   }, [dispatch]);
-
   const navigate = useNavigate();
   const handleCreatePostClick = () => {
     if (user && user.coins >= 10) {
@@ -102,7 +100,6 @@ const Navbar = () => {
       );
 
       const chatData = await Promise.all(chatDataPromises);
-      console.log(chatData);
       setNotificationHistory(chatData);
     } catch (error) {
       console.log("fetchNotificationChat error", error);
@@ -114,7 +111,6 @@ const Navbar = () => {
     dispatch(logoutUser());
     navigate("/");
   };
-  console.log(user.notificationdata, "1111111111111111");
 
   return (
     <Box
@@ -180,7 +176,7 @@ const Navbar = () => {
             </Box>
             <Menu isLazy>
               {/* <MenuButton onClick={()=>{fetchNotificationChat()}}> */}
-              <MenuButton onClick={()=>navigate('/chat')}>
+              <MenuButton onClick={() => navigate("/chat")}>
                 <chakra.span
                   pos="relative"
                   display="inline-block"

@@ -4,16 +4,19 @@ import Footer from "./Footer";
 import api from "../../Services/api";
 import { Image, Flex, Text, Button, Box, Stack } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchCategory } from "../../Services/apiUtils";
+import { fetchCategory,fetchSingleUser } from "../../Services/apiUtils";
 import { logoutUser } from "../../Redux/userActions";
+import { ChatList } from "./Chats/chat-list";
+import { useDispatch } from "react-redux";
+import { setSelectedChatUser } from "../../Redux/userActions";
 
 function Spot() {
   const { spotId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [spotData, setSpotData] = useState(null);
   const [categories, setCategories] = useState(null);
   const [catgId, setCatgId] = useState();
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,6 +33,18 @@ function Spot() {
     };
     fetchData();
   }, [spotId]);
+
+  const handleSelectUser = async (selectedUser) => {
+    try {
+      const singleUserData = await fetchSingleUser(selectedUser);
+      dispatch(setSelectedChatUser(singleUserData));
+
+      navigate("/chat");
+    } catch (error) {
+      console.error("Error fetching single user:", error);
+    }
+  };
+
 
   const getCategoryNameById = (catgId) => {
     const category = categories
@@ -66,7 +81,9 @@ function Spot() {
             {spotData.discription}
           </Text>
           <Flex direction={["column", "row"]} mt={5}>
-            <Button onClick={()=>navigate('/chat',{state:{selectedUser:spotData.user}})}>Chat With Seller</Button>
+            <Button onClick={() => handleSelectUser(spotData.user)}>
+              Chat With Seller
+            </Button>
             <Button bg="#3b49df" color={"white"} ml={[0, 10]}>
               More Spots
             </Button>
@@ -81,6 +98,7 @@ function Spot() {
       </Stack>
 
       <Footer />
+      {/* <ChatList onSelectUser={handleSelectUser} /> */}
     </div>
   );
 }

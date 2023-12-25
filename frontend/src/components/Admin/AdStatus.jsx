@@ -15,8 +15,10 @@ import {
   Text,
   Center,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const AdStatus = () => {
+  const navigate = useNavigate();
   const [action, setAction] = useState([]);
   const [post, setPost] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -45,6 +47,10 @@ const AdStatus = () => {
     fetchData();
     fetchCategories();
   }, []);
+
+  const handleDetailedView = (adId) => {
+    navigate(`/spotdetails/${adId}`);
+  };
 
   const handleToggleStatus = async (adId) => {
     try {
@@ -86,9 +92,9 @@ const AdStatus = () => {
                 <Th>Category</Th>
                 <Th>Genre</Th>
                 <Th>Price</Th>
-                <Th>Landmark</Th>
                 <Th>Pincode</Th>
                 <Th>Status</Th>
+                <Th>View</Th>
                 <Th>Action</Th>
               </Tr>
             </Thead>
@@ -99,9 +105,17 @@ const AdStatus = () => {
                   <Td>{getCategoryNameById(ad.category)}</Td>
                   <Td>{ad.media_type}</Td>
                   <Td>{ad.price}</Td>
-                  <Td>{ad.landmark}</Td>
                   <Td>{ad.pincode}</Td>
                   <Td>{ad.is_active ? "Accepted" : "Declined"}</Td>
+                  <Td>
+                    <Button
+                      colorScheme="blue"
+                      onClick={() => handleDetailedView(ad.id)}
+                    >
+                      {" "}
+                      Detailed View
+                    </Button>
+                  </Td>
                   <Td>
                     <Button
                       colorScheme={ad.is_active ? "red" : "green"}

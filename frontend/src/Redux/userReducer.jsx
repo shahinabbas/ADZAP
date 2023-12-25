@@ -5,6 +5,7 @@ const initialState = {
   is_admin: false,
   notificationCount: 0,
   notificationdata: null,
+  selectedUser: null,
   error: null,
 };
 
@@ -38,6 +39,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         notificationdata: action.payload,
       };
+    case "SET_SELECTED_CHAT_USER":
+      return {
+        ...state,
+        selectedUser: action.payload,
+      };
     case "LOGOUT_USER":
       console.log("Logout Action Received");
       return {
@@ -48,7 +54,8 @@ const userReducer = (state = initialState, action) => {
         is_admin: false,
         notificationCount: 0,
         notificationdata: null,
-
+        selectedUser: null,
+        
         error: null,
       };
 

@@ -8,7 +8,7 @@ urlpatterns = [
     path('action/<int:pk>/', views.ToggleUserActiveStatus.as_view(),
          name='user-is-active'),
     path('edit/<int:pk>/', views.UserEditView.as_view(), name='edit-user'),
-
+     
     path('reset-password/<int:pk>/',
          views.ResetPasswordView.as_view(), name='reset-password'),
 
@@ -26,7 +26,8 @@ urlpatterns = [
 
 
     path('post/', views.PostListCreateView.as_view(), name='post-create-list'),
-    path('post-list-userbased/<int:user_id>/', views.PostList.as_view(), name='post-list'),
+    path('post-list-userbased/<int:user_id>/',
+         views.PostList.as_view(), name='post-list'),
     path('post/action/<int:pk>/', views.PostToggleActionView.as_view(),
          name='post-toggle-action'),
     path('post/<int:pk>/', views.PostRetrieveUpdateDeleteView.as_view(),

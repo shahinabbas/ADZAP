@@ -12,15 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { ChatList } from "./chat-list";
 import { FilterIcon, SearchIcon } from "../../../images/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export function LeftPanel({ onItemClick }) {
-  const [selectedUser, setSelectedUser] = useState(null);
-  useEffect(() => {
-    console.log("left");
-  });
+export function LeftPanel({onItemClick}) {
+
   return (
-    <Flex direction="column" w="30%">
+    <Flex direction="column" w="30%" >
       <Box>
         <Flex
           bg="#f0f2f5"

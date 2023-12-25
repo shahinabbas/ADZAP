@@ -5,6 +5,7 @@ from accounts.models import CustomUser
 class Post(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
+    # Title = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
