@@ -1,35 +1,35 @@
 import {
-  AbsoluteCenter,
   Center,
   Flex,
   Box,
   Heading,
-  HStack,
   Text,
   Input,
   Avatar,
   InputGroup,
-  InputLeftElement,
-  Tooltip,
   IconButton,
   InputRightElement,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiSend } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api from "../../../Services/api";
 import { setupNotification } from "../Navbar";
+import { fetchCount } from "../../../Redux/userActions";
 
 export const RightPanel = () => {
   const user = useSelector((state) => state.user);
+
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const [userChatHistory, setUserChatHistory] = useState([]);
+  const dispatch = useDispatch();
 
   const selectedUser = user.selectedUser;
   useEffect(() => {
     if (!selectedUser) return;
+    markAsSeen(selectedUser.id);
     const path = `${import.meta.env.VITE_APP_WS_BASE_URL}${user.user.id}/${
       selectedUser.id
     }/`;
@@ -47,7 +47,8 @@ export const RightPanel = () => {
       if (ws.readyState === WebSocket.OPEN) {
         setChatMessages((prevMessages) => [...prevMessages, data]);
       }
-      setupNotification();
+      dispatch(fetchCount());
+      setupNotification(dispatch, user);
     };
 
     ws.onerror = (e) => {
@@ -60,10 +61,24 @@ export const RightPanel = () => {
 
     return () => {
       ws?.close();
-      console.log("WebSocket Closed (cleanup)");
       setChatMessages([]);
     };
   }, [selectedUser]);
+
+  const markAsSeen = async (id) => {
+    try {
+      console.log("ohkkkkkkkkkkkk");
+      const res = await api.patch(
+        `${
+          import.meta.env.VITE_APP_BASE_URL
+        }chat/api/notification/isseen/${id}/`
+      );
+      console.log(res.data, "////////////////");
+      dispatch(fetchCount());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
@@ -72,11 +87,10 @@ export const RightPanel = () => {
   const notificationStatus = async () => {
     try {
       const response = await api.patch(
-        `${import.meta.env.VITE_APP_BASE_URL}chat/api/notification/${
-          selectedUser
-        }/`
+        `${
+          import.meta.env.VITE_APP_BASE_URL
+        }chat/api/notification/${selectedUser}/`
       );
-
     } catch (error) {
       console.log("notification status error", error);
     }
@@ -89,8 +103,8 @@ export const RightPanel = () => {
           selectedUser.id
         }`
       );
-      const reversedChatHistory = response.data.slice().reverse();
-      setUserChatHistory(reversedChatHistory);
+      // const reversedChatHistory = response.data.slice().reverse();
+      setUserChatHistory(response.data);
     } catch (error) {
       if (error.response?.status === 401) {
         localStorage.removeItem("access");
@@ -136,7 +150,7 @@ export const RightPanel = () => {
                 name="Clara Fiona"
                 src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGJsYWNrJTIwZmVtYWxlJTIwaGVhZHNob3R8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
               />
-              
+
               <Text>{user.selectedUser.name}</Text>
             </Flex>
           </Box>

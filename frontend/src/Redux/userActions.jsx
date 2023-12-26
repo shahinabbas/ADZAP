@@ -53,3 +53,19 @@ export const setSelectedChatUser = (user) => {
     payload: user,
   };
 };
+
+export const fetchCount = () => async (dispatch) => {
+  try {
+    const response = await api.get(
+      `${import.meta.env.VITE_APP_BASE_URL}chat/api/count/`
+    );
+    const count = response.data;
+    console.log(count, "888888888888888888");
+    dispatch({
+      type: "FETCH_NOTIFICATION_COUNT_SUCCESS",
+      payload: count,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

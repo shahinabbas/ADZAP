@@ -6,6 +6,7 @@ const initialState = {
   notificationCount: 0,
   notificationdata: null,
   selectedUser: null,
+  count:0,
   error: null,
 };
 
@@ -44,6 +45,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         selectedUser: action.payload,
       };
+    case "FETCH_NOTIFICATION_COUNT_SUCCESS":
+      return {
+        ...state,
+        count: action.payload,
+      };
     case "LOGOUT_USER":
       console.log("Logout Action Received");
       return {
@@ -55,6 +61,7 @@ const userReducer = (state = initialState, action) => {
         notificationCount: 0,
         notificationdata: null,
         selectedUser: null,
+        count:0,
         
         error: null,
       };

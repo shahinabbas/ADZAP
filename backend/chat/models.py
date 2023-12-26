@@ -5,6 +5,7 @@ from accounts.models import CustomUser
 
 class CustomerChat(models.Model):
     user = models.IntegerField()
+    other_user = models.IntegerField()
     message = models.TextField(null=True, blank=True)
     group_name = models.CharField(max_length=50, null=True, blank=True)
     time = models.DateTimeField(auto_now_add=True)

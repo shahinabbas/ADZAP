@@ -6,10 +6,17 @@ import Navbar from "./Navbar";
 import { useLocation, useParams } from "react-router-dom";
 import { setSelectedChatUser } from "../../Redux/userActions";
 import { useDispatch } from "react-redux";
-
+import { fetchCount } from "../../Redux/userActions";
 function Chat() {
   const dispatch = useDispatch();
-  
+
+  useEffect(() => {
+    dispatch(fetchCount());
+    return () => {
+      dispatch(setSelectedChatUser(null));
+    };
+  }, [dispatch]);
+
   const handleUserClick = (user) => {
     dispatch(setSelectedChatUser(user));
   };

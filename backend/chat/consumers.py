@@ -36,7 +36,7 @@ class PersonalChatConsumer(AsyncWebsocketConsumer):
         from_user = data['from_user']
         receiver = data['receiver']
 
-        await self.save_message(user=current_user_id, from_user=from_user, message=message, group_name=self.room_group_name, reciever=receiver)
+        await self.save_message(user=current_user_id,from_user=from_user, message=message, group_name=self.room_group_name, reciever=receiver)
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -61,8 +61,9 @@ class PersonalChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_message(self, user, group_name, from_user, message, reciever):
+        other_user_id = self.scope['url_route']['kwargs']['other_user_id']
         chat_obj = CustomerChat.objects.create(
-            user=user, message=message, group_name=group_name, from_user=from_user)
+            user=user, other_user=other_user_id, message=message, group_name=group_name, from_user=from_user)
 
         other_user_id = self.scope['url_route']['kwargs']['other_user_id']
         get_user = CustomUser.objects.get(id=other_user_id)
