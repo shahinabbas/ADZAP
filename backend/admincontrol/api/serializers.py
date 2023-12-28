@@ -46,3 +46,11 @@ class PasswordChangeSerializer(serializers.Serializer):
 class ChartDataSerializer(serializers.Serializer):
     month = serializers.DateField()
     total_price = serializers.IntegerField()
+
+# class DateOnlyField(serializers.ReadOnlyField):
+#     def to_representation(self, value):
+#         return value.date()
+
+class PostCountSerializer(serializers.Serializer):
+    month = serializers.DateField(format='%Y-%m')
+    count = serializers.IntegerField()

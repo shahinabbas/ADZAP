@@ -6,3 +6,5 @@ urlpatterns = [
     path('webhook',views.stripe_webhook, name='webhook'),
 
 ]
+# stripe login
+# stripe listen --forward-to localhost:8000/payment/webhook

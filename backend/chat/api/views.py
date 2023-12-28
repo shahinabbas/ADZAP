@@ -31,17 +31,13 @@ class UserMessagesView(generics.ListAPIView):
     serializer_class = CustomerChatSerializer
 
     def get_queryset(self):
-        current_user_id = self.kwargs['current_user_id']
-
-        latest_messages = CustomerChat.objects.filter(user=current_user_id) \
-            .values('other_user') \
-            .annotate(latest_message=Max('time')) \
-            .order_by()
-
-        queryset = CustomerChat.objects.filter(user=current_user_id) \
-            .filter(time__in=[message['latest_message'] for message in latest_messages])
+        user_id = self.kwargs['current_user_id']  
+        queryset = CustomerChat.objects.filter(
+            Q(user=user_id) | Q(other_user=user_id)
+        ).order_by('-time').distinct()
 
         return queryset
+
 
 
 class UserChatCountListView(generics.ListAPIView):

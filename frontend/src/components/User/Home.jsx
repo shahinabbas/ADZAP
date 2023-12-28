@@ -6,6 +6,8 @@ import Category from "./Home/Category";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import FrequentlyAskedQuestions from "./Home/FrequentlyAskedQuestions";
+import Review from "./Home/Review";
+import Spaces from "./Home/Spaces";
 
 function Home() {
   return (
@@ -20,6 +22,7 @@ function Home() {
           reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.' /> */}
+        <Spaces />
       <Category />
       <br />
       <br />
@@ -32,6 +35,7 @@ function Home() {
           aliquip ex eat occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum."
       /> */}
+      <Review />
       <FrequentlyAskedQuestions />
       <Footer />
     </>

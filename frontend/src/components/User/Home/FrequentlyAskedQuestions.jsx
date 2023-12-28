@@ -14,7 +14,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 export default function FrequentlyAskedQuestions() {
   return (
     <>
-      <Text textAlign={"center"} fontSize={'44px'} fontWeight={'Bold'}>Frequently Asked Questions</Text>
+      <Text textAlign={"center"} mt={5} fontSize={'44px'} fontWeight={'Bold'}>Frequently Asked Questions</Text>
       <Flex
       mt={10}
         minH={"40vh"}

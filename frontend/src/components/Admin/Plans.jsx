@@ -46,7 +46,16 @@ function Plans() {
   const [plan, setPlan] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [planEdit, setPlanEdit] = useState(null);
-
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const showAlert = (message) => {
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+    setTimeout(() => {
+      setIsAlertVisible(false);
+      setAlertMessage("");
+    }, 3000);
+  };
   const fetchPlan = async () => {
     try {
       const response = await api.get(
@@ -68,7 +77,7 @@ function Plans() {
 
     if (!title || !description || !mrp || !price || !coins) {
       setFormError(["Please fill in all required fields."]);
-      setTimeout(() => setFormError([]), 1000);
+      setTimeout(() => setFormError([]), 5000);
       return;
     }
 
@@ -121,7 +130,13 @@ function Plans() {
         timer: 1000,
       });
     } catch (error) {
+
       console.log(error);
+      if (error.response && error.response.status === 400) {
+        setFormError(["Title already exists. Please choose a different title."]);
+      } else {
+        setFormError(["An error occurred. Please try again."]);
+      }
     }
   };
 
@@ -179,7 +194,7 @@ function Plans() {
                 <Th>Coins</Th>
                 <Th>Actions</Th>
                 <Th>
-                  <Button bgColor="white" onClick={onOpen}>
+                  <Button bgColor="purple" color="white" onClick={onOpen}>
                     Add plan
                   </Button>
                 </Th>
@@ -222,7 +237,7 @@ function Plans() {
         <ModalOverlay />
         <ModalContent>
           {formError.length > 0 && (
-            <Box mt={4} color="red.500">
+            <Box mt={4} ml={5} color="red.500">
               <ul>
                 {formError.map((error, index) => (
                   <li key={index}>{error}</li>
@@ -234,6 +249,7 @@ function Plans() {
           <ModalHeader>Add Plan</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+          
             <FormControl>
               <Input
                 type="name"

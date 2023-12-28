@@ -37,7 +37,7 @@ const AdStatus = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoryData = await fetchCategory(); // Assuming fetchCategory is an async function
+        const categoryData = await fetchCategory();
         setCategories(categoryData);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -112,7 +112,6 @@ const AdStatus = () => {
                       colorScheme="blue"
                       onClick={() => handleDetailedView(ad.id)}
                     >
-                      {" "}
                       Detailed View
                     </Button>
                   </Td>

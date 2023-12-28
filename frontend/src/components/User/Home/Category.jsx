@@ -1,13 +1,14 @@
 import * as React from "react";
 import { Container, Text, SimpleGrid, Box, Image, useSafeLayoutEffect, Center } from "@chakra-ui/react";
 import api from "../../../Services/api";
+import axios from "axios";
 
 const Category = () => {
 const [categories,setCategories]=React.useState([]);
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get(`${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`);
+        const response = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}admins/api/category-list/`);
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -10,12 +10,12 @@ import { fetchCount } from "../../Redux/userActions";
 function Chat() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchCount());
-    return () => {
-      dispatch(setSelectedChatUser(null));
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchCount());
+  //   return () => {
+  //     dispatch(setSelectedChatUser(null));
+  //   };
+  // }, [dispatch]);
 
   const handleUserClick = (user) => {
     dispatch(setSelectedChatUser(user));

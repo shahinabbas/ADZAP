@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'django_celery_results',
+    'celery',
     ]
   # 'oauth2_provider',
     # 'drf_social_oauth2',
@@ -228,15 +229,17 @@ SIMPLE_JWT = {
 
 SITE_URL = config('SITE_URL')
 
-# CELERY
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY SETTINGS
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_ACCEPT_CONTENT = {'application/json'}
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Kolkata'
-CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_TIMEZONE = 'Europe/Paris'
+# CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
 
-#SMTP
+# SMTP SETTINGS
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
@@ -244,7 +247,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "shahinabbas771@gmail.com"
 EMAIL_HOST_PASSWORD = "knnlldqmcphgyujh"
 DEFAULT_FROM_EMAIL = '<shahinabbas771@gmail.com>'
-
 
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')

@@ -74,10 +74,10 @@ const Footer = () => {
           </VStack>
         </HStack>
       </Stack>
-      <Divider my={4} />
+      {/* <Divider my={4} /> */}
 
       <Flex justifyContent="center">
-        <Text fontSize="md">
+        <Text fontSize="md" mt={5}>
           <Link
             href="https://github.com/shahinabbas"
             textDecoration="underline"

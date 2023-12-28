@@ -13,33 +13,58 @@ import api from "../../Services/api";
 
 const AdminHome = () => {
   const [chartData, setChartData] = useState([]);
-
+  const [postChartData, setPostChartData] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get(
-          `${import.meta.env.VITE_APP_BASE_URL}admins/api/chart-data/`
-        );
-        console.log(response.data);
-        setChartData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     fetchData();
+    fetchPostData();
   }, []);
 
-  const formattedChartData = chartData.map((item) => {
-    const date = new Date(item.month);
-    const monthName = new Intl.DateTimeFormat("en-US", {
-      month: "long",
-    }).format(date);
-    return {
-      awsMonth: monthName,
-      money: item.total_price,
-    };
-  });
+  const fetchData = async () => {
+    try {
+      const response = await api.get(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/chart-data/`
+      );
+
+      const formattedChartData = response.data.map((item) => {
+        const date = new Date(item.month);
+        const formattedMonth = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}`;
+
+        return {
+          awsMonth: formattedMonth,
+          money: item.total_price,
+        };
+      });
+
+      setChartData(formattedChartData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchPostData = async () => {
+    try {
+      const response = await api.get(
+        `${import.meta.env.VITE_APP_BASE_URL}admins/api/post-chart-data/`
+      );
+
+      const formattedChartData = response.data.map((item) => {
+        const date = new Date(item.month);
+        const formattedMonth = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}`;
+
+        return {
+          awsMonth: formattedMonth,
+          count: item.count,
+        };
+      });
+
+      setPostChartData(formattedChartData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -50,36 +75,45 @@ const AdminHome = () => {
           justifyContent="space-between"
           flexWrap="wrap"
         >
-          <Box width={{ base: "100%", md: "48%" }} mb={4}>
-            <Box bg="white" p={6} borderRadius="lg" boxShadow="lg">
-              <Heading mb={4} textAlign="center" size="xl">
-                Payment Graph 1
-              </Heading>
-              <ResponsiveContainer>
-                <LineChart data={formattedChartData}>
-                  <Line type="monotone" dataKey="money" stroke="#8884d8" />
-                  <CartesianGrid stroke="#ccc" />
-                  <XAxis dataKey="awsMonth" />
-                  <YAxis />
-                </LineChart>
-              </ResponsiveContainer>
-            </Box>
+          <Box
+            width={{ base: "100%", md: "148%" }} 
+            mb={4}
+            p={4}
+            bg="white"
+            borderRadius="lg"
+            boxShadow="lg"
+          >
+            <Heading mb={4} textAlign="center" size="xl">
+              Payment
+            </Heading>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <Line type="monotone" dataKey="money" stroke="#8884d8" />
+                <CartesianGrid stroke="#ccc" />
+                <XAxis dataKey="awsMonth" />
+                <YAxis />
+              </LineChart>
+            </ResponsiveContainer>
           </Box>
-
-          <Box width={{ base: "100%", md: "48%" }}>
-            <Box bg="white" p={6} borderRadius="lg" boxShadow="lg">
-              <Heading mb={4} textAlign="center" size="xl">
-                Payment Graph 2
-              </Heading>
-              <ResponsiveContainer>
-                <LineChart data={formattedChartData}>
-                  <Line type="monotone" dataKey="money" stroke="#8884d8" />
-                  <CartesianGrid stroke="#ccc" />
-                  <XAxis dataKey="awsMonth" />
-                  <YAxis />
-                </LineChart>
-              </ResponsiveContainer>
-            </Box>
+          <Box
+            width={{ base: "100%", md: "148%" }}
+            mb={4}
+            p={4}
+            bg="white"
+            borderRadius="lg"
+            boxShadow="lg"
+          >
+            <Heading mb={4} textAlign="center" size="xl">
+              Post
+            </Heading>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={postChartData}>
+                <Line type="monotone" dataKey="count" stroke="#8884d8" />
+                <CartesianGrid stroke="#ccc" />
+                <XAxis dataKey="awsMonth" />
+                <YAxis />
+              </LineChart>
+            </ResponsiveContainer>
           </Box>
         </Flex>
       </Container>

@@ -18,7 +18,7 @@ class Post(models.Model):
     discription = models.CharField(max_length=2000)
     media_type = models.CharField(max_length=100)
     is_active = models.BooleanField(default=False)
-    time=models.DateTimeField(auto_now_add=True)
+    time=models.DateField(auto_now_add=True)
 
 
 class Banner(models.Model):

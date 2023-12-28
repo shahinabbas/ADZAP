@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import api from "../../../Services/api";
 import { setupNotification } from "../Navbar";
 import { fetchCount } from "../../../Redux/userActions";
+import { setNotificationCount } from "../../../Redux/userActions";
 
 export const RightPanel = () => {
   const user = useSelector((state) => state.user);
@@ -30,6 +31,8 @@ export const RightPanel = () => {
   useEffect(() => {
     if (!selectedUser) return;
     markAsSeen(selectedUser.id);
+    setupNotification(dispatch, user);
+    dispatch(setNotificationCount(0));
     const path = `${import.meta.env.VITE_APP_WS_BASE_URL}${user.user.id}/${
       selectedUser.id
     }/`;
@@ -73,7 +76,6 @@ export const RightPanel = () => {
           import.meta.env.VITE_APP_BASE_URL
         }chat/api/notification/isseen/${id}/`
       );
-      console.log(res.data, "////////////////");
       dispatch(fetchCount());
     } catch (error) {
       console.log(error);
@@ -82,6 +84,11 @@ export const RightPanel = () => {
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
+  };
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
   };
 
   const notificationStatus = async () => {
@@ -154,7 +161,7 @@ export const RightPanel = () => {
               <Text>{user.selectedUser.name}</Text>
             </Flex>
           </Box>
-          <Flex flex="1" overflowY="auto" p={5} flexDirection="column">
+          <Flex flex="1" overflowY="auto" p={5} flexDirection="column" mb={120}>
             {userChatHistory.map((chat, index) => (
               <Box
                 key={index}
@@ -200,12 +207,13 @@ export const RightPanel = () => {
             ))}
           </Flex>
 
-          <Box position="fixed" bottom="0" left="30%" right="0" p="4">
+          <Box position="fixed" bottom="0" left="23%" right="0" p="4">
             <InputGroup>
               <Input
                 placeholder={"Enter message"}
                 value={message}
                 onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
               />
               <InputRightElement>
                 <IconButton

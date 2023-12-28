@@ -20,6 +20,8 @@ import { useSelector } from "react-redux";
 import FrequentlyAskedQuestions from "./Home/FrequentlyAskedQuestions";
 import { motion } from "framer-motion";
 import { SearchIcon } from "@chakra-ui/icons";
+import axios from "axios";
+
 
 function Spots() {
   const [properties, setProperties] = useState([]);
@@ -47,7 +49,7 @@ function Spots() {
 
   const fetchData = async (searchTerm = "") => {
     try {
-      const response = await api.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`,
         {
           params: {

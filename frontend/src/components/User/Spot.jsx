@@ -38,7 +38,6 @@ function Spot() {
     try {
       const singleUserData = await fetchSingleUser(selectedUser);
       dispatch(setSelectedChatUser(singleUserData));
-
       navigate("/chat");
     } catch (error) {
       console.error("Error fetching single user:", error);

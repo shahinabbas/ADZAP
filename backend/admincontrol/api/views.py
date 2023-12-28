@@ -1,6 +1,6 @@
 from rest_framework import generics
 from admincontrol.models import Banner, Category, Post, Box, Plans, PaymentDetails
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer, ChartDataSerializer
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer, ChartDataSerializer, PostCountSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -14,8 +14,8 @@ from django.contrib.auth import authenticate
 from django.db.models.functions import TruncMonth
 from django.db.models import Sum
 from datetime import date, timedelta
-from ..tasks import send_post_created_email
-
+from ..tasks import send_notification_mail
+from django.db.models import Count, functions
 
 class BoxListCreateView(generics.ListCreateAPIView):
     serializer_class = BoxSerializer
@@ -76,6 +76,7 @@ class PostListCreateView(generics.ListCreateAPIView):
                     Q(discription__icontains=search_term) |
                     Q(media_type__icontains=search_term)
                 )
+            queryset = queryset.order_by('-time')
             return queryset
         except Exception as e:
             print(f"Error in get_queryset: {str(e)}")
@@ -123,6 +124,10 @@ class PostToggleActionView(generics.UpdateAPIView):
         #     print('11111111111111')
         #     send_post_created_email.delay(post_id=instance.id)
         # print('mail func call')
+        print('before')
+        # if instance.is_active:
+        send_notification_mail.delay()
+        print('after')
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -229,3 +234,14 @@ class ChartData(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class PostChartData(generics.ListAPIView):
+    serializer_class = PostCountSerializer
+
+    def get_queryset(self):
+        queryset = Post.objects.annotate(
+            month=functions.TruncMonth('time')
+        ).values('month').annotate(count=Count('id')).order_by('month')
+
+        return queryset

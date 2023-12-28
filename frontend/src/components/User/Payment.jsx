@@ -16,6 +16,7 @@ import {
 import Navbar from "./Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../Redux/userActions";
+import Footer from "./Footer"
 
 export default function Payment() {
   const location = useLocation();
@@ -177,6 +178,7 @@ export default function Payment() {
           ))}
         </SimpleGrid>
       </Container>
+      <Footer />
     </>
   );
 }
