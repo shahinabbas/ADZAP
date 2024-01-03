@@ -1,6 +1,6 @@
 from rest_framework import generics
 from admincontrol.models import Banner, Category, Post, Box, Plans, PaymentDetails
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer, ChartDataSerializer, PostCountSerializer
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, ReportSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer, ChartDataSerializer, PostCountSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -16,6 +16,7 @@ from django.db.models import Sum
 from datetime import date, timedelta
 from ..tasks import send_notification_mail
 from django.db.models import Count, functions
+
 
 class BoxListCreateView(generics.ListCreateAPIView):
     serializer_class = BoxSerializer
@@ -60,6 +61,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         try:
             queryset = Post.objects.all()
             search_term = self.request.query_params.get('search', None)
+            categoryId = self.request.query_params.get('search', None)
             is_active = self.request.query_params.get('is_active', None)
             if is_active:
                 queryset = queryset.filter(is_active=True)
@@ -76,6 +78,8 @@ class PostListCreateView(generics.ListCreateAPIView):
                     Q(discription__icontains=search_term) |
                     Q(media_type__icontains=search_term)
                 )
+            if categoryId:
+                queryset = queryset.filter(category_id=categoryId)
             queryset = queryset.order_by('-time')
             return queryset
         except Exception as e:
@@ -190,6 +194,11 @@ class CategoryRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 class PlanListCreateView(generics.ListCreateAPIView):
     queryset = Plans.objects.all()
     serializer_class = PlanSerializer
+
+
+class PaymentReport(generics.ListCreateAPIView):
+    queryset = PaymentDetails.objects.all()
+    serializer_class = ReportSerializer
 
 
 class PlanRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):

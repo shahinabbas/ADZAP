@@ -32,6 +32,7 @@ import {
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { Spinner } from "@chakra-ui/react";
+import EditProfile from "./EditProfile";
 
 function Profile() {
   const user = useSelector((state) => state.user);
@@ -116,8 +117,6 @@ function Profile() {
     setSelectedProductId(productId);
     setIsModalOpen(true);
   };
-
-
   return (
     <>
       <Navbar />
@@ -140,7 +139,10 @@ function Profile() {
           <Flex justify={"center"} mt={5}>
             <Avatar
               size={"xl"}
-              src={"https://avatars2.githubusercontent.com/u/37842853?v=4"}
+              src={
+                user.user.profile_pic ||
+                "https://avatars2.githubusercontent.com/u/37842853?v=4"
+              }
               css={{
                 border: "2px solid white",
               }}
@@ -156,18 +158,7 @@ function Profile() {
               <Text>Post Count</Text>
             </Stack>
 
-            <Button
-              w={"full"}
-              bg={useColorModeValue("#151f21", "gray.900")}
-              color={"white"}
-              rounded={"md"}
-              _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "lg",
-              }}
-            >
-              Edit
-            </Button>
+            <EditProfile />
             <ResetPassword userId={user.user.id} />
           </Box>
         </Box>

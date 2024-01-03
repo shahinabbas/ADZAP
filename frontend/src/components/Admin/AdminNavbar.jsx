@@ -87,6 +87,9 @@ export default function AdminNavbar() {
                   <Text onClick={() => navigate("/status")}>Ad status</Text>
                 </MenuItem>
                 <MenuItem>
+                  <Text onClick={() => navigate("/report")}>Report</Text>
+                </MenuItem>
+                <MenuItem>
                   <Text onClick={handleLogout}>Logout</Text>
                 </MenuItem>
               </MenuList>

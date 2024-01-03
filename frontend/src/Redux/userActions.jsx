@@ -3,13 +3,14 @@ import api from "../services/api";
 
 export const fetchUser = (userId) => async (dispatch) => {
   try {
+    console.log("Fetching user...");
     if (userId) {
       const response = await axios.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/edit/${userId}/`
       );
-      console.log("Fetching user success:", response.data);
       dispatch({ type: "FETCH_USER_SUCCESS", payload: response.data });
     } else {
+      console.log('No userId provided.');
     }
   } catch (error) {
     console.error("Fetching user error:", error);

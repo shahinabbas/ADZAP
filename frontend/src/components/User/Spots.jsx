@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CiFilter } from "react-icons/ci";
 import Navbar from "./Navbar";
 import {
   Flex,
@@ -6,11 +7,17 @@ import {
   Text,
   Badge,
   Center,
+  Button,
   Input,
   InputGroup,
   InputLeftElement,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
+import { FaChevronDown } from "react-icons/fa";
 import api from "../../Services/api";
 import Footer from "./Footer";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,7 +28,7 @@ import FrequentlyAskedQuestions from "./Home/FrequentlyAskedQuestions";
 import { motion } from "framer-motion";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from "axios";
-
+import { fetchCategory } from "../../Services/apiUtils";
 
 function Spots() {
   const [properties, setProperties] = useState([]);
@@ -29,6 +36,7 @@ function Spots() {
   const user = useSelector((state) => state.user);
   const [userId, setUserId] = useState();
   const [boxData, setBoxData] = useState();
+  const [category, setCategory] = useState();
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchBox = async () => {
@@ -46,18 +54,27 @@ function Spots() {
       console.log(error);
     }
   };
-
-  const fetchData = async (searchTerm = "") => {
+  const fetchData = async (searchTerm = "", categoryId) => {
     try {
+      const params = {
+        is_active: true,
+      };
+  
+      if (searchTerm) {
+        params.search = searchTerm;
+      }
+  
+      if (categoryId) {
+        params.categoryId = categoryId;
+      }
+  
       const response = await axios.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`,
         {
-          params: {
-            search: searchTerm,
-            is_active: true,
-          },
+          params,
         }
       );
+  
       console.log(response.data, "jhzshuidhuihaihisfh");
       setProperties(response.data);
       setUserId(user.user.id);
@@ -67,12 +84,21 @@ function Spots() {
       console.log("asdf", error.response.data);
     }
   };
+  
+  const fetchCatgry = async () => {
+    try {
+      const categoryData = await fetchCategory();
+      setCategory(categoryData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     fetchData();
     fetchData(searchTerm);
+    fetchCatgry();
   }, [searchTerm]);
-
   const handleBoxAdd = async (spotId) => {
     try {
       const requestData = {
@@ -109,6 +135,7 @@ function Spots() {
     }
   };
 
+
   return (
     <div>
       <Navbar />
@@ -133,7 +160,28 @@ function Spots() {
           />
         </InputGroup>
       </Box>
-
+      {category && category.length > 0 && (
+        <Menu>
+          <MenuButton
+            as={Button}
+            bgColor={"white"}
+            border={"black"}
+            rightIcon={<CiFilter />}
+          >
+            Filter
+          </MenuButton>
+          <MenuList>
+            {category.map((item) => (
+              <MenuItem
+                key={item.id}
+                onClick={() => fetchData(item.id)}
+              >
+                {item.name}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      )}
       {properties.length === 0 ? (
         <>
           <Center>
@@ -220,7 +268,7 @@ function Spots() {
                       textTransform="uppercase"
                       ml="2"
                     >
-                      {property.country}  &bull; {property.state} 
+                      {property.country} &bull; {property.state}
                     </Box>
                   </Box>
 

@@ -37,6 +37,11 @@ class PlanSerializer(serializers.ModelSerializer):
         model = Plans
         fields = '__all__'
 
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentDetails
+        fields = '__all__'
+
 
 class PasswordChangeSerializer(serializers.Serializer):
     current_password = serializers.CharField()
@@ -54,3 +59,5 @@ class ChartDataSerializer(serializers.Serializer):
 class PostCountSerializer(serializers.Serializer):
     month = serializers.DateField(format='%Y-%m')
     count = serializers.IntegerField()
+
+

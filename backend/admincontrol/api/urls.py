@@ -42,6 +42,7 @@ urlpatterns = [
 
     path('chart-data/', views.ChartData.as_view(), name='chart-data-list'),
     path('post-chart-data/', views.PostChartData.as_view(), name='post-chart-data'),
+    path('report/', views.PaymentReport.as_view(), name='report'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

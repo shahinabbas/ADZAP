@@ -29,6 +29,7 @@ import { loadStripe } from "@stripe/stripe-js/pure";
 import Chat from "./components/User/Chat";
 import Plans from "./components/Admin/Plans";
 import Google from "./components/User/Google";
+import Report from "./components/Admin/Report";
 const stripePromise = loadStripe(
   (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY =
     "pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT")
@@ -76,6 +77,14 @@ function App() {
                   <UserRoute>
                     <Chat />
                   </UserRoute>
+                }
+              />
+              <Route
+                path="/report"
+                element={
+                  <PrivateRoute>
+                    <Report />
+                  </PrivateRoute>
                 }
               />
 

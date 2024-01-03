@@ -18,7 +18,7 @@ class Post(models.Model):
     discription = models.CharField(max_length=2000)
     media_type = models.CharField(max_length=100)
     is_active = models.BooleanField(default=False)
-    time=models.DateField(auto_now_add=True)
+    time = models.DateField(auto_now_add=True)
 
 
 class Banner(models.Model):
@@ -48,6 +48,8 @@ class Plans(models.Model):
     price = models.IntegerField()
     coins = models.IntegerField()
 
+
 class PaymentDetails(models.Model):
-    price=models.IntegerField()
-    date=models.DateField(auto_now_add=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    price = models.IntegerField()
+    date = models.DateField(auto_now_add=True)

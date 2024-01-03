@@ -8,7 +8,18 @@ import {
   YAxis,
   ResponsiveContainer,
 } from "recharts";
-import { Box, Heading, Container, Flex } from "@chakra-ui/react";
+import {
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  StatGroup,
+  Box,
+  Heading,
+  Container,
+  Flex,
+} from "@chakra-ui/react";
 import api from "../../Services/api";
 
 const AdminHome = () => {
@@ -76,7 +87,7 @@ const AdminHome = () => {
           flexWrap="wrap"
         >
           <Box
-            width={{ base: "100%", md: "148%" }} 
+            width={{ base: "100%", md: "148%" }}
             mb={4}
             p={4}
             bg="white"
@@ -117,6 +128,25 @@ const AdminHome = () => {
           </Box>
         </Flex>
       </Container>
+      <StatGroup>
+        <Stat>
+          <StatLabel>Sent</StatLabel>
+          <StatNumber>345,670</StatNumber>
+          <StatHelpText>
+            <StatArrow type="increase" />
+            23.36%
+          </StatHelpText>
+        </Stat>
+
+        <Stat>
+          <StatLabel>Clicked</StatLabel>
+          <StatNumber>45</StatNumber>
+          <StatHelpText>
+            <StatArrow type="decrease" />
+            9.05%
+          </StatHelpText>
+        </Stat>
+      </StatGroup>
     </>
   );
 };

@@ -87,7 +87,8 @@ def stripe_webhook(request):
                 plan = Plans.objects.get(id=plan_id)
                 user.coins += plan.coins
                 user.save()
-                payment_detail = PaymentDetails.objects.create(price=amount_total_paid)
+                payment_detail = PaymentDetails.objects.create(
+                    price=amount_total_paid, user=user)
 
         except CustomUser.DoesNotExist:
             return JsonResponse({'message': 'User not found'}, status=404)
