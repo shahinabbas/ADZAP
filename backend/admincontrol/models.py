@@ -53,3 +53,17 @@ class PaymentDetails(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     price = models.IntegerField()
     date = models.DateField(auto_now_add=True)
+
+
+class ReportUser(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="user")
+    ReportedUser = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="reported_user")
+    Reason=models.CharField(max_length=200)
+
+
+class Review(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    stars=models.IntegerField()
+    message=models.CharField(max_length=200)
+    date = models.TimeField(auto_now_add=True)
+

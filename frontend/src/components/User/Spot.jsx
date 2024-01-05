@@ -9,6 +9,7 @@ import { logoutUser } from "../../Redux/userActions";
 import { ChatList } from "./Chats/chat-list";
 import { useDispatch } from "react-redux";
 import { setSelectedChatUser } from "../../Redux/userActions";
+import ReportUser from "./ReportUser";
 
 function Spot() {
   const { spotId } = useParams();
@@ -94,6 +95,7 @@ function Spot() {
         <Text mt={2}>State: {spotData.state}</Text>
         <Text mt={2}>City: {spotData.city}</Text>
         <Text mt={2}>Landmark: {spotData.landmark}</Text>
+        <ReportUser id={spotData.id} />
       </Stack>
 
       <Footer />

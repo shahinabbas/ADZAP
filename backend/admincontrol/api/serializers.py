@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from admincontrol.models import Banner, Category, Faq, Post, Box, Plans, PaymentDetails
+from admincontrol.models import Banner, Category, Faq, Post, Box, Plans, PaymentDetails, ReportUser, Review
 
 
 class BannerSerializer(serializers.ModelSerializer):
@@ -37,6 +37,7 @@ class PlanSerializer(serializers.ModelSerializer):
         model = Plans
         fields = '__all__'
 
+
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentDetails
@@ -56,8 +57,21 @@ class ChartDataSerializer(serializers.Serializer):
 #     def to_representation(self, value):
 #         return value.date()
 
+
 class PostCountSerializer(serializers.Serializer):
     month = serializers.DateField(format='%Y-%m')
     count = serializers.IntegerField()
 
 
+class ReportUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportUser
+        fields = '__all__'
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+    
+    

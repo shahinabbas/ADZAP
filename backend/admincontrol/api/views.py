@@ -1,6 +1,6 @@
 from rest_framework import generics
-from admincontrol.models import Banner, Category, Post, Box, Plans, PaymentDetails
-from .serializers import BannerSerializer, CategorySerializer, PostSerializer, ReportSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer, ChartDataSerializer, PostCountSerializer
+from admincontrol.models import Banner, Category, Post, Box, Plans, PaymentDetails, ReportUser, Review
+from .serializers import BannerSerializer, CategorySerializer, PostSerializer, ReportSerializer, BoxSerializer, PlanSerializer, PasswordChangeSerializer, ChartDataSerializer, PostCountSerializer, ReportUserSerializer, ReviewSerializer
 from accounts.models import CustomUser
 from rest_framework.response import Response
 from accounts.api.serializers import UserSerializer
@@ -254,3 +254,17 @@ class PostChartData(generics.ListAPIView):
         ).values('month').annotate(count=Count('id')).order_by('month')
 
         return queryset
+
+
+class ReportUser(generics.ListCreateAPIView):
+    queryset = ReportUser.objects.all()
+    serializer_class = ReportUserSerializer
+
+
+class Review(generics.ListCreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+   
+
+    

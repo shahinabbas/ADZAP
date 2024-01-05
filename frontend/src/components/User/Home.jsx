@@ -8,11 +8,13 @@ import Footer from "./Footer";
 import FrequentlyAskedQuestions from "./Home/FrequentlyAskedQuestions";
 import Review from "./Home/Review";
 import Spaces from "./Home/Spaces";
+import Rating from "./Rating";
 
 function Home() {
   return (
     <>
       <Navbar />
+      
       <First />
       {/* <District /> */}
       {/* <Banner textAlign='right' src='src\images\download (1).png' title=' Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -36,6 +38,7 @@ function Home() {
           culpa qui officia deserunt mollit anim id est laborum."
       /> */}
       <Review />
+      <Rating />
       <FrequentlyAskedQuestions />
       <Footer />
     </>

@@ -8,7 +8,7 @@ urlpatterns = [
     path('action/<int:pk>/', views.ToggleUserActiveStatus.as_view(),
          name='user-is-active'),
     path('edit/<int:pk>/', views.UserEditView.as_view(), name='edit-user'),
-     
+
     path('reset-password/<int:pk>/',
          views.ResetPasswordView.as_view(), name='reset-password'),
 
@@ -43,6 +43,9 @@ urlpatterns = [
     path('chart-data/', views.ChartData.as_view(), name='chart-data-list'),
     path('post-chart-data/', views.PostChartData.as_view(), name='post-chart-data'),
     path('report/', views.PaymentReport.as_view(), name='report'),
+
+    path('reportuser/', views.ReportUser.as_view(), name='report_user'),
+    path('review/', views.Review.as_view(), name='review'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

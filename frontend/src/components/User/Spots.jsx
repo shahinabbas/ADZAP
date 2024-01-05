@@ -59,22 +59,22 @@ function Spots() {
       const params = {
         is_active: true,
       };
-  
+
       if (searchTerm) {
         params.search = searchTerm;
       }
-  
+
       if (categoryId) {
         params.categoryId = categoryId;
       }
-  
+
       const response = await axios.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`,
         {
           params,
         }
       );
-  
+
       console.log(response.data, "jhzshuidhuihaihisfh");
       setProperties(response.data);
       setUserId(user.user.id);
@@ -84,7 +84,7 @@ function Spots() {
       console.log("asdf", error.response.data);
     }
   };
-  
+
   const fetchCatgry = async () => {
     try {
       const categoryData = await fetchCategory();
@@ -135,7 +135,6 @@ function Spots() {
     }
   };
 
-
   return (
     <div>
       <Navbar />
@@ -164,18 +163,18 @@ function Spots() {
         <Menu>
           <MenuButton
             as={Button}
-            bgColor={"white"}
+            bgColor={"purple"}
             border={"black"}
             rightIcon={<CiFilter />}
+            color={"white"}
+            ml={239}
+            mt={5}
           >
             Filter
           </MenuButton>
           <MenuList>
             {category.map((item) => (
-              <MenuItem
-                key={item.id}
-                onClick={() => fetchData(item.id)}
-              >
+              <MenuItem key={item.id} onClick={() => fetchData(item.id)}>
                 {item.name}
               </MenuItem>
             ))}
