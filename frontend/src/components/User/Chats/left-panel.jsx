@@ -41,7 +41,7 @@ export function LeftPanel({onItemClick}) {
           borderBottom="1px"
           borderColor="#e2e8f0"
         >
-          <InputGroup>
+          {/* <InputGroup>
             <InputLeftElement
               pointerEvents="none"
               children={<SearchIcon color="gray.300" />}
@@ -59,8 +59,8 @@ export function LeftPanel({onItemClick}) {
               variant="filled"
               placeholder="Search or start new chat"
             />
-          </InputGroup>
-          <Tooltip
+          </InputGroup> */}
+          {/* <Tooltip
             shouldWrapChildren
             label="Unread chats filter"
             bg="#eae6df"
@@ -70,7 +70,7 @@ export function LeftPanel({onItemClick}) {
             <IconButton>
               <FilterIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
         </HStack>
       </Box>
       <ChatList onItemClick={onItemClick} />

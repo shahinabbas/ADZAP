@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import emailjs from 'emailjs-com';
 import Navbar from "./Navbar";
 import {
   Image,
   Flex,
   Text,
   Button,
-  Spacer,
   Input,
   FormControl,
   Textarea,
 } from "@chakra-ui/react";
 import Footer from "./Footer";
+import emailjs from "emailjs-com";
+import Swal from "sweetalert2";
 
+emailjs.init("ghFNUAmQV4pQ5dpsx");
 function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,22 +21,49 @@ function Contact() {
   const [location, setLocation] = useState("");
   const [message, setMessage] = useState("");
 
-
-  // function sendEmail(e) {
-  //   e.preventDefault();    
-
-  //   emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target, 'YOUR_USER_ID')
-  //     .then((result) => {
-  //         window.location.reload()  
-  //     }, (error) => {
-  //         console.log(error.text);
-  //     });
-  // }
-
+  const sendEmail = (e) => {
+    e.preventDefault();
+  
+    emailjs
+      .send("service_0wattch", "template_b8w2ymb", {
+        from_name: name,
+        name: name,
+        message: message,
+        phone: number,
+        location: location,
+        email: email,
+        reply_to: email,
+      })
+      .then((response) => {
+        setEmail("");
+        setNumber("");
+        setName("");
+        setMessage("");
+        setLocation("");
+      })
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Message shared successfully! Check your email for a response.",
+          showConfirmButton: false,
+          timer: 1800,
+        });
+      })
+      .catch((error) => {
+        console.error("Error sending email", error);
+      });
+  };
+  
   return (
     <div>
       <Navbar />
-      <Text fontSize="35px" fontWeight="bold" mt="8" textAlign="center" marginTop='65px' >
+      <Text
+        fontSize="35px"
+        fontWeight="bold"
+        mt="8"
+        textAlign="center"
+        marginTop="65px"
+      >
         Are You Looking For More About Us
       </Text>
       <Flex>
@@ -53,6 +81,7 @@ function Contact() {
             marginTop: "55px",
             width: "530px",
           }}
+          onSubmit={sendEmail}
         >
           <Text fontSize="25px" fontWeight="bold" mt="8" textAlign="center">
             Write To Us

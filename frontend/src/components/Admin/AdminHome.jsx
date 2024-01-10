@@ -128,7 +128,7 @@ const AdminHome = () => {
           </Box>
         </Flex>
       </Container>
-      <StatGroup>
+      {/* <StatGroup>
         <Stat>
           <StatLabel>Sent</StatLabel>
           <StatNumber>345,670</StatNumber>
@@ -146,7 +146,7 @@ const AdminHome = () => {
             9.05%
           </StatHelpText>
         </Stat>
-      </StatGroup>
+      </StatGroup> */}
     </>
   );
 };

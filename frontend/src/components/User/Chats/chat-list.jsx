@@ -114,7 +114,7 @@ export function ChatList({ onItemClick }) {
                     {/* <chakra.time fontSize="xs" color="#667781">
                   {item.date}
                 </chakra.time> */}
-                    {Count &&
+                    {/* {Count &&
                       Count.map((countItem) => {
                         if (countItem.user === item.id) {
                           return (
@@ -135,7 +135,7 @@ export function ChatList({ onItemClick }) {
                           );
                         }
                         return null;
-                      })}
+                      })} */}
                   </Flex>
                 </Box>
               </HStack>
@@ -176,7 +176,7 @@ export function ChatList({ onItemClick }) {
                       </HStack>
                     </Box>
                   
-                    {Count &&
+                    {/* {Count &&
                       Count.map((countItem) => {
                         if (countItem.user === item.id) {
                           return (
@@ -197,7 +197,7 @@ export function ChatList({ onItemClick }) {
                           );
                         }
                         return null;
-                      })}
+                      })} */}
                   </Flex>
                 </Box>
               </HStack>

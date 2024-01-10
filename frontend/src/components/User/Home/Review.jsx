@@ -58,21 +58,19 @@ const Review = () => {
 
       setReviewData(updatedReviewData.reverse());
 
+      const ratingsCount = new Array(5).fill(0);
+      response.data.forEach((review) => {
+        ratingsCount[review.stars - 1]++;
+      });
 
-    const ratingsCount = new Array(5).fill(0);
-    response.data.forEach((review) => {
-      ratingsCount[review.stars - 1]++;
-    });
+      const dynamicRatingSummary = ratingsCount.map((count, index) => ({
+        id: index + 1,
+        rating: index + 1,
+        percentage: `${((count / newTotalRatings) * 100).toFixed(0)}%`,
+      }));
 
-    const dynamicRatingSummary = ratingsCount.map((count, index) => ({
-      id: index + 1,
-      rating: index + 1,
-      percentage: `${((count / newTotalRatings) * 100).toFixed(0)}%`,
-    }));
-
-    // Update state with new values
-    setTotalRatings(newTotalRatings);
-    setRatingSummary(dynamicRatingSummary);
+      setTotalRatings(newTotalRatings);
+      setRatingSummary(dynamicRatingSummary);
       console.log(response.data);
     } catch (error) {
       console.log(error);

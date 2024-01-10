@@ -90,6 +90,9 @@ export default function AdminNavbar() {
                   <Text onClick={() => navigate("/report")}>Report</Text>
                 </MenuItem>
                 <MenuItem>
+                  <Text onClick={() => navigate("/reporteduser")}>Reported User</Text>
+                </MenuItem>
+                <MenuItem>
                   <Text onClick={handleLogout}>Logout</Text>
                 </MenuItem>
               </MenuList>

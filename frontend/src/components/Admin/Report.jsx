@@ -51,7 +51,7 @@ const Report = () => {
       <AdminNavbar />
       <Container>
         <Center mt={5}>
-          <Text fontWeight={"400px"} fontSize="xl">
+          <Text fontWeight={"bold"} fontSize="xl">
             Payment Report
           </Text>
         </Center>
@@ -65,7 +65,6 @@ const Report = () => {
           Download PDF
         </Button>
         <ReactHTMLTableToExcel
-        
           id="test-table-xls-button"
           className="download-table-xls-button"
           table="paymentTable"

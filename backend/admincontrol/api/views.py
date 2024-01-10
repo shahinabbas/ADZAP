@@ -17,7 +17,6 @@ from datetime import date, timedelta
 from ..tasks import send_notification_mail
 from django.db.models import Count, functions
 
-
 class BoxListCreateView(generics.ListCreateAPIView):
     serializer_class = BoxSerializer
 
@@ -51,9 +50,7 @@ class BoxDeleteView(generics.DestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# class PostListCreateView(generics.ListCreateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
+
 class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
 
@@ -63,11 +60,12 @@ class PostListCreateView(generics.ListCreateAPIView):
             search_term = self.request.query_params.get('search', None)
             categoryId = self.request.query_params.get('search', None)
             is_active = self.request.query_params.get('is_active', None)
+            print(categoryId,search_term,'1111111111111111111111111111')
             if is_active:
                 queryset = queryset.filter(is_active=True)
+            
             if search_term:
                 queryset = queryset.filter(
-                    Q(category__name__icontains=search_term) |
                     Q(country__icontains=search_term) |
                     Q(state__icontains=search_term) |
                     Q(city__icontains=search_term) |
@@ -78,7 +76,7 @@ class PostListCreateView(generics.ListCreateAPIView):
                     Q(discription__icontains=search_term) |
                     Q(media_type__icontains=search_term)
                 )
-            if categoryId:
+            if categoryId:  
                 queryset = queryset.filter(category_id=categoryId)
             queryset = queryset.order_by('-time')
             return queryset
@@ -259,7 +257,6 @@ class PostChartData(generics.ListAPIView):
 class ReportUser(generics.ListCreateAPIView):
     queryset = ReportUser.objects.all()
     serializer_class = ReportUserSerializer
-
 
 class Review(generics.ListCreateAPIView):
     queryset = Review.objects.all()

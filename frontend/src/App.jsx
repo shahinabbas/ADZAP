@@ -30,6 +30,7 @@ import Chat from "./components/User/Chat";
 import Plans from "./components/Admin/Plans";
 import Google from "./components/User/Google";
 import Report from "./components/Admin/Report";
+import ReportedUser from "./components/Admin/ReportedUser";
 const stripePromise = loadStripe(
   (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY =
     "pk_test_51ODcxzSBzn9HNwsvVFNTnZVyDa6mgZcBQLxLAOigwbyRwALk3TMOKC7M78thlfdErzQuAiqfqkvZWvtfFAQNfKti00z0o8fsaT")
@@ -143,6 +144,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <FrequentlyAskedQuestions />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/reporteduser"
+                element={
+                  <PrivateRoute>
+                    <ReportedUser />
                   </PrivateRoute>
                 }
               />

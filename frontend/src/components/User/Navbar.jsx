@@ -69,7 +69,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [notificationHistory, setNotificationHistory] = useState();
-
   useEffect(() => {
     dispatch(fetchUser());
     if (user && user.user) {
@@ -212,12 +211,34 @@ const Navbar = () => {
             </Menu>
 
             <Menu isLazy>
-              <MenuButton as={Button} size="sm" px={0} py={0} rounded="full">
-                <Avatar
-                  size="sm"
-                  src={"https://avatars2.githubusercontent.com/u/37842853?v=4"}
-                />
-              </MenuButton>
+              {user && user.user && user.user.id ? (
+                <MenuButton as={Button} size="sm" px={0} py={0} rounded="full">
+                  <Avatar
+                    size="sm"
+                    src={
+                      user.user.profile_pic ||
+                      "https://avatars2.githubusercontent.com/u/37842853?v=4"
+                    }
+                  />
+                </MenuButton>
+              ) : (
+                <Menu isLazy>
+                  <MenuButton
+                    as={Button}
+                    size="sm"
+                    px={0}
+                    py={0}
+                    rounded="full"
+                  >
+                    <Avatar
+                      size="sm"
+                      src={
+                        "https://avatars2.githubusercontent.com/u/37842853?v=4"
+                      }
+                    />
+                  </MenuButton>
+                </Menu>
+              )}
 
               {user && user.user && user.user.id ? (
                 <Text>Welcome, {user.user.name}!</Text>

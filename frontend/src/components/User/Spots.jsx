@@ -67,7 +67,7 @@ function Spots() {
       if (categoryId) {
         params.categoryId = categoryId;
       }
-
+      console.log(params, "444444444444444444444444444");
       const response = await axios.get(
         `${import.meta.env.VITE_APP_BASE_URL}admins/api/post/`,
         {
@@ -313,6 +313,7 @@ function Spots() {
       <br />
       <br />
       <br />
+
       <FrequentlyAskedQuestions />
       <Footer />
     </div>

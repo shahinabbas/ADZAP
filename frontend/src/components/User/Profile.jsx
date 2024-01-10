@@ -33,7 +33,7 @@ import {
 import { useSelector } from "react-redux";
 import { Spinner } from "@chakra-ui/react";
 import EditProfile from "./EditProfile";
-
+import Footer from "./Footer";
 function Profile() {
   const user = useSelector((state) => state.user);
   const [productsList, setProductsList] = useState([]);
@@ -265,6 +265,7 @@ function Profile() {
           onClose={() => setIsModalOpen(false)}
         />
       )}
+      <Footer />
     </>
   );
 }
