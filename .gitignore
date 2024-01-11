@@ -1,6 +1,6 @@
 #Python
-.env
-.env
+frontend/.env
+backend/.env
 venv/
 db.sqlite3
 
