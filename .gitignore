@@ -1,5 +1,6 @@
 #Python
-backend/.env
+.env
+.env
 venv/
 db.sqlite3
 
