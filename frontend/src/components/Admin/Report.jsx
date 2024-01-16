@@ -14,10 +14,10 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
-import api from "../../services/api";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import api from "../../Services/api";
 
 const Report = () => {
   const [data, setData] = useState([]);
